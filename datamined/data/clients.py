@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 
 import tempfile
 
+
 class Client(object):
   """Abstract base class for user clients."""
 
@@ -35,6 +36,7 @@ class Client(object):
     """
     raise NotImplementedError()
 
+
 class InsecureFileClient(Client):
   """Stores data locally on disk. No guarantees on security."""
 
@@ -52,7 +54,8 @@ class InsecureFileClient(Client):
     Simply writes to a new file in data_dir. No encryption is used. Note that
     this implementation doesn't close the files. Should probalby fix that later.
     """
-    with tempfile.NamedTemporaryFile(dir=self.data_dir, delete=False) as data_file:
+    with tempfile.NamedTemporaryFile(
+        dir=self.data_dir, delete=False) as data_file:
       data_file.write(data)
       return data_file.name
 

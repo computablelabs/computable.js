@@ -6,7 +6,8 @@ from __future__ import division
 from __future__ import unicode_literals
 
 import unittest
-import datamined as dm 
+import datamined as dm
+
 
 class TestInsecureFileClient(unittest.TestCase):
   """
@@ -17,5 +18,3 @@ class TestInsecureFileClient(unittest.TestCase):
   ledger = client.store(data)
   retrieved_data = client.retrieve(ledger)
   assert data == retrieved_data
-  
-
