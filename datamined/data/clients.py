@@ -13,7 +13,7 @@ class Client(object):
 
   def __init__(self, private_key):
     """Initializes client and stores private key approporiately"""
-    raise NotImplementedError()
+    raise NotImplementedError
 
   def store(self, data):
     """Stores the data provided.
@@ -26,7 +26,7 @@ class Client(object):
     ledger: A record of where the data was stored. Details vary on
             implementation.
     """
-    raise NotImplementedError()
+    raise NotImplementedError
 
   def retrieve(self, ledger):
     """Retrieves the data associated with ledger.
@@ -34,7 +34,22 @@ class Client(object):
     Uses this client's private key to attempt retrieval. Will raise error if
     key does not function.
     """
-    raise NotImplementedError()
+    raise NotImplementedError
+
+  def get_ledger_key(self, ledger):
+    """Gets an access key to access data associated with ledger.
+
+    Parameters 
+    ----------
+    ledger: A record of where the data was stored. Details vary on
+            implementation.
+
+    Returns 
+    -------
+    ledger_key: An access key that permits reading the data stored in the
+                associated ledger. 
+    """
+    raise NotImplementedError
 
 
 class InsecureFileClient(Client):
@@ -69,3 +84,16 @@ class InsecureFileClient(Client):
     """
     with open(ledger) as data_file:
       return data_file.read()
+
+  def get_ledger_key(self, ledger):
+    """Gets an access key to access data associated with ledger.
+
+    Parameters 
+    ----------
+    ledger: As returned by store.
+
+    Returns 
+    -------
+    ledger_key: Simply None, since no key for insecure system. 
+    """
+    return None
