@@ -36,7 +36,6 @@ for n in range(N_miners):
   miners.append(miner)
   ledgers.append(ledger)
 
-
 # At this point, there's currency floating around. This currency should
 # incentivize the entrace of computational nodes onto the economy.
 compute_nodes = []
