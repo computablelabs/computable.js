@@ -8,6 +8,8 @@ import datamined as dm
 user_one_data = "ATTAGGACATTTATA"
 user_two_data = "GATTAACCAATTAGAGA"
 
+validator = dm.valid.NaiveGenomicValidator()
+
 # Yes this is terrible.
 # TODO(rbharath): Swap out for non-demo code.
 user_one_private_key = "*&^#*HWEF(#@*R#(@JF"
@@ -20,8 +22,8 @@ user_two_client = dm.data.InsecureFileClient(user_two_private_key)
 # Accessing data stored at location pointed to by a particular ledger requires
 # the associated private key.
 # TODO(rbharath): Storing should return payment in datacoins. What is the API for doing so?
-user_one_data_ledger = user_one_client.store(user_one_data)
-user_two_data_ledger = user_two_client.store(user_two_data)
+user_one_data_ledger = user_one_client.store(user_one_data, validator)
+user_two_data_ledger = user_two_client.store(user_two_data, validator)
 
 user_one_retrieved_data = user_one_client.retrieve(user_one_data_ledger)
 user_two_retrieved_data = user_two_client.retrieve(user_two_data_ledger)

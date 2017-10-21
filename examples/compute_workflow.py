@@ -1,12 +1,18 @@
-# Provides a simple example of how to perform computation with the datamined API. Data is stored using dm.data.Client objects. Them dm.compute.Node instances perform a basic computation upon the data from the corresponding nodes.
+# Provides a simple example of how to perform computation with the datamined
+# API. Data is stored using dm.data.Client objects. Them dm.compute.Node
+# instances perform a basic computation upon the data from the corresponding
+# nodes.
 
 import datamined as dm
 
 data = "ATTAGGACATTTATA"
 
+validator = dm.valid.NaiveGenomicValidator()
+
 private_key = "*&^#*HWEF(#@*R#(@JF"
 client = dm.data.InsecureFileClient(private_key)
-ledger = client.store(data)
+ledger = client.store(data, validator)
+
 # Assumes that dm.data.Client objects have the ability to generate
 # "ledger_access_key"s which provide access to the data stored at the ledger
 # location.
