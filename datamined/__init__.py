@@ -7,3 +7,5 @@ from __future__ import unicode_literals
 
 import datamined.data
 import datamined.compute
+import datamined.valid
+import datamined.coins

@@ -7,6 +7,7 @@
 # the buyer receives the ledger key, which it then uses to perform a
 # computation.
 
+import numpy as np
 import datamined as dm
 
 N_miners = 10
@@ -15,7 +16,7 @@ N_buyers = 5
 N_operations = 100
 
 # In this economy, there is only one central validator
-validator = dc.valid.NaiveGenomicsValidator()
+validator = dm.valid.NaiveGenomicValidator()
 
 # Let's create some currency in this economy by mining some data to create
 # tokens.
@@ -24,7 +25,12 @@ miners = []
 # list of their own ledgers?
 ledgers = []
 for n in range(N_miners):
-  miner = dm.data.InsecureFileClient()
+  # TODO(rbharath): Have individual private keys
+  private_key = "SLDFKJ:OEWJFWOEFE3453WD"
+  # Create an introductory client wallet 
+  miner_wallet = dm.coins.ExampleWallet()
+  assert miner_wallet.token_count() == 0
+  miner = dm.data.InsecureFileClient(private_key, miner_wallet)
   assert miner.get_wallet().token_count() == 0
 
   # TODO(rbharath): Each miner should be entering in random data. Need to add a
@@ -40,7 +46,11 @@ for n in range(N_miners):
 # incentivize the entrace of computational nodes onto the economy.
 compute_nodes = []
 for m in range(N_compute_nodes):
-  node = dm.compute.genomicCountInsecureFileNode()
+  # Create a node wallet 
+  node_wallet = dm.coins.ExampleWallet()
+  assert node_wallet.token_count() == 0
+
+  node = dm.compute.GenomicCountInsecureFileNode(node_wallet)
   # Nodes start with no money.
   assert node.get_wallet().token_count() == 0
   compute_nodes.append(node)
@@ -53,10 +63,10 @@ buyers = miners[:N_buyers]
 # The buyers are now starting to compute things...
 for op in range(N_operations):
   # Select a random compute node
-  node = compute_nodes[random.randint(0, N_compute_nodes)]
+  node = compute_nodes[np.random.randint(0, N_compute_nodes)]
   # Select a random data node
-  data = miners[random.randint(0, N_miners)]
-  ledger = ledgers[random.randint(0, N_miners)]
+  data = miners[np.random.randint(0, N_miners)]
+  ledger = ledgers[np.random.randint(0, N_miners)]
   # Obtain ledger key
   ledger_key = data.get_ledger_key(ledger)
 

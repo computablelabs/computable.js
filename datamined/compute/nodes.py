@@ -9,8 +9,14 @@ from __future__ import unicode_literals
 class Node(object):
   """Abstract base class for commpute nodes."""
 
-  def __init__(self):
-    """Initializes the compute node"""
+  def __init__(self, wallet):
+    """Initializes the compute node
+
+    Parameters
+    ----------
+    wallet: dm.coins.Wallet
+      Wallets used to store coins for this node.
+    """
     raise NotImplementedError
 
   def compute(self, ledger, ledger_key, computation):
@@ -28,6 +34,16 @@ class Node(object):
     """
     raise NotImplementedError
 
+  def get_wallet(self):
+    """Returns access to wallet
+
+    Returns 
+    ----------
+    wallet: dm.coins.Wallet 
+      The wallet associated with this node.
+    """
+    raise NotImplementedError
+
 
 class GenomicCountInsecureFileNode(Node):
   """A simple example compute node that counts base pairs in genomic data.
@@ -38,9 +54,19 @@ class GenomicCountInsecureFileNode(Node):
   implementation is meant solely for simple demonstrations of concept.
   """
 
-  def __init__(self):
-    """Initializes the compute node"""
-    pass
+  def __init__(self, wallet):
+    """Initializes the compute node
+
+    Parameters
+    ----------
+    wallet: dm.coins.Wallet
+      Wallets used to store coins for this node.
+    """
+    self.wallet = wallet
+
+    # TODO(rbharath): This increment should be factored out somehow, likely
+    # into a solidity contract.
+    self.compute_reward = 1.0
 
   def compute(self, ledger, ledger_key, computation):
     """Performs the base-pair count.
@@ -57,4 +83,16 @@ class GenomicCountInsecureFileNode(Node):
     results = {}
     for base_pair in ["A", "C", "G", "T"]:
       results[base_pair] = data.count(base_pair)
+      # TODO(rbharath): This money needs to come from somewhere!!
+      self.wallet.increment(self.compute_reward)
     return results
+
+  def get_wallet(self):
+    """Returns access to wallet
+
+    Returns 
+    ----------
+    wallet: dm.coins.Wallet 
+      The wallet associated with this node.
+    """
+    return self.wallet 

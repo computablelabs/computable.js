@@ -15,11 +15,18 @@ class Client(object):
     """Initializes client and stores private key approporiately"""
     raise NotImplementedError
 
-  def store(self, data):
+  def store(self, data, validator):
     """Stores the data provided.
 
     Subclasses will want to override this method depending on where the data
     should be stored and based on the security guarantees desired. 
+
+    Parameters
+    ----------
+    data: String
+      Stores the specified data.
+    validator: Validator
+      Returns true if data is actually valid.
 
     Returns
     -------
@@ -51,19 +58,41 @@ class Client(object):
     """
     raise NotImplementedError
 
+  def get_wallet(self):
+    """Returns access to wallet
+
+    Returns 
+    ----------
+    wallet: dm.coins.Wallet 
+      The wallet associated with this client.
+    """
+    raise NotImplementedError
+
 
 class InsecureFileClient(Client):
   """Stores data locally on disk. No guarantees on security."""
 
-  def __init__(self, private_key):
+  def __init__(self, private_key, wallet):
     """Initializes client.
 
     Ignores private key (since no encryption used.) Creates a temporary
     directory that's used to store data for this client.
+
+    Parameters
+    ----------
+    private_key: str
+      Private key for this wallet. Ignored.
+    wallet: dm.coins.Wallet
+      Wallets used to store coins for this client.
     """
+    self.wallet = wallet
     self.data_dir = tempfile.mkdtemp()
 
-  def store(self, data):
+    # TODO(rbharath): This increment should be factored out somehow, likely
+    # into a solidity contract.
+    self.data_reward = 1.0
+
+  def store(self, data, validator):
     """Stores provided data.
   
     Simply writes to a new file in data_dir. No encryption is used. Note that
@@ -71,7 +100,12 @@ class InsecureFileClient(Client):
     """
     with tempfile.NamedTemporaryFile(
         dir=self.data_dir, delete=False) as data_file:
-      data_file.write(data)
+      if validator.is_valid(data):
+        data_file.write(data)
+        # Increment wallet token count
+        self.wallet.increment(self.data_reward)
+      else:
+        raise ValueError("This data is not valid")
       return data_file.name
 
   def retrieve(self, ledger):
@@ -97,3 +131,13 @@ class InsecureFileClient(Client):
     ledger_key: Simply None, since no key for insecure system. 
     """
     return None
+
+  def get_wallet(self):
+    """Returns access to wallet
+
+    Returns 
+    ----------
+    wallet: dm.coins.Wallet 
+      The wallet associated with this client.
+    """
+    return self.wallet 
