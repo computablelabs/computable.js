@@ -1,0 +1,60 @@
+{
+  "version":"7",
+  "compilation":{
+    "contracts_source_dirs": ["./contracts"],
+    "import_remappings": []
+  },
+  "chains": {
+    "local": {
+      "chain": {
+        "class": "populus.chain.LocalGethChain"
+      },
+      "web3": {
+        "eth": {
+          "default_account": "0x487acb445bdfe53a8b1b608296e333c7d1188d42"
+        },
+        "provider": {
+          "class": "web3.providers.rpc.HTTPProvider",
+          "settings": {
+            "endpoint_uri": "http://127.0.0.1:8545",
+            "request_kwargs": {
+                "timeout": 180
+            }
+          }
+        }
+      },
+      "contracts": {
+        "backends": {
+          "JSONFile": {
+            "$ref": "contracts.backends.JSONFile"
+          },
+          "Memory": {
+            "$ref": "contracts.backends.Memory"
+          },
+          "ProjectContracts": {
+            "$ref": "contracts.backends.ProjectContracts"
+          },
+          "TestContracts": {
+            "$ref": "contracts.backends.TestContracts"
+          }
+        }
+      }
+    },
+    "ropsten": {
+      "chain": {
+        "class": "populus.chain.ExternalChain"
+      },
+      "web3": {
+        "eth": {
+          "default_account": "0x5493d57a37f1b7cab72fa74ed95ebd542f48ae61"
+        },
+        "provider": {
+          "class": "web3.providers.ipc.IPCProvider",
+          "settings": {
+            "ipc_path": "/home/rbharath/.ethereum/testnet/geth.ipc"
+          }
+        }
+      }
+    }
+  }
+}
