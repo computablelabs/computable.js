@@ -51,7 +51,8 @@ contract Crowdsale is SafeMath, TestableNow {
         beneficiary = _beneficiary;
         msWallet = _msWallet;
 
-        // Allow to override the start time to test the contract in testnet
+        // Allow to override the start time to test the contract in
+        // testnet
         if(_start > 0) {
             start = _start;
         }
@@ -69,11 +70,13 @@ contract Crowdsale is SafeMath, TestableNow {
             invest(msg.sender);
     }
 
-    /* make an investment
-    *  only callable if the crowdsale started and hasn't been closed already and the maxGoal wasn't reached yet.
-    *  the current token price is looked up and the corresponding number of tokens is transfered to the receiver.
-    *  the sent value is directly forwarded to a safe multisig wallet.
-    *  this method allows to purchase tokens in behalf of another address.*/
+    /* Make an investment. only callable if the crowdsale started and
+     * hasn't been closed already and the maxGoal wasn't reached yet.
+     * the current token price is looked up and the corresponding
+     * number of tokens is transfered to the receiver.  the sent
+     * value is directly forwarded to a safe multisig wallet.  this
+     * method allows to purchase tokens in behalf of another
+     * address.*/
     function invest(address receiver) payable{
     	uint amount = msg.value;
     	uint price = getPrice();
@@ -93,12 +96,14 @@ contract Crowdsale is SafeMath, TestableNow {
         for(var i = 0; i < deadlines.length; i++)
             if(current()<deadlines[i])
                 return prices[i];
-        return prices[prices.length-1];//should never be returned, but to be sure to not divide by 0
+        //should never be returned, but to be sure to not divide by 0
+        return prices[prices.length-1];
     }
 
     modifier afterDeadline() { if (current() >= deadlines[deadlines.length-1]) _; }
 
-    /* checks if the goal or time limit has been reached and ends the campaign */
+    /* checks if the goal or time limit has been reached and ends the
+    * campaign */
     function checkGoalReached() afterDeadline {
         if (tokensSold >= fundingGoal){
             fundingGoalReached = true;
@@ -108,8 +113,9 @@ contract Crowdsale is SafeMath, TestableNow {
         crowdsaleClosed = true;
     }
 
-    /* allows the funders to withdraw their funds if the goal has not been reached.
-	*  only works after funds have been returned from the multisig wallet. */
+    /* allows the funders to withdraw their funds if the goal has not
+     * been reached.  only works after funds have been returned from
+    * the multisig wallet. */
 	function safeWithdrawal() afterDeadline {
 		uint amount = balanceOf[msg.sender];
 		if(address(this).balance >= amount){
