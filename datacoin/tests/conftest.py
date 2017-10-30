@@ -44,8 +44,7 @@ def token(chain, crowdsale, beneficiary):
   # ICO is closed. There will be 60.000.000 tokens left for the
   # edgeless team to hold and for the bounty program to be paid
   # (10.000.000).
-  contract.transact({"from": beneficiary}).approve(
-      crowdsale.address, 440000000)
+  contract.transact({"from": beneficiary}).approve(crowdsale.address, 440000000)
 
   return contract
 
@@ -113,6 +112,7 @@ def finished_crowdsale(crowdsale, token, end):
 #
 # ERC-20 fixtures
 #
+
 
 @pytest.fixture
 def token_owner(beneficiary):

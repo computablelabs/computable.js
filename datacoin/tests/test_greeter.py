@@ -1,4 +1,5 @@
-# This test file is written in pytest style. We make use of the 
+# This test file is written in pytest style. We make use of the
+
 
 def test_greeter(chain):
   greeter, _ = chain.provider.get_or_deploy_contract('Greeter')
