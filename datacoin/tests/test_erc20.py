@@ -6,7 +6,7 @@ from web3.contract import Contract
 
 
 def test_erc20_interface(erc20_token, token_owner, empty_address):
-  """Edgeless token satisfies ERC-20 interface."""
+  """DataCoin satisfies ERC-20 interface."""
 
   # https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC20.sol
 
@@ -69,7 +69,7 @@ def test_erc20_transfer_with_allowance(erc20_token, token_owner, empty_address,
   assert token.call().allowance(token_owner, allowed_party) == amount
 
   events = token.pastEvents("Approval").get()
-  # Edgeless gets 2 events, because one is needed to construct token
+  # DataCoin gets 2 events, because one is needed to construct token
   assert len(events) > 0
   e = events[-1]
   # TODO(rbharath): Is this call to lower() valid? Original test

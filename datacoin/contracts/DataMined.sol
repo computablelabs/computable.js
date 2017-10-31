@@ -1,5 +1,5 @@
 /**
-*	Crowdsale for Edgeless Tokens.
+*	Crowdsale for Datacoin Tokens.
 *	Raised Ether will be stored safely at a multisignature wallet and returned to the ICO in case the funding goal is not reached,
 *   allowing the investors to withdraw their funds.
 *	Author: Julia Altenried
