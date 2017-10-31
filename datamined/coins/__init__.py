@@ -7,3 +7,4 @@ from __future__ import unicode_literals
 
 from datamined.coins.wallets import Wallet 
 from datamined.coins.wallets import ExampleWallet 
+from datamined.coins.wallets import LocalGethWallet 

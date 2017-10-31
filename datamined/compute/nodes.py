@@ -84,7 +84,7 @@ class GenomicCountInsecureFileNode(Node):
     for base_pair in ["A", "C", "G", "T"]:
       results[base_pair] = data.count(base_pair)
       # TODO(rbharath): This money needs to come from somewhere!!
-      self.wallet.increment(self.compute_reward)
+      self.wallet.deposit(self.compute_reward)
     return results
 
   def get_wallet(self):

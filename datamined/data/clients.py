@@ -103,7 +103,7 @@ class InsecureFileClient(Client):
       if validator.is_valid(data):
         data_file.write(data)
         # Increment wallet token count
-        self.wallet.increment(self.data_reward)
+        self.wallet.deposit(self.data_reward)
       else:
         raise ValueError("This data is not valid")
       return data_file.name

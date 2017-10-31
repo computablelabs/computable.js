@@ -1,5 +1,5 @@
 /**
- * The Edgeless token contract complies with the ERC20 standard (see
+ * The DataCoin token contract complies with the ERC20 standard (see
  * https://github.com/ethereum/EIPs/issues/20).  Additionally tokens
  * can be locked for a defined time interval by token holders.  The
  * owner's share of tokens is locked for the first 360 days and all
@@ -19,15 +19,16 @@ contract tokenRecipient {
 import "./TestableNow.sol";
 import "./SafeMath.sol";
 
-contract EdgelessToken is SafeMath, TestableNow {
+contract DataCoin is SafeMath, TestableNow {
     /* Public variables of the token */
     string public standard = 'ERC20';
-    string public name = 'Edgeless';
+    string public name = 'DataCoin';
     string public symbol = 'EDG';
     uint8 public decimals = 0;
     uint256 public totalSupply;
     address public owner;
     /* from this time on tokens may be transfered (after ICO)*/
+    // TODO(rbharath): What should startTime be changed to?
     uint256 public startTime = 1490112000;
     /* tells if tokens have been burned already */
     bool public burned;
@@ -49,7 +50,7 @@ contract EdgelessToken is SafeMath, TestableNow {
 
     /* Initializes contract with initial supply tokens to the creator
     * of the contract */
-    function EdgelessToken(address _owner) {
+    function DataCoin(address _owner) {
         // Owner is the crowdsale contract
         owner = _owner;
         // Give the owner all initial tokens
