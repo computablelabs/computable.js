@@ -17,6 +17,9 @@ install:
 - pip install yapf==0.17.0
 - pip install coveralls
 - python setup.py install
+- sudo apt-get install libssl-dev
+- pip install py-solc
+- python -m solc.install v0.4.17
 script:
 - nosetests -a '!slow' --with-coverage --cover-package=datamined -v datamined --nologcapture
 - find ./datamined | grep .py$ |xargs python -m doctest -v
