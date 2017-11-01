@@ -18,8 +18,9 @@ install:
 - pip install coveralls
 - python setup.py install
 - sudo apt-get install libssl-dev
-- pip install py-solc
-- python -m solc.install v0.4.17
+- sudo add-apt-repository ppa:ethereum/ethereum
+- sudo apt-get update
+- sudo apt-get install solc
 script:
 - nosetests -a '!slow' --with-coverage --cover-package=datamined -v datamined --nologcapture
 - find ./datamined | grep .py$ |xargs python -m doctest -v
