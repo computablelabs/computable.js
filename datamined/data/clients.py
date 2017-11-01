@@ -140,4 +140,4 @@ class InsecureFileClient(Client):
     wallet: dm.coins.Wallet 
       The wallet associated with this client.
     """
-    return self.wallet 
+    return self.wallet
