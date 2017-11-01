@@ -99,7 +99,7 @@ class InsecureFileClient(Client):
     this implementation doesn't close the files. Should probalby fix that later.
     """
     with tempfile.NamedTemporaryFile(
-        dir=self.data_dir, delete=False) as data_file:
+        dir=self.data_dir, delete=False, mode="w+") as data_file:
       if validator.is_valid(data):
         data_file.write(data)
         # Increment wallet token count
@@ -140,4 +140,4 @@ class InsecureFileClient(Client):
     wallet: dm.coins.Wallet 
       The wallet associated with this client.
     """
-    return self.wallet 
+    return self.wallet

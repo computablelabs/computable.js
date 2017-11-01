@@ -14,10 +14,12 @@ class TestInsecureFileClient(unittest.TestCase):
   Test insecure file client.
   """
   data = "AAATT"
-  client = dm.data.InsecureFileClient("ignored")
-  ledger = client.store(data)
+  wallet = dm.coins.ExampleWallet()
+  validator = dm.valid.NaiveGenomicValidator()
+  client = dm.data.InsecureFileClient("ignored", wallet)
+  ledger = client.store(data, validator)
   ledger_key = client.get_ledger_key(ledger)
 
-  node = dm.compute.GenomicCountInsecureFileNode()
+  node = dm.compute.GenomicCountInsecureFileNode(wallet)
   results = node.compute(ledger, ledger_key, "count-basepairs")
   assert results == {"A": 3, "T": 2, "C": 0, "G": 0}

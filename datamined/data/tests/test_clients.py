@@ -14,7 +14,9 @@ class TestInsecureFileClient(unittest.TestCase):
   Test insecure file client.
   """
   data = "AAATT"
-  client = dm.data.InsecureFileClient("ignored")
-  ledger = client.store(data)
+  wallet = dm.coins.ExampleWallet()
+  validator = dm.valid.NaiveGenomicValidator()
+  client = dm.data.InsecureFileClient("ignored", wallet)
+  ledger = client.store(data, validator)
   retrieved_data = client.retrieve(ledger)
   assert data == retrieved_data
