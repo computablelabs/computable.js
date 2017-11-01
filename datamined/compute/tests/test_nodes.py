@@ -13,6 +13,7 @@ class TestInsecureFileClient(unittest.TestCase):
   """
   Test basic computation example. 
   """
+
   def test_basic_computation_naive(self):
     data = "AAATT"
     wallet = dm.coins.ExampleWallet()
@@ -30,14 +31,14 @@ class TestInsecureFileClient(unittest.TestCase):
 
     # Create a data validator.
     validator = dm.valid.NaiveGenomicValidator()
-    # Create an introductory client wallet 
+    # Create an introductory client wallet
     client_wallet = dm.coins.ExampleWallet()
 
     client = dm.data.InsecureFileClient("ignored", client_wallet)
     ledger = client.store(data, validator)
     ledger_key = client.get_ledger_key(ledger)
 
-    # Create an introductory node wallet 
+    # Create an introductory node wallet
     node_wallet = dm.coins.ExampleWallet()
     node = dm.compute.GenomicCountInsecureFileNode(node_wallet)
     results = node.compute(ledger, ledger_key, "count-basepairs")

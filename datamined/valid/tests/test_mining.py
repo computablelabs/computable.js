@@ -13,6 +13,7 @@ class TestMining(unittest.TestCase):
   """
   Test basic mining example. 
   """
+
   def test_basic_mining(self):
     data = "ATTAGGACATTTATA"
 
@@ -21,7 +22,7 @@ class TestMining(unittest.TestCase):
     # Check whether data is valid
     assert validator.is_valid(data)
 
-    # Create an introductory wallet 
+    # Create an introductory wallet
     wallet = dm.coins.ExampleWallet()
     assert wallet.get_balance() == 0
 
@@ -30,4 +31,3 @@ class TestMining(unittest.TestCase):
     client = dm.data.InsecureFileClient("ignored", wallet)
     ledger = client.store(data, validator)
     assert client.get_wallet().get_balance() > 0
-

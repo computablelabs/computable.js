@@ -13,6 +13,7 @@ class TestInsecureFileClient(unittest.TestCase):
   """
   Test insecure file client.
   """
+
   def test_retrieval_naive(self):
     data = "AAATT"
     wallet = dm.coins.ExampleWallet()
@@ -28,7 +29,7 @@ class TestInsecureFileClient(unittest.TestCase):
 
     validator = dm.valid.NaiveGenomicValidator()
 
-    # Create an introductory client wallet 
+    # Create an introductory client wallet
     user_one_wallet = dm.coins.ExampleWallet()
     user_one = dm.data.InsecureFileClient("ignored", user_one_wallet)
     assert user_one.get_wallet().get_balance() == 0
