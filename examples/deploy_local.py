@@ -7,6 +7,7 @@ from populus.utils.wait import wait_for_transaction_receipt
 from web3 import RPCProvider
 from web3 import Web3
 
+
 def check_succesful_tx(web3, txid, timeout=180):
   # http://ethereum.stackexchange.com/q/6007/620
   print("Checking if transaction successful")
@@ -18,6 +19,7 @@ def check_succesful_tx(web3, txid, timeout=180):
   print("txinfo['gas']: ", txinfo["gas"])
   print("receipt['gasUsed']: ", receipt["gasUsed"])
   return receipt
+
 
 chain_name = "local"
 project = Project("/home/rbharath/datamined/datacoin/")
@@ -46,7 +48,9 @@ with project.get_chain(chain_name) as chain:
   print("########################################################")
   # Random address on Ropsten testnet
   multisig_address = "0x83917f644df1319a6ae792bb244333332e65fff8"
-  txhash = Crowdsale.deploy(transaction={"from": beneficiary}, args=[beneficiary, multisig_address, 1])
+  txhash = Crowdsale.deploy(
+      transaction={"from": beneficiary},
+      args=[beneficiary, multisig_address, 1])
   print("Deploying crowdsale, tx hash is", txhash)
   receipt = check_succesful_tx(web3, txhash)
   crowdsale_address = receipt["contractAddress"]

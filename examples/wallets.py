@@ -3,7 +3,7 @@ import datamined as dm
 data = "ATTAGGACATTTATA"
 private_key = "*&^#*HWEF(#@*R#(@JF"
 
-# Create an introductory client wallet 
+# Create an introductory client wallet
 client_wallet = dm.coins.LocalGethWallet()
 
 ## TODO(rbharath): The wallet currently retains memory on the chain.

@@ -18,7 +18,7 @@ class TestWallets(unittest.TestCase):
     data = "ATTAGGACATTTATA"
     private_key = "*&^#*HWEF(#@*R#(@JF"
 
-    # Create an introductory client wallet 
+    # Create an introductory client wallet
     client_wallet = dm.coins.LocalGethWallet()
 
     print("client_wallet.get_balance()", client_wallet.get_balance())

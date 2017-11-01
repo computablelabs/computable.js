@@ -8,10 +8,11 @@ from __future__ import unicode_literals
 import tempfile
 import os
 # This is Project Root
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATACOIN_PATH = os.path.join(ROOT_DIR, '../datacoin')
 
 from populus import Project
+
 
 class Wallet(object):
   """Abstract base class for coin wallets."""
@@ -53,6 +54,7 @@ class Wallet(object):
     """
     raise NotImplementedError
 
+
 class ExampleWallet(object):
   """Dummy wallet with local coin count (not on blockchain)."""
 
@@ -85,9 +87,8 @@ class ExampleWallet(object):
       Added to internal coin count.
     """
     if not value > 0:
-      raise ValueError("value must be positive") 
-    self.balance += value 
-    
+      raise ValueError("value must be positive")
+    self.balance += value
 
   def withdraw(self, value):
     """Decrements balance by this value.
@@ -98,8 +99,9 @@ class ExampleWallet(object):
       Subtracted from internal coin count.
     """
     if not value > 0:
-      raise ValueError("value must be positive") 
-    self.balance -= value 
+      raise ValueError("value must be positive")
+    self.balance -= value
+
 
 class LocalGethWallet(Wallet):
   """A wallet that deals with DataCoins on a local Geth node."""
