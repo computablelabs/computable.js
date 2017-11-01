@@ -17,10 +17,10 @@ install:
 - pip install yapf==0.17.0
 - pip install coveralls
 - python setup.py install
-- sudo apt-get install libssl-dev
-- sudo add-apt-repository ppa:ethereum/ethereum
-- sudo apt-get update
-- sudo apt-get install solc
+- sudo apt-get -y install libssl-dev
+- sudo add-apt-repository -y ppa:ethereum/ethereum
+- sudo apt-get -y update
+- sudo apt-get -y install solc
 script:
 - nosetests -a '!slow' --with-coverage --cover-package=datamined -v datamined --nologcapture
 - find ./datamined | grep .py$ |xargs python -m doctest -v
