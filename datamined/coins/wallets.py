@@ -6,7 +6,13 @@ from __future__ import division
 from __future__ import unicode_literals
 
 import tempfile
+import os
+# This is Project Root
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATACOIN_PATH = os.path.join(ROOT_DIR, '../datacoin')
+
 from populus import Project
+
 
 class Wallet(object):
   """Abstract base class for coin wallets."""
@@ -48,6 +54,7 @@ class Wallet(object):
     """
     raise NotImplementedError
 
+
 class ExampleWallet(object):
   """Dummy wallet with local coin count (not on blockchain)."""
 
@@ -80,9 +87,8 @@ class ExampleWallet(object):
       Added to internal coin count.
     """
     if not value > 0:
-      raise ValueError("value must be positive") 
-    self.balance += value 
-    
+      raise ValueError("value must be positive")
+    self.balance += value
 
   def withdraw(self, value):
     """Decrements balance by this value.
@@ -93,13 +99,14 @@ class ExampleWallet(object):
       Subtracted from internal coin count.
     """
     if not value > 0:
-      raise ValueError("value must be positive") 
-    self.balance -= value 
+      raise ValueError("value must be positive")
+    self.balance -= value
+
 
 class LocalGethWallet(Wallet):
   """A wallet that deals with DataCoins on a local Geth node."""
 
-  def __init__(self):
+  def __init__(self, project_dir=None, chain_name="tester", wait=False):
     """Initializes wallet.
 
     TODO(rbharath): Using populus projects here is pretty awkward.
@@ -112,9 +119,14 @@ class LocalGethWallet(Wallet):
      Project that chain is running under.
     """
     # TODO(rbharath): Replace this with a command-line config.
-    self.project = Project("/home/rbharath/datamined/datacoin")
-    with self.project.get_chain('local') as chain:
-      self.wallet, _ = chain.provider.get_or_deploy_contract("Wallet")
+    if project_dir is None:
+      project_dir = DATACOIN_PATH
+    self.project_dir = project_dir
+    self.project = Project(self.project_dir)
+    self.chain_name = chain_name
+    self.wait = wait
+    with self.project.get_chain(self.chain_name) as chain:
+      self.wallet, _ = chain.provider.deploy_contract("Wallet")
 
   def deposit(self, value):
     """Deposits this value.
@@ -124,10 +136,11 @@ class LocalGethWallet(Wallet):
     value: uint
       Added to internal coin count.
     """
-    with self.project.get_chain('local') as chain:
+    with self.project.get_chain(self.chain_name) as chain:
       # Make a deposit into the wallet
       deposit_txn_hash = self.wallet.transact().deposit(value)
-      chain.wait.for_receipt(deposit_txn_hash)
+      if self.wait:
+        chain.wait.for_receipt(deposit_txn_hash)
 
   def withdraw(self, value):
     """Decrements balance by this value.
@@ -137,10 +150,11 @@ class LocalGethWallet(Wallet):
     value: uint
       Subtracted from internal coin count.
     """
-    with self.project.get_chain('local') as chain:
+    with self.project.get_chain(self.chain_name) as chain:
       # Make a withdrawal from the wallet
       withdraw_txn_hash = self.wallet.transact().withdraw(value)
-      chain.wait.for_receipt(withdraw_txn_hash)
+      if self.wait:
+        chain.wait.for_receipt(withdraw_txn_hash)
 
   def get_balance(self):
     """Returns a count of the number of tokens in the wallet..
@@ -150,7 +164,7 @@ class LocalGethWallet(Wallet):
     balance: int 
       A count of the number of tokens in the wallet.
     """
-    with self.project.get_chain('local') as chain:
+    with self.project.get_chain(self.chain_name) as chain:
       # Make a withdrawal from the wallet
       balance = self.wallet.call().getBalance()
       return balance
