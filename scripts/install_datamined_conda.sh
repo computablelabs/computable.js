@@ -22,3 +22,4 @@ conda create -y --name $envname python=$python_version
 source activate $envname
 conda install -y -q -c pip 
 pip install populus
+pip install nose
