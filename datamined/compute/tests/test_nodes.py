@@ -9,7 +9,7 @@ import unittest
 import datamined as dm
 
 
-class TestInsecureFileClient(unittest.TestCase):
+class TestComputation(unittest.TestCase):
   """
   Test basic computation example. 
   """
