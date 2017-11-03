@@ -104,7 +104,12 @@ class ExampleWallet(object):
 
 
 class LocalGethWallet(Wallet):
-  """A wallet that deals with DataCoins on a local Geth node."""
+  """A wallet that deals with DataCoins on a local Geth node.
+  
+  TODO(rbharath): I suspect that this code could work on test nodes
+  and perhaps the main ethereum network as well. Need to do more
+  tests to verify this though. 
+  """
 
   def __init__(self, project_dir=None, chain_name="tester", wait=False):
     """Initializes wallet.
@@ -115,10 +120,15 @@ class LocalGethWallet(Wallet):
 
     Parameters
     ----------
-    project: populus.Project
-     Project that chain is running under.
+    project_dir: str
+      The directory in which the populus project contain contracts is
+      stored.
+    chain_name: str
+      Name of the blockchain to which we connect.
+    wait: bool
+      Does this wallet wait for transactions to clear before
+      returning.
     """
-    # TODO(rbharath): Replace this with a command-line config.
     if project_dir is None:
       project_dir = DATACOIN_PATH
     self.project_dir = project_dir
