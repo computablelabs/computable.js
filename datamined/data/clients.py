@@ -88,9 +88,9 @@ class InsecureFileClient(Client):
     self.wallet = wallet
     self.data_dir = tempfile.mkdtemp()
 
-    # TODO(rbharath): This increment should be factored out somehow, likely
-    # into a solidity contract.
-    self.data_reward = 1.0
+    # TODO(rbharath): This increment should be factored out somehow,
+    # likely into a solidity contract.
+    self.data_reward = 1
 
   def store(self, data, validator):
     """Stores provided data.
