@@ -64,9 +64,9 @@ class GenomicCountInsecureFileNode(Node):
     """
     self.wallet = wallet
 
-    # TODO(rbharath): This increment should be factored out somehow, likely
-    # into a solidity contract.
-    self.compute_reward = 1.0
+    # TODO(rbharath): This increment should be factored out somehow,
+    # likely into a solidity contract.
+    self.compute_reward = 1
 
   def compute(self, ledger, ledger_key, computation):
     """Performs the base-pair count.
@@ -95,4 +95,4 @@ class GenomicCountInsecureFileNode(Node):
     wallet: dm.coins.Wallet 
       The wallet associated with this node.
     """
-    return self.wallet 
+    return self.wallet
