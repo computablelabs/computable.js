@@ -21,5 +21,6 @@ export envname=$1
 conda create -y --name $envname python=$python_version
 source activate $envname
 conda install -y -q -c pip 
+conda install numpy
 pip install populus
 pip install nose
