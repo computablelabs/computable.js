@@ -110,6 +110,7 @@ class TestDataCoin(unittest.TestCase):
 
     # TODO(rbharath): This is adapted directly from the example code. Doesn't make sense for DataMined, so remove in future PR.
     #def test_get_price_tiers(crowdsale, token, customer, web3):
+
   def test_get_price_tiers(self):
     """Price tiers match given dates."""
     project_dir = DATACOIN_PATH
@@ -231,102 +232,6 @@ class TestDataCoin(unittest.TestCase):
               token.call().startTime(), tz=datetime.timezone.utc)))
 
       assert token.call().startTime() == deadlines[-1]
-
-#@pytest.fixture
-#def start():
-#  """Match in TestableCrowdsale."""
-#  return 1488294000
-#
-#
-#@pytest.fixture
-#def end():
-#  """Match in TestableCrowdsale."""
-#  return 1490112000
-#
-#
-#@pytest.fixture
-#def open_crowdsale(crowdsale, token, start):
-#  """We live in time when crowdsale is open"""
-#  crowdsale.transact().setCurrent(start + 1)
-#  token.transact().setCurrent(start + 1)
-#  return crowdsale
-
-  #def test_buy_tokens(open_crowdsale, token, customer, beneficiary, web3):
-#  def test_buy_tokens(self):
-#    """Sending ETH successfully buys tokens."""
-#    project_dir = DATACOIN_PATH
-#    project = Project(project_dir, create_config_file=True)
-#    chain_name = "tester"
-#
-#    with project.get_chain(chain_name) as chain:
-#      # setup
-#      accounts = chain.web3.eth.accounts
-#      customer = accounts[1]
-#      beneficiary = accounts[3]
-#      multisig = accounts[4]
-#      # crowdsale
-#      crowdsale, _ = chain.provider.get_or_deploy_contract(
-#          'Crowdsale', deploy_args=[beneficiary, multisig, 0])
-#      # token
-#      token, _ = chain.provider.get_or_deploy_contract(
-#          'DataCoin', deploy_args=[beneficiary])
-#      crowdsale.transact({"from": beneficiary}).setToken(token.address)
-#      start = 1488294000
-#      crowdsale.transact().setCurrent(start + 1)
-#      token.transact().setCurrent(start + 1)
-#      open_crowdsale = crowdsale
-#
-#      print("Customer")
-#      balance = chain.web3.eth.getBalance(customer)
-#      print("wei balance: ", balance)
-#      eth = Web3.fromWei(balance, "ether")
-#      print("eth balance: ", eth)
-#
-#      print("Open Crowdsale")
-#      balance = chain.web3.eth.getBalance(open_crowdsale.address)
-#      print("wei balance: ", balance)
-#      eth = Web3.fromWei(balance, "ether")
-#      print("eth balance: ", eth)
-#      print("ATTEMPTS")
-#      #gas_estimate = web3.utils.transactions.get_buffered_gas_estimate(chain.web3, {
-#      #    "from": customer,
-#      #    "to": open_crowdsale.address,
-#      #    "value": Web3.toWei(20, "ether"),
-#      #})
-#      #print("gas_estimate: ", gas_estimate)
-#      #gas_estimate = chain.web3.eth.estimateGas({
-#      #    "from": customer,
-#      #    "to": open_crowdsale.address,
-#      #    "value": Web3.toWei(20, "ether"),
-#      #})
-#      #print("gas_estimate: ", gas_estimate)
-#      #assert 0 == 1
-#
-#      #t.gas_price = 0
-#      chain.web3.eth.sendTransaction({
-#          "from": customer,
-#          "to": open_crowdsale.address,
-#          "value": Web3.toWei(20, "ether"),
-#          "gas": 3000000,
-#          "gasPrice": 1,
-#      })
-#
-#      # We get ERC-20 event
-#      events = token.pastEvents("Transfer").get()
-#      assert len(events) == 1
-#      e = events[0]
-#      assert e["args"]["to"].lower() == customer
-#      assert e["args"]["from"].lower() == beneficiary
-#      assert e["args"]["value"] == 24000
-#
-#      # We get crowdsale event
-#      events = open_crowdsale.pastEvents("FundTransfer").get()
-#      assert len(events) == 1
-#      e = events[0]
-#      assert e["args"]["backer"].lower() == customer
-#      assert e["args"]["amount"] == Web3.toWei(20, "ether")
-#      assert e["args"]["amountRaised"] == Web3.toWei(20, "ether")
-#
 
   def test_buy_tokens(self):
     """Sending ETH successfully buys tokens."""
