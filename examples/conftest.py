@@ -1,8 +1,54 @@
 """Test fixtures."""
 
+import os
 import pytest
 from web3.contract import Contract
+import sys
 
+from populus.project import Project
+from datamined.coins.wallets import DATACOIN_PATH
+
+def get_populus_option(cmdline_option, ini_option, environ_var, pytestconfig, default=None):
+
+    if pytestconfig.getoption(cmdline_option, default=False):
+            return pytestconfig.getoption(cmdline_option)
+    else:
+        if pytestconfig.getini(ini_option):
+            return pytestconfig.getini(ini_option)
+        elif environ_var in os.environ.keys():
+            return os.environ[environ_var]
+
+    return default
+
+
+
+@pytest.fixture()
+def web3(chain):
+    return chain.web3
+
+
+@pytest.fixture()
+#def project(request, pytestconfig):
+#def project(pytestconfig):
+def project():
+
+    #project_dir = get_populus_option(
+    #    cmdline_option="--populus-project",
+    #    ini_option="populus_project",
+    #    environ_var="PYTEST_POPULUS_PROJECT",
+    #    pytestconfig=pytestconfig,
+    #    default=pytestconfig.args[0]
+    #)
+    project_dir = DATACOIN_PATH
+
+    project = Project(project_dir, create_config_file=True)
+
+    return project
+
+@pytest.yield_fixture()
+def chain(project):
+    with project.get_chain('tester') as chain:
+        yield chain
 
 # http://stackoverflow.com/q/28898919/315168
 def pytest_itemcollected(item):
@@ -30,7 +76,7 @@ def token(chain, crowdsale, beneficiary):
   #owner = crowdsale.address
   args = [beneficiary]  # Owner set
   contract, _ = chain.provider.get_or_deploy_contract(
-      'EdgelessToken', deploy_args=args)
+      'DataCoin', deploy_args=args)
   assert crowdsale.call().tokenReward(
   ) == '0x0000000000000000000000000000000000000000'
   crowdsale.transact({"from": beneficiary}).setToken(contract.address)
@@ -136,3 +182,7 @@ def empty_address(accounts):
 def allowed_party(accounts):
   """Gets ERC-20 allowance."""
   return accounts[5]
+
+@pytest.fixture()
+def accounts(web3):
+    return web3.eth.accounts
