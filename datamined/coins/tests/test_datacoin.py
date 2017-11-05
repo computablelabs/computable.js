@@ -49,7 +49,7 @@ class TestDataCoin(unittest.TestCase):
     with project.get_chain('tester') as chain:
       beneficiary = chain.web3.eth.accounts[3]
       multisig = chain.web3.eth.accounts[4]
-      
+
       # Initialize crowdsale
       args = [beneficiary, multisig, 0]
       crowdsale, _ = chain.provider.get_or_deploy_contract(
@@ -61,19 +61,20 @@ class TestDataCoin(unittest.TestCase):
           'DataCoin', deploy_args=args)
       assert crowdsale.call().tokenReward(
       ) == '0x0000000000000000000000000000000000000000'
-      crowdsale.transact({"from": beneficiary}).setToken(
-          token.address)
+      crowdsale.transact({"from": beneficiary}).setToken(token.address)
       assert crowdsale.call().tokenReward(
       ) != '0x0000000000000000000000000000000000000000'
 
-      token.transact({"from": beneficiary}).approve(
-          crowdsale.address, 440000000)
+      token.transact({
+          "from": beneficiary
+      }).approve(crowdsale.address, 440000000)
 
       assert token.call().balanceOf(beneficiary) == 500000000
       assert token.call().totalSupply() == 500000000
       assert token.call().owner().lower() == beneficiary
       assert token.call().allowance(beneficiary, crowdsale.address) == 440000000
-      assert token.call().owner().lower() == crowdsale.call().beneficiary().lower()
+      assert token.call().owner().lower() == crowdsale.call().beneficiary(
+      ).lower()
 
   def test_token_initialized(self):
     """Crowdsale is properly initialized with given parameters."""
@@ -152,7 +153,7 @@ class TestDataCoin(unittest.TestCase):
       beneficiary = chain.web3.eth.accounts[3]
       multisig = chain.web3.eth.accounts[4]
       customer = chain.web3.eth.accounts[1]
-      
+
       # Initialize crowdsale
       args = [beneficiary, multisig, 0]
       crowdsale, _ = chain.provider.get_or_deploy_contract(
@@ -164,16 +165,18 @@ class TestDataCoin(unittest.TestCase):
           'DataCoin', deploy_args=args)
       assert crowdsale.call().tokenReward(
       ) == '0x0000000000000000000000000000000000000000'
-      crowdsale.transact({"from": beneficiary}).setToken(
-          token.address)
+      crowdsale.transact({"from": beneficiary}).setToken(token.address)
       assert crowdsale.call().tokenReward(
       ) != '0x0000000000000000000000000000000000000000'
 
-      token.transact({"from": beneficiary}).approve(
-          crowdsale.address, 440000000)
+      token.transact({
+          "from": beneficiary
+      }).approve(crowdsale.address, 440000000)
 
       deadlines = [1488297600, 1488902400, 1489507200, 1490112000]
-      prices = [833333333333333, 909090909090909, 952380952380952, 1000000000000000]
+      prices = [
+          833333333333333, 909090909090909, 952380952380952, 1000000000000000
+      ]
 
       for idx, deadline in enumerate(deadlines):
         crowdsale.transact().setCurrent(deadline - 1)
@@ -191,7 +194,7 @@ class TestDataCoin(unittest.TestCase):
       beneficiary = chain.web3.eth.accounts[3]
       multisig = chain.web3.eth.accounts[4]
       customer = chain.web3.eth.accounts[1]
-      
+
       # Initialize crowdsale
       args = [beneficiary, multisig, 0]
       crowdsale, _ = chain.provider.get_or_deploy_contract(
@@ -203,13 +206,13 @@ class TestDataCoin(unittest.TestCase):
           'DataCoin', deploy_args=args)
       assert crowdsale.call().tokenReward(
       ) == '0x0000000000000000000000000000000000000000'
-      crowdsale.transact({"from": beneficiary}).setToken(
-          token.address)
+      crowdsale.transact({"from": beneficiary}).setToken(token.address)
       assert crowdsale.call().tokenReward(
       ) != '0x0000000000000000000000000000000000000000'
 
-      token.transact({"from": beneficiary}).approve(
-          crowdsale.address, 440000000)
+      token.transact({
+          "from": beneficiary
+      }).approve(crowdsale.address, 440000000)
 
       deadlines = [
           crowdsale.call().deadlines(0),
@@ -223,9 +226,10 @@ class TestDataCoin(unittest.TestCase):
               crowdsale.call().start(), tz=datetime.timezone.utc)))
 
       for idx, deadline in enumerate(deadlines):
-        print("Deadline {} is {}".format(idx,
-                                        datetime.datetime.fromtimestamp(
-                                            deadline, tz=datetime.timezone.utc)))
+        print(
+            "Deadline {} is {}".format(idx,
+                                       datetime.datetime.fromtimestamp(
+                                           deadline, tz=datetime.timezone.utc)))
 
       print("Token is transferable {}".format(
           datetime.datetime.fromtimestamp(
@@ -243,7 +247,7 @@ class TestDataCoin(unittest.TestCase):
       beneficiary = chain.web3.eth.accounts[3]
       multisig = chain.web3.eth.accounts[4]
       customer = chain.web3.eth.accounts[1]
-      
+
       # Initialize crowdsale
       args = [beneficiary, multisig, 0]
       crowdsale, _ = chain.provider.get_or_deploy_contract(
@@ -255,13 +259,13 @@ class TestDataCoin(unittest.TestCase):
           'DataCoin', deploy_args=args)
       assert crowdsale.call().tokenReward(
       ) == '0x0000000000000000000000000000000000000000'
-      crowdsale.transact({"from": beneficiary}).setToken(
-          token.address)
+      crowdsale.transact({"from": beneficiary}).setToken(token.address)
       assert crowdsale.call().tokenReward(
       ) != '0x0000000000000000000000000000000000000000'
 
-      token.transact({"from": beneficiary}).approve(
-          crowdsale.address, 440000000)
+      token.transact({
+          "from": beneficiary
+      }).approve(crowdsale.address, 440000000)
 
       # Doing open crowdsale
       crowdsale.transact().setCurrent(start + 1)
