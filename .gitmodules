@@ -1,0 +1,3 @@
+[submodule "computable"]
+	path = computable
+	url = https://github.com/computablelabs/computable
