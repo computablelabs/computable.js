@@ -3,12 +3,12 @@ export interface Token {
   name: string;
   symbol: string;
   // TODO is this a string, bytes, number ?
-  supply: string;
-  decimals: string;
-  deployToken: boolean;
+  supply: number;
+  decimals: number;
+  deployToken?: boolean;
 }
 
 export interface TokenHolder {
   address: string;
-  amount: string;
+  amount: number;
 }

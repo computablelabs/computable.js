@@ -4,10 +4,10 @@ import { amount } from './general'
 
 export const Token:AToken =  {
   address: '0x337cDDa6D41A327c5ad456166CCB781a9722AFf9',
-  decimals: '18',
+  decimals: 2,
   name: 'ComputableCoin',
   symbol: 'CC',
-  supply: '1000000000000000000000000000',
+  supply: 10000,
   deployToken: true,
 }
 
