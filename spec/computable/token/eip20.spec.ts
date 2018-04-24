@@ -45,8 +45,22 @@ describe('EIP20 Token', () => {
   })
 
   describe('Transfers', () => {
-    xit('transfers to another account', async () => {
+    it('transfers to another account', async () => {
+      // spy on the event
+      // const spy = { onTransfer: function() {} },
+        // transferSpy = spyOn(spy, 'onTransfer')
+      const emitter = eip20.events.Transfer(undefined, (err, evt) => { console.log(err) })
+        .on('data', (log) => {
+          console.log(log)
+        })
 
+      const result = await eip20.methods.transfer(accounts[1], 5000).send({ from: accounts[0] })
+      expect(result.status).toBe(true)
+      const senderBal = await eip20.methods.balanceOf(accounts[0]).call()
+      expect(parseInt(senderBal)).toBe(5000)
+      const recieverBal = await eip20.methods.balanceOf(accounts[1]).call()
+      expect(parseInt(recieverBal)).toBe(5000)
+      // expect(transferSpy).toHaveBeenCalled()
     })
   })
 })
