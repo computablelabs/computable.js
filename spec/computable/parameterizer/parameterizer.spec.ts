@@ -3,60 +3,30 @@ import Web3 from 'web3'
 // symlink? copy types to @types? TODO
 import { Contract } from '../../../node_modules/web3/types.d'
 import json from '../../../computable/build/contracts/Parameterizer.json'
-import {
-  Addresses,
-  Token,
-  ParameterDefaults,
-} from '../../../src/constants'
+import { getDefaults } from './helpers'
+import { Addresses, Token } from '../../../src/constants'
 
 // TODO use the web3 IProvider?
-const provider:any = ganache.provider()
+const provider:any = ganache.provider(),
+  web3 = new Web3(provider)
 
-const web3 = new Web3(provider)
-
-let accounts:string[], parameterizer:Contract
-
-beforeEach(async () => {
-  accounts = await web3.eth.getAccounts()
-
-  parameterizer = await new web3.eth.Contract(json.abi)
-    .deploy({ data: json.bytecode, arguments: [
-      Token.address,
-      Addresses.Three, // will be used for the PLCRVoting.address
-      ParameterDefaults.MinDeposit,
-      ParameterDefaults.PMinDeposit,
-      ParameterDefaults.ApplyStageLength,
-      ParameterDefaults.PApplyStageLength,
-      ParameterDefaults.CommitStageLength,
-      ParameterDefaults.PCommitStageLength,
-      ParameterDefaults.RevealStageLength,
-      ParameterDefaults.PRevealStageLength,
-      ParameterDefaults.DispensationPct,
-      ParameterDefaults.PDispensationPct,
-      ParameterDefaults.VoteQuorum,
-      ParameterDefaults.PVoteQuorum
-    ]})
-    .send({ from: accounts[0], gas: '5000000' }) // NOTE watch the gas limit here
-
-  parameterizer.setProvider(provider)
-})
+let accounts:string[],
+  parameterizer:Contract
 
 describe('Parameterizer', () => {
-  // describe('Expected failures', () => {
-    // it('throws if called by non-owner', async () => {
-      // try {
-        // await validator.methods.addVote('foo').send({
-          // from: accounts[1],
-        // })
+  beforeEach(async () => {
+    accounts = await web3.eth.getAccounts()
 
-        // // this should never be run as we should throw above
-        // expect(false).toBe(true)
+    parameterizer = await new web3.eth.Contract(json.abi)
+      .deploy({ data: json.bytecode, arguments: [
+        Token.address,
+        Addresses.Three, // TODO use deployed voting contract
+        ...getDefaults()
+      ]})
+      .send({ from: accounts[0], gasPrice: 100, gas: 4500000 })
 
-      // } catch(e) {
-        // expect(e).toBeTruthy()
-      // }
-    // })
-  // })
+    parameterizer.setProvider(provider)
+  })
 
   it('can be instantiated (with that ridiculous amount of args...)', () => {
     expect(parameterizer).toBeTruthy()

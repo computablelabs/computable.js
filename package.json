@@ -36,6 +36,6 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "web3": "^1.0.0-beta.33"
+    "web3": "^1.0.0-beta.34"
   }
 }
