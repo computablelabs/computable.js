@@ -7,7 +7,7 @@ export const Token:AToken =  {
   decimals: 2,
   name: 'ComputableCoin',
   symbol: 'CC',
-  supply: 10000,
+  supply: 5000000,
   deployToken: true,
 }
 
