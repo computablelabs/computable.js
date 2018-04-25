@@ -11,23 +11,30 @@ const web3 = new Web3(provider)
 
 let accounts:string[], eip20:Contract
 
-beforeEach(async () => {
-  accounts = await web3.eth.getAccounts()
 
-  eip20 = await new web3.eth.Contract(json.abi)
-    .deploy({ data: json.bytecode, arguments: [
-      Token.supply,
-      Token.name,
-      Token.decimals,
-      Token.symbol
-    ]})
-    .send({ from: accounts[0], gas: '5000000' }) // NOTE watch the gas limit here
-
-  eip20.setProvider(provider)
-})
 
 describe('EIP20 Token', () => {
+  beforeEach(async () => {
+    accounts = await web3.eth.getAccounts()
+
+    eip20 = await new web3.eth.Contract(json.abi)
+      .deploy({ data: json.bytecode, arguments: [
+        Token.supply,
+        Token.name,
+        Token.decimals,
+        Token.symbol
+      ]})
+      .send({ from: accounts[0], gas: '5000000' }) // NOTE watch the gas limit here
+
+    eip20.setProvider(provider)
+  })
+
   describe('Creation', () => {
+    it('has a network address', async () => {
+      const where = eip20.options.address
+      expect(where).toBeTruthy()
+    })
+
     it('gives initial balance to owner', async () => {
       const bal = await eip20.methods.balanceOf(accounts[0]).call()
       expect(parseInt(bal)).toBe(10000)
@@ -46,13 +53,10 @@ describe('EIP20 Token', () => {
 
   describe('Transfers', () => {
     it('transfers to another account', async () => {
-      // spy on the event
-      // const spy = { onTransfer: function() {} },
-        // transferSpy = spyOn(spy, 'onTransfer')
-      const emitter = eip20.events.Transfer(undefined, (err, evt) => { console.log(err) })
-        .on('data', (log) => {
-          console.log(log)
-        })
+      // spy on the event -- TODO when a fix for the web3 error is up...
+      // const spy = { onTransfer: function(data) {} },
+      // transferSpy = spyOn(spy, 'onTransfer').andCallThrough()
+      // eip20.events.Transfer().on('data', spy.onTransfer)
 
       const result = await eip20.methods.transfer(accounts[1], 5000).send({ from: accounts[0] })
       expect(result.status).toBe(true)
