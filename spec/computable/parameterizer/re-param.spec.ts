@@ -15,7 +15,7 @@ let accounts:string[],
   eip20:Contract,
   parameterizer:Contract
 
-describe('Parameterizer', () => {
+describe('Parameterizer: Reparamaterize', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -74,7 +74,7 @@ describe('Parameterizer', () => {
     expect(res).toBe(false)
   })
 
-  describe('Process proposal', () => {
+  describe('Add a new proposal', () => {
     it('adds a new proposal', async () => {
       const applicantStartingBalance = await eip20.methods.balanceOf(accounts[0]).call()
       expect(applicantStartingBalance).toBe('5000000')
