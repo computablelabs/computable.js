@@ -7,7 +7,7 @@ https://github.com/computablelabs/contracts contains the smart contract code for
 ### Setup
 * git clone...
 * `npm install`
-* `npm submodule init` (first time after clone only)
+* `git submodule init` (first time after clone only)
 * `git submodule update --remote`
 * `npm run test`
 
