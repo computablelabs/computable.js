@@ -1,11 +1,9 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 // symlink? copy types to @types? TODO
+import { deployToken, deployParameterizer } from '../helpers'
 import { Contract } from '../../../node_modules/web3/types.d'
-import pJson from '../../../computable/build/contracts/Parameterizer.json'
-import tJson from '../../../computable/build/contracts/EIP20.json'
-import { getDefaults } from './helpers'
-import { Addresses, Token } from '../../../src/constants'
+import { Addresses } from '../../../src/constants'
 
 // TODO use the web3 IProvider?
 const provider:any = ganache.provider(),
@@ -19,32 +17,16 @@ describe('Parameterizer: Reparamaterize', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    // paramaterizer needs a deployed token
-    eip20 = await new web3.eth.Contract(tJson.abi, undefined, { gasPrice: 100, gas: 4500000 })
-      .deploy({ data: tJson.bytecode, arguments: [
-        Token.supply,
-        Token.name,
-        Token.decimals,
-        Token.symbol
-      ]})
-      .send({ from: accounts[0] }) // NOTE watch the gas limit here
-
+    eip20 = await deployToken(web3, accounts[0])
     eip20.setProvider(provider)
     const tokenAddress = eip20.options.address
 
-    // use the deployed token address
-    parameterizer = await new web3.eth.Contract(pJson.abi, undefined, { gasPrice: 100, gas: 4500000 })
-      .deploy({ data: pJson.bytecode, arguments: [
-        tokenAddress,
-        Addresses.Three, // TODO use deployed voting contract
-        ...getDefaults()
-      ]})
-      .send({ from: accounts[0] })
-
+    parameterizer = await deployParameterizer(web3, accounts[0], tokenAddress, Addresses.THREE) // THREE placeholding plcr TODO
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
     await eip20.methods.approve(parameterizer.options.address, 1000000).send({ from: accounts[0] })
+
   })
 
   // describe('Expected failures', () => {
