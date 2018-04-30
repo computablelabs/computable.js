@@ -1,6 +1,6 @@
 import { Token as AToken, TokenHolder } from '../interfaces/token'
 import { Addresses } from './addresses'
-import { amount } from './general'
+import { ONE_THOUSAND } from './general'
 
 export const Token:AToken =  {
   address: '0x337cDDa6D41A327c5ad456166CCB781a9722AFf9',
@@ -8,23 +8,22 @@ export const Token:AToken =  {
   name: 'ComputableCoin',
   symbol: 'CC',
   supply: 5000000,
-  deployToken: true,
 }
 
 const holderOne:TokenHolder = {
-  address: Addresses.One,
-  amount: amount,
+  address: Addresses.ONE,
+  amount: ONE_THOUSAND,
 }
 const holderTwo:TokenHolder = {
-  address: Addresses.Two,
-  amount: amount,
+  address: Addresses.TWO,
+  amount: ONE_THOUSAND,
 }
 const holderThree:TokenHolder = {
-  address: Addresses.Three,
-  amount: amount,
+  address: Addresses.THREE,
+  amount: ONE_THOUSAND,
 }
 const holderFour:TokenHolder = {
-  address: Addresses.Four,
-  amount: amount,
+  address: Addresses.FOUR,
+  amount: ONE_THOUSAND,
 }
-export const tokenHolders:TokenHolder[] = [holderOne, holderTwo, holderThree, holderFour]
+export const TokenHolders:TokenHolder[] = [holderOne, holderTwo, holderThree, holderFour]

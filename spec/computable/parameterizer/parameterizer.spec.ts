@@ -1,9 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-// symlink? copy types to @types? TODO
+import { deployParameterizer } from '../helpers'
 import { Contract } from '../../../node_modules/web3/types.d'
-import json from '../../../computable/build/contracts/Parameterizer.json'
-import { getDefaults } from './helpers'
 import { Addresses, Token } from '../../../src/constants'
 
 // TODO use the web3 IProvider?
@@ -17,15 +15,7 @@ describe('Parameterizer', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    parameterizer = await new web3.eth.Contract(json.abi)
-      .deploy({ data: json.bytecode, arguments: [
-        Token.address,
-        Addresses.Three, // TODO use deployed voting contract
-        ...getDefaults()
-      ]})
-      .send({ from: accounts[0], gasPrice: 100, gas: 4500000 })
-
-    parameterizer.setProvider(provider)
+  parameterizer = await deployParameterizer(web3, accounts[0], Token.address, Addresses.THREE) // THREE placeholding plcr TODO
   })
 
   it('can be instantiated (with that ridiculous amount of args...)', () => {

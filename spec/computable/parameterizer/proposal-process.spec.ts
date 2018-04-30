@@ -1,10 +1,9 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
-import pJson from '../../../computable/build/contracts/Parameterizer.json'
-import tJson from '../../../computable/build/contracts/EIP20.json'
-import { getDefaults, increaseTime } from './helpers'
-import { ParameterDefaults, Addresses, Token } from '../../../src/constants'
+import { deployToken, deployParameterizer } from '../helpers'
+import { increaseTime } from './helpers'
+import { Addresses, ParameterDefaults } from '../../../src/constants'
 import Bignumber from 'bignumber'
 
 const provider:any = ganache.provider(),
@@ -14,32 +13,15 @@ let accounts:string[],
   eip20:Contract,
   parameterizer:Contract
 
-describe('Parameterizer: Reparamaterize', () => {
+describe('Parameterizer: Reparameterize', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    // paramaterizer needs a deployed token
-    eip20 = await new web3.eth.Contract(tJson.abi, undefined, { gasPrice: 100, gas: 4500000 })
-      .deploy({ data: tJson.bytecode, arguments: [
-        Token.supply,
-        Token.name,
-        Token.decimals,
-        Token.symbol
-      ]})
-      .send({ from: accounts[0] }) // NOTE watch the gas limit here
-
+    eip20 = await deployToken(web3, accounts[0])
     eip20.setProvider(provider)
     const tokenAddress = eip20.options.address
 
-    // use the deployed token address
-    parameterizer = await new web3.eth.Contract(pJson.abi, undefined, { gasPrice: 100, gas: 4500000 })
-      .deploy({ data: pJson.bytecode, arguments: [
-        tokenAddress,
-        Addresses.Three, // TODO use deployed voting contract
-        ...getDefaults()
-      ]})
-      .send({ from: accounts[0] })
-
+    parameterizer = await deployParameterizer(web3, accounts[0], tokenAddress, Addresses.THREE) // THREE placeholding plcr TODO
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
@@ -53,7 +35,7 @@ describe('Parameterizer: Reparamaterize', () => {
     const tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
     expect(tx).toBeTruthy()
 
-    const tx2 = await increaseTime(provider, ParameterDefaults.PApplyStageLength + 1)
+    const tx2 = await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
     expect(tx2).toBeTruthy()
     // propId is nested in the event TODO change to using the event listener when they work
     const propID = tx.events._ReparameterizationProposal.returnValues.propID,
