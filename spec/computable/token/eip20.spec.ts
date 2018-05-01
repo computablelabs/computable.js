@@ -1,8 +1,8 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
-import json from '../../../computable/build/contracts/EIP20.json'
 import { Token } from '../../../src/constants'
+import { deployToken } from '../helpers'
 
 // TODO use the web3 IProvider?
 const provider:any = ganache.provider(),
@@ -14,15 +14,7 @@ describe('EIP20 Token', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = await new web3.eth.Contract(json.abi, undefined, { gasPrice: 100, gas: 4500000 })
-      .deploy({ data: json.bytecode, arguments: [
-        Token.supply,
-        Token.name,
-        Token.decimals,
-        Token.symbol
-      ]})
-      .send({ from: accounts[0] })
-
+    eip20 = await deployToken(web3, accounts[0])
     eip20.setProvider(provider)
   })
 

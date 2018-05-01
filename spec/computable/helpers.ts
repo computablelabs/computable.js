@@ -1,6 +1,7 @@
 import { Contract } from '../../node_modules/web3/types.d'
 import tokenJson from '../../computable/build/contracts/EIP20.json'
 import parameterizerJson from '../../computable/build/contracts/Parameterizer.json'
+import votingJson from '../../computable/build/contracts/PLCRVoting.json'
 import {
   ParameterDefaults,
   Token,
@@ -39,14 +40,22 @@ export async function deployToken(web3:any, account:string): Promise<Contract> {
   return eip20
 }
 
-export async function deployParameterizer(web3:any, account:string, tokenAddress:string, plcrAddress:string): Promise<Contract> {
+export async function deployParameterizer(web3:any, account:string, tokenAddress:string, votingAddress:string): Promise<Contract> {
   const parameterizer = await new web3.eth.Contract(parameterizerJson.abi, undefined, { gasPrice: GAS_PRICE, gas: GAS })
     .deploy({ data: parameterizerJson.bytecode, arguments: [
       tokenAddress,
-      plcrAddress,
+      votingAddress,
       ...getDefaults()
     ]})
-    .send({ from: account }) 
+    .send({ from: account })
 
   return parameterizer
+}
+
+export async function deployVoting(web3:any, account:string, tokenAddress:string): Promise<Contract> {
+  const voting = await new web3.eth.Contract(votingJson.abi, undefined, { gasPrice: GAS_PRICE, gas: GAS })
+    .deploy({ data: votingJson.bytecode, arguments: [tokenAddress] })
+    .send({ from: account })
+
+  return voting
 }

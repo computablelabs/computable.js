@@ -13,7 +13,7 @@ let accounts:string[],
   eip20:Contract,
   parameterizer:Contract
 
-describe('Parameterizer: Reparameterize', () => {
+describe('Parameterizer: Process a proposal', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
