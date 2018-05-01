@@ -18,7 +18,7 @@ describe('PLCRVoting', () => {
     eip20.setProvider(provider)
     const tokenAddress = eip20.options.address
 
-    voting = await deployVoting(web3, accounts[0], tokenAddress )
+    voting = await deployVoting(web3, accounts[0], tokenAddress)
     voting.setProvider(provider)
   })
 
