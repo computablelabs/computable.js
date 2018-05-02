@@ -13,7 +13,8 @@ let accounts:string[],
   eip20:Contract,
   parameterizer:Contract
 
-describe('Parameterizer: Reparameterize', () => {
+// TODO this is on hold until the voting contract and its dependencies are spec'd
+xdescribe('Parameterizer: challengeCanBeResolved', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -28,25 +29,20 @@ describe('Parameterizer: Reparameterize', () => {
     await eip20.methods.approve(parameterizer.options.address, 1000000).send({ from: accounts[0] })
   })
 
-  it('can process a proposal', async () => {
-    const applicantStartingBalance = await eip20.methods.balanceOf(accounts[0]).call()
-    expect(applicantStartingBalance).toBe('5000000')
-
+  it('should be truthy if a challenge is ready to be resolved', async () => {
     const tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
     expect(tx).toBeTruthy()
 
-    const tx2 = await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
-    expect(tx2).toBeTruthy()
-    // propId is nested in the event TODO change to using the event listener when they work
-    const propID = tx.events._ReparameterizationProposal.returnValues.propID,
-      tx3 = await parameterizer.methods.processProposal(propID).send({ from: accounts[0] })
-    expect(tx3).toBeTruthy()
-    // we should see the changes now
-    const vq = await parameterizer.methods.get('voteQuorum').call()
-    expect(vq).toBe('51')
-    // the proposer should have had their tokens returned
-    const applicantFinalBalance = await eip20.methods.balanceOf(accounts[0]).call()
-    expect(applicantStartingBalance).toBe(applicantFinalBalance)
+    // propID is nested in the event TODO change to using the event listener when they work
+    const propID = tx.events._ReparameterizationProposal.returnValues.propID
+
+    const tx1 = await parameterizer.methods.challengeReparameterization(propID).send({ from: accounts[1] })
+    expect(tx1).toBeTruthy()
+    console.log(tx1)
+
+    // await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
+    // await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
+
   })
 
 })
