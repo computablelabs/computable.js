@@ -13,6 +13,7 @@ let accounts:string[],
   eip20:Contract,
   parameterizer:Contract
 
+// TODO this is on hold until the voting contract and its dependencies are spec'd
 xdescribe('Parameterizer: challengeCanBeResolved', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
