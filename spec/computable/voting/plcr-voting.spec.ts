@@ -39,6 +39,11 @@ describe('PLCRVoting', () => {
 
   it('has deployed', async () => {
     expect(voting).toBeTruthy()
+    expect(voting.options.address).toBeTruthy()
+  })
+
+  xit('commits vote, updates DLL state', () => {
+    // TODO depends on registry being deployed
   })
 
 })

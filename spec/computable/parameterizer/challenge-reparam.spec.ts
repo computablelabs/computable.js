@@ -22,7 +22,7 @@ let accounts:string[],
   parameterizer:Contract
 
 // TODO this is on hold until the voting contract and its dependencies are spec'd
-describe('Parameterizer: challengeCanBeResolved', () => {
+describe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -56,8 +56,11 @@ describe('Parameterizer: challengeCanBeResolved', () => {
     await eip20.methods.approve(parameterizerAddress, 450000).send({ from: accounts[1] })
   })
 
-  it('should be truthy if a challenge is ready to be resolved', async () => {
-    const tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
+  it('should leave params intact if a proposal loses a challenge', async () => {
+    const startingBalZero = await eip20.methods.balanceOf(accounts[0]).call(),
+      startingBalOne = await eip20.methods.balanceOf(accounts[1]).call(),
+      tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
+
     expect(tx).toBeTruthy()
 
     // propID is nested in the event TODO change to using the event listener when they work
@@ -66,28 +69,18 @@ describe('Parameterizer: challengeCanBeResolved', () => {
     const tx1 = await parameterizer.methods.challengeReparameterization(propID).send({ from: accounts[1] })
     expect(tx1).toBeTruthy()
 
-    await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
-    await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
+    await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
 
-    const res = await parameterizer.methods.challengeCanBeResolved(propID).call()
-    expect(res).toBe(true)
-  })
+    const tx2 = await parameterizer.methods.processProposal(propID).send({ from: accounts[0] })
+    expect(tx2).toBeTruthy()
 
-  it('should be falsy if challenge not ready', async () => {
-    const tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
-    expect(tx).toBeTruthy()
+    const voteQ = await parameterizer.methods.get('voteQuorum').call()
+    // nothing should have changed as it was challenged
+    expect(voteQ).toBe('50')
 
-    // propID is nested in the event TODO change to using the event listener when they work
-    const propID = tx.events._ReparameterizationProposal.returnValues.propID
-
-    const tx1 = await parameterizer.methods.challengeReparameterization(propID).send({ from: accounts[1] })
-    expect(tx1).toBeTruthy()
-
-    await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
-    // NOTE reveal stage length is the determining factor here
-
-    const res = await parameterizer.methods.challengeCanBeResolved(propID).call()
-    expect(res).toBe(false)
+    const finalBalZero = await eip20.methods.balanceOf(accounts[0]).call()
+    // proposer loses their deposit
+    expect(parseInt(finalBalZero)).toBe(parseInt(startingBalZero) - ParameterDefaults.P_MIN_DEPOSIT)
   })
 
 })

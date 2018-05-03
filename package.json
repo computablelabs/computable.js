@@ -27,13 +27,10 @@
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "@types/node": "^9.6.5",
-    "bignumber": "^1.1.0",
     "ganache-cli": "^6.1.0",
     "jasmine": "^3.1.0",
     "jasmine-spec-reporter": "^4.2.1",
     "jasmine-ts": "^0.2.1",
-    "solc": "^0.4.21",
-    "truffle-hdwallet-provider": "0.0.3",
     "typescript": "^2.8.1"
   },
   "dependencies": {
