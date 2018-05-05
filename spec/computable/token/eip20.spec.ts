@@ -2,7 +2,7 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
 import { Token } from '../../../src/constants'
-import { deployToken } from '../helpers'
+import { deployToken } from '../../helpers'
 
 // TODO use the web3 IProvider?
 const provider:any = ganache.provider(),

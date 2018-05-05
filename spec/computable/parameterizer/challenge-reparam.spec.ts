@@ -2,13 +2,14 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
 import {
+  commitVote,
   deployToken,
   deployDll,
   deployAttributeStore,
   deployVoting,
   deployParameterizer,
-} from '../helpers'
-import { increaseTime } from './helpers'
+  increaseTime,
+} from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 
 const provider:any = ganache.provider(),
@@ -81,6 +82,28 @@ describe('Parameterizer: challengeReparameterization', () => {
     const finalBalZero = await eip20.methods.balanceOf(accounts[0]).call()
     // proposer loses their deposit
     expect(parseInt(finalBalZero)).toBe(parseInt(startingBalZero) - ParameterDefaults.P_MIN_DEPOSIT)
+
+    // edge case, the challenger gets both deposits back b/c there were no voters
+    const finalBalOne = await eip20.methods.balanceOf(accounts[1]).call()
+    expect(parseInt(finalBalOne)).toBe(parseInt(startingBalOne) + ParameterDefaults.P_MIN_DEPOSIT)
+  })
+
+  // TODO revisit once voting is ready
+  xit('should set new params if a proposal wins a challenge', async () => {
+    const startingBalZero = await eip20.methods.balanceOf(accounts[0]).call(),
+      startingBalOne = await eip20.methods.balanceOf(accounts[1]).call(),
+      tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
+
+    expect(tx).toBeTruthy()
+    // propID is nested in the event TODO change to using the event listener when they work
+    const propID = tx.events._ReparameterizationProposal.returnValues.propID
+
+    const tx1 = await parameterizer.methods.challengeReparameterization(propID).send({ from: accounts[1] })
+    expect(tx1).toBeTruthy()
+    const chalID = tx.events._NewChallenge.returnValues.challengeID
+
+    // accounts[2] as voter here
+    await commitVote(voting, chalID, accounts[2])
   })
 
 })

@@ -7,8 +7,8 @@ import {
   deployAttributeStore,
   deployVoting,
   deployParameterizer,
-} from '../helpers'
-import { increaseTime } from './helpers'
+  increaseTime,
+} from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 
 const provider:any = ganache.provider(),

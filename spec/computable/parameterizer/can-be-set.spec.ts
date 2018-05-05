@@ -1,8 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
-import { deployToken, deployParameterizer } from '../helpers'
-import { increaseTime } from './helpers'
+import { deployToken, deployParameterizer, increaseTime } from '../../helpers'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
 
 const provider:any = ganache.provider(),

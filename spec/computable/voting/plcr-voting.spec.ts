@@ -6,7 +6,7 @@ import {
   deployDll,
   deployAttributeStore,
   deployVoting,
-} from '../helpers'
+} from '../../helpers'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
