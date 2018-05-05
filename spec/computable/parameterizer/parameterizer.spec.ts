@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { deployParameterizer } from '../helpers'
+import { deployParameterizer } from '../../helpers'
 import { Contract } from '../../../node_modules/web3/types.d'
 import { Addresses, Token } from '../../../src/constants'
 

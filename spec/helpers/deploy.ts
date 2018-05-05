@@ -5,30 +5,13 @@ import dllJson from '../../computable/build/contracts/DLL.json'
 import storeJson from '../../computable/build/contracts/AttributeStore.json'
 import parameterizerJson from '../../computable/build/contracts/Parameterizer.json'
 import votingJson from '../../computable/build/contracts/PLCRVoting.json'
+import registryJson from '../../computable/build/contracts/Registry.json'
 import {
   ParameterDefaults,
   Token,
   GAS,
   GAS_PRICE,
 } from '../../src/constants'
-
-// the paramaterizer takes a massive number of args, here are some defaults for it
-function getDefaults(): any[] {
-  return [
-    ParameterDefaults.MIN_DEPOSIT,
-    ParameterDefaults.P_MIN_DEPOSIT,
-    ParameterDefaults.APPLY_STAGE_LENGTH,
-    ParameterDefaults.P_APPLY_STAGE_LENGTH,
-    ParameterDefaults.COMMIT_STAGE_LENGTH,
-    ParameterDefaults.P_COMMIT_STAGE_LENGTH,
-    ParameterDefaults.REVEAL_STAGE_LENGTH,
-    ParameterDefaults.P_REVEAL_STAGE_LENGTH,
-    ParameterDefaults.DISPENSATION_PCT,
-    ParameterDefaults.P_DISPENSATION_PCT,
-    ParameterDefaults.VOTE_QUORUM,
-    ParameterDefaults.P_VOTE_QUORUM
-  ]
-}
 
 /**
  * The abstracted pattern for deploying a compiled contract. Note that the `args` argument is
@@ -56,8 +39,6 @@ export async function deployDll(web3:Web3, account:string): Promise<Contract> {
   return deploy(web3, account, dllJson.abi, dllJson.bytecode)
 }
 
-
-
 export async function deployParameterizer(
   web3:Web3,
   account:string,
@@ -71,6 +52,18 @@ export async function deployParameterizer(
 export async function deployToken(web3:Web3, account:string): Promise<Contract> {
   const args = [Token.supply, Token.name, Token.decimals, Token.symbol]
   return deploy(web3, account, tokenJson.abi, tokenJson.bytecode, args)
+}
+
+export async function deployRegistry(
+  web3:Web3,
+  account:string,
+  tokenAddress:string,
+  votingAddress:string,
+  parameterizerAddress:string,
+  name:string
+): Promise<Contract> {
+  const args = [tokenAddress, votingAddress, parameterizerAddress, name]
+  return deploy(web3, account, registryJson.abi, registryJson.bytecode, args)
 }
 
 /**
@@ -92,6 +85,24 @@ export async function deployVoting(
 
   // Note that arguments are always an array, even when unary
   return deploy(web3, account, votingJson.abi, votingBytecode, [tokenAddress])
+}
+
+// the paramaterizer takes a massive number of args, here are some defaults for it
+function getDefaults(): any[] {
+  return [
+    ParameterDefaults.MIN_DEPOSIT,
+    ParameterDefaults.P_MIN_DEPOSIT,
+    ParameterDefaults.APPLY_STAGE_LENGTH,
+    ParameterDefaults.P_APPLY_STAGE_LENGTH,
+    ParameterDefaults.COMMIT_STAGE_LENGTH,
+    ParameterDefaults.P_COMMIT_STAGE_LENGTH,
+    ParameterDefaults.REVEAL_STAGE_LENGTH,
+    ParameterDefaults.P_REVEAL_STAGE_LENGTH,
+    ParameterDefaults.DISPENSATION_PCT,
+    ParameterDefaults.P_DISPENSATION_PCT,
+    ParameterDefaults.VOTE_QUORUM,
+    ParameterDefaults.P_VOTE_QUORUM
+  ]
 }
 
 function updateBytecode(bytecode:string, library:string, address:string): string {

@@ -1,5 +1,3 @@
-import { ParameterDefaults } from '../../../src/constants'
-
 // NOTE the web3 typed IProvider is incomplete (no sendAsync etc...) TODO flush it out
 export function increaseTime(provider: any, seconds: number): Promise<any> {
   return new Promise((resolve, reject) =>

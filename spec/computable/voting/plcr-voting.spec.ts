@@ -6,7 +6,7 @@ import {
   deployDll,
   deployAttributeStore,
   deployVoting,
-} from '../helpers'
+} from '../../helpers'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
@@ -39,6 +39,11 @@ describe('PLCRVoting', () => {
 
   it('has deployed', async () => {
     expect(voting).toBeTruthy()
+    expect(voting.options.address).toBeTruthy()
+  })
+
+  xit('commits vote, updates DLL state', () => {
+    // TODO depends on registry being deployed
   })
 
 })

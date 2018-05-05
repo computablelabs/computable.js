@@ -1,7 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 // symlink? copy types to @types? TODO
-import { deployToken, deployParameterizer } from '../helpers'
+import { deployToken, deployParameterizer } from '../../helpers'
 import { Contract } from '../../../node_modules/web3/types.d'
 import { Addresses } from '../../../src/constants'
 
