@@ -22,7 +22,6 @@ let accounts:string[],
   voting:Contract,
   parameterizer:Contract
 
-// TODO this is on hold until the voting contract and its dependencies are spec'd
 describe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
