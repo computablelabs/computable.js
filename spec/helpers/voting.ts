@@ -21,6 +21,5 @@ export async function commitVote(
 }
 
 function getVoteSaltHash(web3:Web3, vote:string|number|boolean, salt:string|number): string {
-  //`0x${abi.soliditySHA3(['uint', 'uint'], [vote, salt]).toString('hex')}`
   return web3.utils.soliditySha3({ t: 'uint', v: vote }, { t: 'uint', v: salt })
 }
