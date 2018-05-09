@@ -20,6 +20,8 @@ export async function commitVote(
   return tx
 }
 
+// TODO remove the ts-ignore when our PR is merged
 function getVoteSaltHash(web3:Web3, vote:string|number|boolean, salt:string|number): string {
+  // @ts-ignore:2554
   return web3.utils.soliditySha3({ t: 'uint', v: vote }, { t: 'uint', v: salt })
 }
