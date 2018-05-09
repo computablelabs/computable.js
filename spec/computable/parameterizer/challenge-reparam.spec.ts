@@ -22,7 +22,7 @@ let accounts:string[],
   voting:Contract,
   parameterizer:Contract
 
-describe('Parameterizer: challengeReparameterization', () => {
+fdescribe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -54,6 +54,10 @@ describe('Parameterizer: challengeReparameterization', () => {
     await eip20.methods.transfer(accounts[1], 500000).send({ from: accounts[0] })
     // parameterizer must be approved to spend on [1]'s behalf
     await eip20.methods.approve(parameterizerAddress, 450000).send({ from: accounts[1] })
+    // voter needs funds
+    await eip20.methods.transfer(accounts[2], 500000).send({ from: accounts[0] })
+    // approve voting by voter
+    await eip20.methods.approve(votingAddress, 450000).send({ from: accounts[2] })
   })
 
   it('should leave params intact if a proposal loses a challenge', async () => {
@@ -87,8 +91,7 @@ describe('Parameterizer: challengeReparameterization', () => {
     expect(parseInt(finalBalOne)).toBe(parseInt(startingBalOne) + ParameterDefaults.P_MIN_DEPOSIT)
   })
 
-  // TODO revisit once voting is ready
-  xit('should set new params if a proposal wins a challenge', async () => {
+  it('should set new params if a proposal wins a challenge', async () => {
     const startingBalZero = await eip20.methods.balanceOf(accounts[0]).call(),
       startingBalOne = await eip20.methods.balanceOf(accounts[1]).call(),
       tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
@@ -99,10 +102,22 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     const tx1 = await parameterizer.methods.challengeReparameterization(propID).send({ from: accounts[1] })
     expect(tx1).toBeTruthy()
-    const chalID = tx.events._NewChallenge.returnValues.challengeID
+    const challID = tx1.events._NewChallenge.returnValues.challengeID
 
     // accounts[2] as voter here
-    await commitVote(voting, chalID, accounts[2])
+    const tx2 = await commitVote(web3, voting, challID, accounts[2])
+    expect(tx2).toBeTruthy()
+
+    await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
+
+    const tx3 = await voting.methods.revealVote(challID, 1, 420).send({ from: accounts[2] })
+    expect(tx3).toBeTruthy()
+
+    await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
+    await parameterizer.methods.processProposal(propID).send({ from: accounts[0] })
+
+    const quorum = await parameterizer.methods.get('voteQuorum').call()
+    expect(quorum).toBe('51')
   })
 
 })
