@@ -22,7 +22,7 @@ let accounts:string[],
   voting:Contract,
   parameterizer:Contract
 
-fdescribe('Parameterizer: challengeReparameterization', () => {
+describe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
