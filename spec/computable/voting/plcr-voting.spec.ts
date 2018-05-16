@@ -3,33 +3,33 @@ import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
 import { ParameterDefaults, NAME } from '../../../src/constants'
 import {
-  commitVote,
-  deployToken,
   deployDll,
   deployAttributeStore,
   deployVoting,
-  deployParameterizer,
   deployRegistry,
-} from '../../helpers'
+} from '../../../src/helpers'
+import { commitVote } from '../../helpers'
+import Eip20 from '../../../src/contracts/eip20'
+import Parameterizer from '../../../src/contracts/parameterizer'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
 
 let accounts:string[],
-  eip20:Contract,
+  eip20:Eip20,
   dll:Contract,
   store:Contract,
   voting:Contract,
-  parameterizer:Contract,
+  parameterizer:Parameterizer,
   registry:Contract
 
 describe('PLCRVoting', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = await deployToken(web3, accounts[0])
+    eip20 = new Eip20(accounts[0])
+    const tokenAddress = await eip20.deploy(web3)
     eip20.setProvider(provider)
-    const tokenAddress = eip20.options.address
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -43,27 +43,27 @@ describe('PLCRVoting', () => {
     voting.setProvider(provider)
     const votingAddress = voting.options.address
 
-    parameterizer = await deployParameterizer(web3, accounts[0], tokenAddress, votingAddress)
+    parameterizer = new Parameterizer(accounts[0])
+    const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
     parameterizer.setProvider(provider)
-    const parameterizerAddress = parameterizer.options.address
 
     registry = await deployRegistry(
       web3, accounts[0], tokenAddress, votingAddress, parameterizerAddress, NAME
     )
-    registry.setProvider(provider)
     const registryAddress = registry.options.address
+    registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await eip20.methods.approve(votingAddress, 1000000).send({ from: accounts[0] })
-    await eip20.methods.approve(registryAddress, 1000000).send({ from: accounts[0] })
+    await eip20.approve(votingAddress, 1000000)
+    await eip20.approve(registryAddress, 1000000)
     // 1st account, as challenger, needs funds
-    await eip20.methods.transfer(accounts[1], 500000).send({ from: accounts[0] })
+    await eip20.transfer(accounts[1], 500000)
     // 2nd account as voter needs funds
-    await eip20.methods.transfer(accounts[2], 500000).send({ from: accounts[0] })
+    await eip20.transfer(accounts[2], 500000)
     // registry needs to be approved to spend ond the challenger's behalf
-    await eip20.methods.approve(registryAddress, 450000).send({ from: accounts[1] })
+    await eip20.approve(registryAddress, 450000, { from: accounts[1] })
     // voting needs approval from voter
-    await eip20.methods.approve(votingAddress, 450000).send({ from: accounts[2] })
+    await eip20.approve(votingAddress, 450000, { from: accounts[2] })
   })
 
   it('has deployed', () => {
@@ -84,6 +84,7 @@ describe('PLCRVoting', () => {
 
     const tx3 = await registry.methods.challenge(domainOne, '').send({ from: accounts[1] })
     expect(tx3).toBeTruthy()
+
     const challID1 = tx3.events._Challenge.returnValues.challengeID
     expect(challID1).toBeTruthy()
 
