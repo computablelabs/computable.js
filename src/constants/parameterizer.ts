@@ -1,5 +1,5 @@
 export enum ParameterDefaults {
-  MIN_DEPOSIT= 10,
+  MIN_DEPOSIT = 10,
   P_MIN_DEPOSIT = 100,
   APPLY_STAGE_LENGTH = 600,
   P_APPLY_STAGE_LENGTH = 1200,

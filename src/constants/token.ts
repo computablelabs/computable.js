@@ -1,5 +1,5 @@
 import { Token as AToken, TokenHolder } from '../interfaces/token'
-import { Addresses } from './addresses'
+import { Addresses } from './address'
 import { ONE_THOUSAND } from './general'
 
 export const Token:AToken =  {

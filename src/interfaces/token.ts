@@ -1,14 +1,14 @@
+import { Nos } from '../types'
+
 export interface Token {
-  address: string;
-  name: string;
-  symbol: string;
-  // TODO is this a string, bytes, number ?
-  supply: number;
-  decimals: number;
-  deployToken?: boolean;
+  address:string;
+  name:string;
+  symbol:string;
+  supply:Nos;
+  decimals:Nos;
 }
 
 export interface TokenHolder {
-  address: string;
-  amount: number;
+  address:string;
+  amount:Nos;
 }

@@ -1,32 +1,32 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-// symlink? copy types to @types? TODO
-import { deployToken, deployParameterizer } from '../../helpers'
-import { Contract } from '../../../node_modules/web3/types.d'
 import { Addresses } from '../../../src/constants'
+import Eip20 from '../../../src/contracts/eip20'
+import Parameterizer from '../../../src/contracts/parameterizer'
+import { maybeParseInt } from '../../../src/helpers'
 
 // TODO use the web3 IProvider?
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
 
 let accounts:string[],
-  eip20:Contract,
-  parameterizer:Contract
+  eip20:Eip20,
+  parameterizer:Parameterizer
 
 describe('Parameterizer: Reparamaterize', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = await deployToken(web3, accounts[0])
+    eip20 = new Eip20(accounts[0])
+    const tokenAddress = await eip20.deploy(web3)
     eip20.setProvider(provider)
-    const tokenAddress = eip20.options.address
 
-    parameterizer = await deployParameterizer(web3, accounts[0], tokenAddress, Addresses.THREE) // THREE placeholding plcr TODO
+    parameterizer = new Parameterizer(accounts[0])
+    const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress: Addresses.THREE })
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
-    await eip20.methods.approve(parameterizer.options.address, 1000000).send({ from: accounts[0] })
-
+    await eip20.approve(parameterizerAddress, 1000000)
   })
 
   // describe('Expected failures', () => {
@@ -46,34 +46,35 @@ describe('Parameterizer: Reparamaterize', () => {
   // })
 
   it('parameterizer has an allowance of a million', async () => {
-    const allowance = await eip20.methods.allowance(accounts[0], parameterizer.options.address).call()
+    const allowance = await eip20.allowance(accounts[0], parameterizer.getAddress())
     expect(parseInt(allowance)).toBe(1000000)
   })
 
   it('returns falsy for non-existant proposal', async () => {
     // const pid = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0], gasPrice: 100, gas: 4500000 })
-    const res = await parameterizer.methods.propExists(web3.utils.asciiToHex('foo')).call()
+    const res = await parameterizer.propExists(web3.utils.asciiToHex('foo'))
     expect(res).toBe(false)
   })
 
   describe('Add a new proposal', () => {
     it('adds a new proposal', async () => {
-      const applicantStartingBalance = await eip20.methods.balanceOf(accounts[0]).call()
+      const applicantStartingBalance = await eip20.balanceOf(accounts[0])
       expect(applicantStartingBalance).toBe('5000000')
 
-      const tx = await parameterizer.methods.proposeReparameterization('voteQuorum', 51).send({ from: accounts[0] })
+      const tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
       expect(tx).toBeTruthy()
       // propId is nested in the event TODO change to using the event listener when they work
-      const propID = tx.events._ReparameterizationProposal.returnValues.propID,
-        proposed = await parameterizer.methods.proposals(propID).call()
+      const propID = tx.events && tx.events._ReparameterizationProposal.returnValues.propID,
+        proposed = await parameterizer.proposals(propID)
+
       expect(proposed.name).toBe('voteQuorum')
       expect(proposed.value).toBe('51')
 
       // proposer should have been charged PMinDeposit
-      const deposit = await parameterizer.methods.get('pMinDeposit').call()
+      const deposit = await parameterizer.get('pMinDeposit')
       expect(deposit).toBe('100')
-      const applicantFinalBalance = await eip20.methods.balanceOf(accounts[0]).call()
-      expect(parseInt(applicantFinalBalance)).toBe((parseInt(applicantStartingBalance)) - (parseInt(deposit)))
+      const applicantFinalBalance = await eip20.balanceOf(accounts[0])
+      expect(maybeParseInt(applicantFinalBalance)).toBe((maybeParseInt(applicantStartingBalance)) - (maybeParseInt(deposit)))
     })
   })
 })
