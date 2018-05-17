@@ -6,14 +6,15 @@ import {
   increaseTime,
 } from '../../helpers'
 import {
+  eventReturnValues,
   deployDll,
   deployAttributeStore,
-  deployVoting,
   maybeParseInt,
 } from '../../../src/helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Eip20 from '../../../src/contracts/eip20'
+import Voting from '../../../src/contracts/plcr-voting'
 
 // TODO define the return of ganache.provider
 const provider:any = ganache.provider(),
@@ -23,7 +24,7 @@ let accounts:string[],
   eip20:Eip20,
   dll:Contract,
   store:Contract,
-  voting:Contract,
+  voting:Voting,
   parameterizer:Parameterizer
 
 describe('Parameterizer: challengeReparameterization', () => {
@@ -34,19 +35,17 @@ describe('Parameterizer: challengeReparameterization', () => {
     const tokenAddress = await eip20.deploy(web3)
     eip20.setProvider(provider)
 
-    // voting and its dependencies are required, TODO we _could_ bundle these and perhaps still return the inidividual instances
-    // `{ dll, store, voting } = deployVotingAndLibraries` perhaps...
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
     const dllAddress = dll.options.address
 
     store = await deployAttributeStore(web3, accounts[0])
     store.setProvider(provider)
-    const storeAddress = store.options.address
+    const attributeStoreAddress = store.options.address
 
-    voting = await deployVoting(web3, accounts[0], dllAddress, storeAddress, tokenAddress)
+    voting = new Voting(accounts[0])
+    const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
     voting.setProvider(provider)
-    const votingAddress = voting.options.address
 
     // if you pass an acct to the constructor it will be set as the default account
     parameterizer = new Parameterizer(accounts[0])
@@ -69,12 +68,8 @@ describe('Parameterizer: challengeReparameterization', () => {
   it('should leave params intact if a proposal loses a challenge', async () => {
     const startingBalZero = await eip20.balanceOf(accounts[0]),
       startingBalOne = await eip20.balanceOf(accounts[1]),
-      tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
-
-    expect(tx).toBeTruthy()
-
-    // TODO abstract this into p11r class
-    const propID = tx && tx.events && tx.events._ReparameterizationProposal.returnValues.propID
+      propID = eventReturnValues('_ReparameterizationProposal',
+        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID')
 
     const tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
     expect(tx1).toBeTruthy()
@@ -100,23 +95,21 @@ describe('Parameterizer: challengeReparameterization', () => {
   it('should set new params if a proposal wins a challenge', async () => {
     const startingBalZero = await eip20.balanceOf(accounts[0]),
       startingBalOne = await eip20.balanceOf(accounts[1]),
-      tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
-      // propID = eventReturnValue(tx, '_ReparameterizationProposal')
 
-    expect(tx).toBeTruthy()
-    const propID = tx && tx.events && tx.events._ReparameterizationProposal.returnValues.propID
+      propID = eventReturnValues('_ReparameterizationProposal',
+        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID'),
 
-    const tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
-    expect(tx1).toBeTruthy()
-    const challID = tx1 && tx1.events && tx1.events._NewChallenge.returnValues.challengeID
+      challID = eventReturnValues('_NewChallenge',
+        await parameterizer.challengeReparameterization(propID, { from: accounts[1] }), 'challengeID'),
 
-    // accounts[2] as voter here
-    const tx2 = await commitVote(web3, voting, challID, accounts[2])
+      // accounts[2] as voter here
+      tx2 = await commitVote(web3, voting, challID, accounts[2])
+
     expect(tx2).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
 
-    const tx3 = await voting.methods.revealVote(challID, 1, 420).send({ from: accounts[2] })
+    const tx3 = await voting.revealVote(challID, 1, 420, { from: accounts[2] })
     expect(tx3).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)

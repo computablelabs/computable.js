@@ -1,16 +1,16 @@
 import Web3 from 'web3'
 import { ParameterDefaults, GAS, GAS_PRICE, Errors } from '../constants'
+import Deployable from '../abstracts/deployable'
+import { Nos } from '../types'
+import parameterizerJson from '../../computable/build/contracts/Parameterizer.json'
+// TODO PR web3 to export these properly
+import { TransactionReceipt } from '../../node_modules/web3/types.d'
 import {
   Keyed,
   ContractOptions,
   DeployParams,
   ParameterizerProposal,
 } from '../interfaces'
-import Deployable from '../abstracts/deployable'
-import { Nos } from '../types'
-import parameterizerJson from '../../computable/build/contracts/Parameterizer.json'
-// TODO PR web3 to export these properly
-import { TransactionReceipt } from '../../node_modules/web3/types.d'
 
 /**
  * Shape of the parameter object that should be passed to this class during a deploy.

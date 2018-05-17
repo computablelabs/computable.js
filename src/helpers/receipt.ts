@@ -1,0 +1,16 @@
+/**
+ * Methods allowing the developer to more easily work with the TransactionReceipt
+ * objects that are returned from any-and-all contract class transactions
+ */
+
+import { TransactionReceipt } from '../../node_modules/web3/types.d'
+
+/**
+ * Access the data held in receipt.events.name.returnValues.
+ */
+export function eventReturnValues(name:string, tx:TransactionReceipt, refinement?:string): any {
+  const ret = tx.events && tx.events[name] && tx.events[name].returnValues
+  if (!ret) return
+
+  return refinement ? ret[refinement] : ret
+}
