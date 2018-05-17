@@ -8,7 +8,6 @@ import {
   deployAttributeStore,
   deployRegistry,
 } from '../../../src/helpers'
-import { commitVote } from '../../helpers'
 import Eip20 from '../../../src/contracts/eip20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
