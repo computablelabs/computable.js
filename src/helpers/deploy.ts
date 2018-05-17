@@ -2,7 +2,6 @@ import Web3 from 'web3'
 import { Contract } from '../../node_modules/web3/types.d'
 import dllJson from '../../computable/build/contracts/DLL.json'
 import storeJson from '../../computable/build/contracts/AttributeStore.json'
-import votingJson from '../../computable/build/contracts/PLCRVoting.json'
 import registryJson from '../../computable/build/contracts/Registry.json'
 import {
   Token,
@@ -55,20 +54,6 @@ export async function deployRegistry(
  * will always add up to exactly 40 chars. This means we need to slice off the first 2 (0x) chars of the
  * deployed address given to us.
  */
-export async function deployVoting(
-  web3:Web3,
-  account:string,
-  dllAddress:string,
-  attributeStoreAddress:string,
-  tokenAddress:string
-): Promise<Contract> {
-  let votingBytecode = updateBytecode(votingJson.bytecode, 'DLL', dllAddress.slice(2))
-  votingBytecode = updateBytecode(votingBytecode, 'AttributeStore', attributeStoreAddress.slice(2))
-
-  // Note that arguments are always an array, even when unary
-  return deploy(web3, account, votingJson.abi, votingBytecode, [tokenAddress])
-}
-
-function updateBytecode(bytecode:string, library:string, address:string): string {
+export function updateBytecode(bytecode:string, library:string, address:string): string {
   return bytecode.replace(new RegExp(`__${library}__+`, 'g'), address)
 }

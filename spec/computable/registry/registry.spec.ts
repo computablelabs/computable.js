@@ -5,10 +5,10 @@ import { NAME } from '../../../src/constants'
 import {
   deployDll,
   deployAttributeStore,
-  deployVoting,
   deployRegistry,
 } from '../../../src/helpers'
 import Eip20 from '../../../src/contracts/eip20'
+import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 
 const provider:any = ganache.provider(),
@@ -18,7 +18,7 @@ let accounts:string[],
   eip20:Eip20,
   dll:Contract,
   store:Contract,
-  voting:Contract,
+  voting:Voting,
   parameterizer:Parameterizer,
   registry:Contract
 
@@ -36,11 +36,11 @@ describe('Registry', () => {
 
     store = await deployAttributeStore(web3, accounts[0])
     store.setProvider(provider)
-    const storeAddress = store.options.address
+    const attributeStoreAddress = store.options.address
 
-    voting = await deployVoting(web3, accounts[0], dllAddress, storeAddress, tokenAddress)
+    voting = new Voting(accounts[0])
+    const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
     voting.setProvider(provider)
-    const votingAddress = voting.options.address
 
     parameterizer = new Parameterizer(accounts[0])
     const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
@@ -64,7 +64,7 @@ describe('Registry', () => {
     expect(regParam).toBe(parameterizer.getAddress())
 
     const regVote = await registry.methods.voting().call()
-    expect(regVote).toBe(voting.options.address)
+    expect(regVote).toBe(voting.getAddress())
 
     const name = await registry.methods.name().call()
     expect(name).toBe(NAME)

@@ -1,6 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { increaseTime } from '../../helpers'
+import { eventReturnValues } from '../../../src/helpers'
 import Eip20 from '../../../src/contracts/eip20'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
@@ -30,29 +31,23 @@ describe('Parameterizer: canBeSet', () => {
   })
 
   it('should be truthy if a proposal passed its application stage with no challenge', async () => {
-    const tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
-    expect(tx).toBeTruthy()
+    const propID = eventReturnValues('_ReparameterizationProposal',
+      await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID')
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
     await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
-    // propID is nested in the event TODO change to using the event listener when they work
-    const propID = tx.events && tx.events._ReparameterizationProposal.returnValues.propID
 
-    const res = await parameterizer.canBeSet(propID)
-    expect(res).toBe(true)
+    expect(await parameterizer.canBeSet(propID)).toBe(true)
   })
 
   it('should be falsy if proposal did not pass challenge phase', async () => {
-    const tx = await parameterizer.proposeReparameterization('dispensationPct', '58')
-    expect(tx).toBeTruthy()
+    const propID = eventReturnValues('_ReparameterizationProposal',
+      await parameterizer.proposeReparameterization('dispensationPct', '58'), 'propID')
 
-    const propID = tx.events && tx.events._ReparameterizationProposal.returnValues.propID,
-      shouldBeFalse = await parameterizer.canBeSet(propID)
-    expect(shouldBeFalse).toBe(false)
+    expect(await parameterizer.canBeSet(propID)).toBe(false)
 
     // should become true if commit stage length is increased
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
-    const shouldBeTrue = await parameterizer.canBeSet(propID)
-    expect(shouldBeTrue).toBe(true)
+    expect(await parameterizer.canBeSet(propID)).toBe(true)
   })
 })
