@@ -30,8 +30,6 @@ describe('Parameterizer: challengeCanBeResolved', () => {
     const tokenAddress = await eip20.deploy(web3)
     eip20.setProvider(provider)
 
-    // voting and its dependencies are required, TODO we _could_ bundle these and perhaps still return the inidividual instances
-    // `{ dll, store, voting } = deployVotingAndLibraries` perhaps...
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
     const dllAddress = dll.options.address

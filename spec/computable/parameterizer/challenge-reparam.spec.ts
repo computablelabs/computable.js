@@ -1,20 +1,17 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract, HttpProvider } from '../../../node_modules/web3/types.d'
-import {
-  commitVote,
-  increaseTime,
-} from '../../helpers'
+import { increaseTime } from '../../helpers'
+import { ParameterDefaults } from '../../../src/constants'
+import Parameterizer from '../../../src/contracts/parameterizer'
+import Eip20 from '../../../src/contracts/eip20'
+import Voting from '../../../src/contracts/plcr-voting'
 import {
   eventReturnValues,
   deployDll,
   deployAttributeStore,
   maybeParseInt,
 } from '../../../src/helpers'
-import { ParameterDefaults } from '../../../src/constants'
-import Parameterizer from '../../../src/contracts/parameterizer'
-import Eip20 from '../../../src/contracts/eip20'
-import Voting from '../../../src/contracts/plcr-voting'
 
 // TODO define the return of ganache.provider
 const provider:any = ganache.provider(),
@@ -102,8 +99,8 @@ describe('Parameterizer: challengeReparameterization', () => {
       challID = eventReturnValues('_NewChallenge',
         await parameterizer.challengeReparameterization(propID, { from: accounts[1] }), 'challengeID'),
 
-      // accounts[2] as voter here
-      tx2 = await commitVote(web3, voting, challID, accounts[2])
+      // accounts[2] as voter here TODO setup some spec-level constants
+      tx2 = await voting.commitVote(web3, challID, accounts[2], 1, 10, 420)
 
     expect(tx2).toBeTruthy()
 

@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { Addresses } from '../../../src/constants'
 import Eip20 from '../../../src/contracts/eip20'
 import Parameterizer from '../../../src/contracts/parameterizer'
-import { maybeParseInt } from '../../../src/helpers'
+import { maybeParseInt, eventReturnValues } from '../../../src/helpers'
 
 // TODO use the web3 IProvider?
 const provider:any = ganache.provider(),
@@ -61,10 +61,9 @@ describe('Parameterizer: Reparamaterize', () => {
       const applicantStartingBalance = await eip20.balanceOf(accounts[0])
       expect(applicantStartingBalance).toBe('5000000')
 
-      const tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
-      expect(tx).toBeTruthy()
       // propId is nested in the event TODO change to using the event listener when they work
-      const propID = tx.events && tx.events._ReparameterizationProposal.returnValues.propID,
+      const propID = eventReturnValues('_ReparameterizationProposal',
+        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID'),
         proposed = await parameterizer.proposals(propID)
 
       expect(proposed.name).toBe('voteQuorum')

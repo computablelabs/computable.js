@@ -1,6 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { increaseTime } from '../../helpers'
+import { eventReturnValues } from '../../../src/helpers'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
 import Eip20 from '../../../src/contracts/eip20'
 import Parameterizer from '../../../src/contracts/parameterizer'
@@ -32,14 +33,13 @@ describe('Parameterizer: Process a proposal', () => {
     const applicantStartingBalance = await eip20.balanceOf(accounts[0])
     expect(applicantStartingBalance).toBe('5000000')
 
-    const tx = await parameterizer.proposeReparameterization('voteQuorum', 51)
-    expect(tx).toBeTruthy()
+    const propID = eventReturnValues('_ReparameterizationProposal',
+      await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID')
 
     const tx2 = await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
     expect(tx2).toBeTruthy()
     // propId is nested in the event TODO change to using the event listener when they work
-    const propID = tx.events && tx.events._ReparameterizationProposal.returnValues.propID,
-      tx3 = await parameterizer.processProposal(propID)
+    const tx3 = await parameterizer.processProposal(propID)
     expect(tx3).toBeTruthy()
     // we should see the changes now
     const vq = await parameterizer.get('voteQuorum')
