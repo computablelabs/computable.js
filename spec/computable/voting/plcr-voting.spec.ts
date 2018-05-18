@@ -6,11 +6,11 @@ import {
   eventReturnValues,
   deployDll,
   deployAttributeStore,
-  deployRegistry,
 } from '../../../src/helpers'
 import Eip20 from '../../../src/contracts/eip20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
+import Registry from '../../../src/contracts/registry'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
@@ -21,7 +21,7 @@ let accounts:string[],
   store:Contract,
   voting:Voting,
   parameterizer:Parameterizer,
-  registry:Contract
+  registry:Registry
 
 describe('PLCRVoting', () => {
   beforeEach(async () => {
@@ -47,10 +47,8 @@ describe('PLCRVoting', () => {
     const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
     parameterizer.setProvider(provider)
 
-    registry = await deployRegistry(
-      web3, accounts[0], tokenAddress, votingAddress, parameterizerAddress, NAME
-    )
-    const registryAddress = registry.options.address
+    registry = new Registry(accounts[0])
+    const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
@@ -75,21 +73,19 @@ describe('PLCRVoting', () => {
     const toBytes = (str:string) => web3.utils.toHex(str),
       domainOne = toBytes('one.net'),
       domainTwo = toBytes('two.net'),
-      tx1 = await registry.methods.apply(domainOne, ParameterDefaults.MIN_DEPOSIT, '').send({ from: accounts[0] }),
-      tx2 = await registry.methods.apply(domainTwo, ParameterDefaults.MIN_DEPOSIT, '').send({ from: accounts[0] })
+      tx1 = await registry.apply(domainOne, ParameterDefaults.MIN_DEPOSIT),
+      tx2 = await registry.apply(domainTwo, ParameterDefaults.MIN_DEPOSIT)
 
     expect(tx1).toBeTruthy()
     expect(tx2).toBeTruthy()
 
-    const tx3 = await registry.methods.challenge(domainOne, '').send({ from: accounts[1] })
-    expect(tx3).toBeTruthy()
-
-    const challID1 = eventReturnValues('_Challenge', tx3, 'challengeID')
+    const challID1 = eventReturnValues('_Challenge',
+      await registry.challenge(domainOne, '', { from: accounts[1] }), 'challengeID')
     expect(challID1).toBeTruthy()
 
-    const tx4 = await registry.methods.challenge(domainTwo, '').send({ from: accounts[1] })
-    expect(tx4).toBeTruthy()
-    const challID2 = eventReturnValues('_Challenge', tx4, 'challengeID')
+
+    const challID2 = eventReturnValues('_Challenge',
+      await registry.challenge(domainTwo, '', { from: accounts[1] }), 'challengeID')
     expect(challID2).toBeTruthy()
 
     // we'll let the defaults get used for vote, tokens and salt

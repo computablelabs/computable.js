@@ -2,14 +2,11 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from '../../../node_modules/web3/types.d'
 import { NAME } from '../../../src/constants'
-import {
-  deployDll,
-  deployAttributeStore,
-  deployRegistry,
-} from '../../../src/helpers'
+import { deployDll, deployAttributeStore } from '../../../src/helpers'
 import Eip20 from '../../../src/contracts/eip20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
+import Registry from '../../../src/contracts/registry'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
@@ -20,7 +17,7 @@ let accounts:string[],
   store:Contract,
   voting:Voting,
   parameterizer:Parameterizer,
-  registry:Contract
+  registry:Registry
 
 describe('Registry', () => {
   beforeEach(async () => {
@@ -46,27 +43,25 @@ describe('Registry', () => {
     const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
     parameterizer.setProvider(provider)
 
-    registry = await deployRegistry(
-      web3, accounts[0], tokenAddress, votingAddress, parameterizerAddress, NAME
-    )
+    registry = new Registry(accounts[0])
+    const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
     registry.setProvider(provider)
-    const registryAddress = registry.options.address
   })
 
   it('has deployed, setting correct state', async () => {
     expect(registry).toBeTruthy()
-    expect(registry.options.address).toBeTruthy()
+    expect(registry.getAddress).toBeTruthy()
 
-    const regToken = await registry.methods.token().call()
+    const regToken = await registry.token()
     expect(regToken).toBe(eip20.getAddress())
 
-    const regParam = await registry.methods.parameterizer().call()
+    const regParam = await registry.parameterizer()
     expect(regParam).toBe(parameterizer.getAddress())
 
-    const regVote = await registry.methods.voting().call()
+    const regVote = await registry.voting()
     expect(regVote).toBe(voting.getAddress())
 
-    const name = await registry.methods.name().call()
+    const name = await registry.name()
     expect(name).toBe(NAME)
   })
 

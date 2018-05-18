@@ -90,7 +90,7 @@ export default class extends Deployable {
   /**
    * Pepare the deploy options, passing them along with the instantiated web3 and optional
    * contract options to the super class' _deploy method.
-   * @see abstracts/deployable#_deploy
+   * @see abstracts/deployable#deployContract
    */
   async deploy(web3:Web3, params:ParameterizerDeployParams, opts?:ContractOptions): Promise<string> {
     const dp:DeployParams = {
