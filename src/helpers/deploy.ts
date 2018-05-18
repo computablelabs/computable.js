@@ -2,7 +2,6 @@ import Web3 from 'web3'
 import { Contract } from '../../node_modules/web3/types.d'
 import dllJson from '../../computable/build/contracts/DLL.json'
 import storeJson from '../../computable/build/contracts/AttributeStore.json'
-import registryJson from '../../computable/build/contracts/Registry.json'
 import {
   Token,
   GAS,
@@ -20,11 +19,9 @@ async function deploy(
   bytecode:string,
   args: any[] = []
 ): Promise<Contract> {
-  const deployed = await new web3.eth.Contract(abi, undefined, {gasPrice: GAS_PRICE, gas: GAS })
+  return await new web3.eth.Contract(abi, undefined, {gasPrice: GAS_PRICE, gas: GAS })
     .deploy({ data: bytecode, arguments: args })
     .send({ from: account })
-
-  return deployed
 }
 
 export async function deployAttributeStore(web3:Web3, account:string): Promise<Contract> {
@@ -33,18 +30,6 @@ export async function deployAttributeStore(web3:Web3, account:string): Promise<C
 
 export async function deployDll(web3:Web3, account:string): Promise<Contract> {
   return deploy(web3, account, dllJson.abi, dllJson.bytecode)
-}
-
-export async function deployRegistry(
-  web3:Web3,
-  account:string,
-  tokenAddress:string,
-  votingAddress:string,
-  parameterizerAddress:string,
-  name:string
-): Promise<Contract> {
-  const args = [tokenAddress, votingAddress, parameterizerAddress, name]
-  return deploy(web3, account, registryJson.abi, registryJson.bytecode, args)
 }
 
 /**
