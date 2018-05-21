@@ -4,7 +4,7 @@ import { Contract, HttpProvider } from '../../../node_modules/web3/types.d'
 import { increaseTime } from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Parameterizer from '../../../src/contracts/parameterizer'
-import Eip20 from '../../../src/contracts/eip20'
+import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import {
   eventReturnValues,

@@ -8,7 +8,7 @@ import {
   deployAttributeStore,
 } from '../../../src/helpers'
 import { ParameterDefaults } from '../../../src/constants'
-import Eip20 from '../../../src/contracts/eip20'
+import Eip20 from '../../../src/contracts/eip-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Voting from '../../../src/contracts/plcr-voting'
 

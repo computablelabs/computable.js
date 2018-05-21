@@ -7,7 +7,7 @@ import {
   deployDll,
   deployAttributeStore,
 } from '../../../src/helpers'
-import Eip20 from '../../../src/contracts/eip20'
+import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
