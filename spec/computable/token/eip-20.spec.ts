@@ -1,7 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Token } from '../../../src/constants'
-import Eip20 from '../../../src/contracts/eip20'
+import Eip20 from '../../../src/contracts/eip-20'
 import { maybeParseInt } from '../../../src/helpers'
 
 // TODO use the web3 IProvider?

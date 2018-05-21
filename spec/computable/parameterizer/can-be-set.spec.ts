@@ -2,7 +2,7 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { increaseTime } from '../../helpers'
 import { eventReturnValues } from '../../../src/helpers'
-import Eip20 from '../../../src/contracts/eip20'
+import Eip20 from '../../../src/contracts/eip-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
 
