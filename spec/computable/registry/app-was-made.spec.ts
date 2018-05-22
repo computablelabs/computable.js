@@ -51,14 +51,6 @@ describe('Registry', () => {
     // 0th account approves voting and reg to spend
     await eip20.approve(votingAddress, 1000000)
     await eip20.approve(registryAddress, 1000000)
-    // 1st account, as challenger, needs funds
-    // await eip20.transfer(accounts[1], 500000)
-    // 2nd account as voter needs funds
-    // await eip20.transfer(accounts[2], 500000)
-    // registry needs to be approved to spend ond the challenger's behalf
-    // await eip20.approve(registryAddress, 450000, { from: accounts[1] })
-    // voting needs approval from voter
-    // await eip20.approve(votingAddress, 450000, { from: accounts[2] })
   })
 
   it('returns true if application expiry was previously initialized', async () => {
