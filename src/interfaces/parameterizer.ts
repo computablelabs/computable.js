@@ -1,3 +1,7 @@
+/**
+ * Define and export interfaces which are integral to the parameterizer contract
+ */
+
 import { Nos } from '../types'
 
 export interface ParameterizerProposal {
