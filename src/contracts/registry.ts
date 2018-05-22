@@ -15,10 +15,10 @@ import {
  * Shape of the parameter object that should be passed to this class during a deploy.
  */
 interface RegistryDeployParams {
-  tokenAddress: string;
-  votingAddress: string;
-  parameterizerAddress: string;
-  name: string;
+  tokenAddress: string; // deployed address of the token that this contract references
+  votingAddress: string; // deployed address of a PLCRVoting contract this contract references
+  parameterizerAddress: string; // deployed address of a Parameterizer this contract references
+  name: string; // The name of this registry
 }
 
 /**
@@ -30,6 +30,8 @@ interface RegistryDeployParams {
  *
  * Getters:
  * -------
+ * appWasMade
+ * isWhiteListed
  * name
  * parameterizer
  * token
@@ -49,6 +51,15 @@ export default class extends Deployable {
       account = this.requireAccount(opts)
 
     return await deployed.methods.apply(listing, tokens, data).send({ from: account })
+  }
+
+  /**
+   * Returns a bool that indicates if `apply` was called for a given listing hash
+   */
+  async appWasMade(listing:string): Promise<boolean> {
+    const deployed = this.requireDeployed()
+
+    return deployed.methods.appWasMade(listing).call()
   }
 
   /**
@@ -85,6 +96,27 @@ export default class extends Deployable {
   }
 
   /**
+   * Allows the owner of a listingHash to remove the listingHash from the whitelist
+   * Returns all tokens to the owner of the listingHash
+   * @param listing listing that msg.sender is the owner of
+   */
+  async exit(listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
+
+    return await deployed.methods.exit(listing).send({ from: account })
+  }
+
+  /**
+   * Return a bool indicating if this listing has been whitelisted
+   */
+  async isWhitelisted(listing:string): Promise<boolean> {
+    const deployed = this.requireDeployed()
+
+    return await deployed.methods.isWhitelisted(listing).call()
+  }
+
+  /**
    * Return the name passed to this contract instance at deploy time
    */
   async name(): Promise<string> {
@@ -109,6 +141,17 @@ export default class extends Deployable {
     const deployed = this.requireDeployed()
 
     return await deployed.methods.token().call()
+  }
+
+  /**
+   * Updates a listingHash's status from 'application' to 'listing' or resolves a challenge if one exists.
+   * Delegates to `whitelistApplication` or `resolveChallenge`
+   */
+  async updateStatus(listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const account = this.requireAccount(opts),
+      deployed = this.requireDeployed()
+
+    return await deployed.methods.updateStatus(listing).send({ from: account })
   }
 
   /**
