@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import { Nos } from '../../src/types'
 // NOTE the web3 typed IProvider is incomplete (no sendAsync etc...) TODO flush it out
 export function increaseTime(provider: any, seconds: number): Promise<any> {
@@ -18,4 +19,8 @@ export function increaseTime(provider: any, seconds: number): Promise<any> {
       resolve({ increaseTime: result, mine: data })
     }))
   )
+}
+
+export function stringToBytes(web3:Web3, str:string): string {
+  return web3.utils.toHex(str)
 }

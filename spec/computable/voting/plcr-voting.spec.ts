@@ -7,6 +7,7 @@ import {
   deployDll,
   deployAttributeStore,
 } from '../../../src/helpers'
+import { stringToBytes } from '../../helpers'
 import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
@@ -70,9 +71,8 @@ describe('PLCRVoting', () => {
   })
 
   it('commits vote, updates DLL state', async () => {
-    const toBytes = (str:string) => web3.utils.toHex(str),
-      domainOne = toBytes('one.net'),
-      domainTwo = toBytes('two.net'),
+    const domainOne = stringToBytes(web3, 'one.net'),
+      domainTwo = stringToBytes(web3, 'two.net'),
       tx1 = await registry.apply(domainOne, ParameterDefaults.MIN_DEPOSIT),
       tx2 = await registry.apply(domainTwo, ParameterDefaults.MIN_DEPOSIT)
 
