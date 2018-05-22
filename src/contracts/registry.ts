@@ -24,9 +24,15 @@ interface RegistryDeployParams {
 /**
  * Registry
  *
+ * Publisher Interface:
+ * -------------------
+ * apply
+ * exit
+ *
  * Token Holder Interface:
  * ----------------------
- * apply
+ * challenge
+ * updateStatus
  *
  * Getters:
  * -------
@@ -36,7 +42,6 @@ interface RegistryDeployParams {
  * parameterizer
  * token
  * voting
- *
  */
 
 export default class extends Deployable {
