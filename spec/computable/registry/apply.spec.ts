@@ -160,7 +160,6 @@ describe('Registry', () => {
         expect(false).toBe(true)
       } catch(err) {
         expect(err).toBeTruthy()
-        console.log(err.toString())
       }
     })
   })
