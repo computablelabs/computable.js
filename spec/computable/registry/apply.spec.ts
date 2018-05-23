@@ -1,13 +1,18 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract } from '../../../node_modules/web3/types.d'
-import { deployDll, deployAttributeStore, maybeParseInt } from '../../../src/helpers'
+import { Contract, Block } from '../../../node_modules/web3/types.d'
 import { stringToBytes, increaseTime } from '../../helpers'
 import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 import { ParameterDefaults, NAME } from '../../../src/constants'
+import {
+  deployDll,
+  deployAttributeStore,
+  maybeParseInt,
+  eventReturnValues,
+} from '../../../src/helpers'
 
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
@@ -20,7 +25,7 @@ let accounts:string[],
   parameterizer:Parameterizer,
   registry:Registry
 
-fdescribe('Registry', () => {
+describe('Registry', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -54,7 +59,8 @@ fdescribe('Registry', () => {
 
     // 1st account needs funding
     await eip20.transfer(accounts[1], 500000)
-    await eip20.approve(registryAddress, 450000, { from: accounts[1] })
+    await eip20.approve(registryAddress, 250000, { from: accounts[1] })
+    await eip20.approve(parameterizerAddress, 250000, { from: accounts[1] })
   })
 
   it('allows a new application', async () => {
@@ -109,6 +115,52 @@ fdescribe('Registry', () => {
         expect(false).toBe(true)
       } catch(err) {
         expect(err).toBeTruthy()
+      }
+    })
+
+    it('reverts if deposit less than min_deposit', async () => {
+      const listBytes = stringToBytes(web3, 'listing.com')
+
+      try {
+        await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT - 1)
+        expect(false).toBe(true)
+      } catch(err) {
+        expect(err).toBeTruthy()
+      }
+    })
+
+    it('should revert if applicationExpiry would overflow', async () => {
+      const BN = web3.utils.BN,
+        eth = web3.eth,
+        bigOne = new BN(1),
+        block:Block = await eth.getBlock(await eth.getBlockNumber())
+
+      expect(block).toBeTruthy()
+      // create an applyStageLen that, when added to current block time will be
+      // greater than 2^256-1
+      const maxUint = new BN(2).pow(new BN(256)).sub(bigOne),
+        applyStageLen = maxUint.sub(new BN(block.timestamp)).add(bigOne),
+        propID = eventReturnValues('_ReparameterizationProposal',
+          await parameterizer.proposeReparameterization('applyStageLen',
+            applyStageLen.toString(10), { from: accounts[1] }), 'propID')
+
+      expect(propID).toBeTruthy()
+
+      await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
+      await parameterizer.processProposal(propID)
+
+      // assure prop was processed
+      const actualLen = await parameterizer.get('applyStageLen')
+      expect(actualLen).toBe(applyStageLen.toString(10))
+
+      const listBytes = stringToBytes(web3, 'uhoh.net')
+
+      try {
+        await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+        expect(false).toBe(true)
+      } catch(err) {
+        expect(err).toBeTruthy()
+        console.log(err.toString())
       }
     })
   })
