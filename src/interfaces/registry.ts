@@ -7,7 +7,7 @@ import { Nos } from '../types'
 export interface RegistryListing {
   applicationExpiry:Nos; // Expiration date of apply stage
   whitelisted:boolean; // Indicates registry status
-  owner:string; // Owner of sisting
+  owner:string; // Owner of listing
   unstakedDeposit:Nos; // Number of tokens in the listing not locked in a challenge
   challengeID:Nos; // Corresponds to a pollID in PLCRVoting
 }
