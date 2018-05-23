@@ -21,8 +21,8 @@ interface ParameterizerDeployParams {
   votingAddress: string; // Address of the PLCR voting contract for the provided token
   minDeposit?:Nos; // Min deposit required for a listing to be included (whitelisted)
   pMinDeposit?:Nos; // Min deposit required to propose changes to the system (reparameterization etc...)
-  applyStageLength?:Nos; // The length of time applicants must wait to be whitelisted
-  pApplyStageLength?:Nos; // Length of time it will take reparameterization proposals to process
+  applyStageLen?:Nos; // The length of time applicants must wait to be whitelisted
+  pApplyStageLen?:Nos; // Length of time it will take reparameterization proposals to process
   dispensationPct?:Nos; // Percentage of a losing party's deposit paid to a winning party
   pDispensationPct?:Nos; // Percentage paid to the parameterizer from a losing party
   commitStageLen?:Nos; // Length of time for commit period in voting
@@ -101,8 +101,8 @@ export default class extends Deployable {
         params.votingAddress,
         params.minDeposit || ParameterDefaults.MIN_DEPOSIT,
         params.pMinDeposit || ParameterDefaults.P_MIN_DEPOSIT,
-        params.applyStageLength || ParameterDefaults.APPLY_STAGE_LENGTH,
-        params.pApplyStageLength || ParameterDefaults.P_APPLY_STAGE_LENGTH,
+        params.applyStageLen || ParameterDefaults.APPLY_STAGE_LENGTH,
+        params.pApplyStageLen || ParameterDefaults.P_APPLY_STAGE_LENGTH,
         params.commitStageLen || ParameterDefaults.COMMIT_STAGE_LENGTH,
         params.pCommitStageLen || ParameterDefaults.P_COMMIT_STAGE_LENGTH,
         params.revealStageLen || ParameterDefaults.REVEAL_STAGE_LENGTH,

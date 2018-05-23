@@ -9,6 +9,7 @@ import {
   Keyed,
   ContractOptions,
   DeployParams,
+  RegistryListing,
 } from '../interfaces'
 
 /**
@@ -37,7 +38,8 @@ interface RegistryDeployParams {
  * Getters:
  * -------
  * appWasMade
- * isWhiteListed
+ * isWhitelisted
+ * listings
  * name
  * parameterizer
  * token
@@ -119,6 +121,16 @@ export default class extends Deployable {
     const deployed = this.requireDeployed()
 
     return await deployed.methods.isWhitelisted(listing).call()
+  }
+
+  /**
+   * Return a listing corresponding to the given listing hash.
+   * Note the underlying contract returns an array here
+   */
+  async listings(listing:string): Promise<RegistryListing> {
+    const deployed = this.requireDeployed()
+
+    return await deployed.methods.listings(listing).call()
   }
 
   /**
