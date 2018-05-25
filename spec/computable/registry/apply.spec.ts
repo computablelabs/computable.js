@@ -25,7 +25,7 @@ let accounts:string[],
   parameterizer:Parameterizer,
   registry:Registry
 
-describe('Registry', () => {
+describe('Registry: Apply', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
