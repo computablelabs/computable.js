@@ -88,7 +88,7 @@ describe('PLCRVoting', () => {
       await registry.challenge(domainTwo, '', { from: accounts[1] }), 'challengeID')
     expect(challID2).toBeTruthy()
 
-    // we'll let the defaults get used for vote, tokens and salt
+    // args: last 3 are vote, tokens, salt
     const tx5 = await voting.commitVote(web3, challID1, accounts[2], 1, 10, 420)
     expect(tx5).toBeTruthy()
     // bump the num tokens here...
