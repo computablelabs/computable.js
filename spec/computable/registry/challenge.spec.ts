@@ -7,7 +7,7 @@ import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 import { ParameterDefaults, NAME } from '../../../src/constants'
-import { RegistryListing } from '../../../src/interfaces'
+import { RegistryListing, Challenge } from '../../../src/interfaces'
 import {
   deployDll,
   deployAttributeStore,
@@ -141,6 +141,10 @@ describe('Registry: Challenge', () => {
     const challID = eventReturnValues('_Challenge',
       await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
     expect(challID).toBeTruthy()
+
+    // should be able to fetch the actual challenge object
+    const chall:Challenge = await registry.challenges(challID)
+    expect(chall).toBeTruthy()
 
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
     await voting.commitVote(web3, challID, voter, 1, 10, 420)
