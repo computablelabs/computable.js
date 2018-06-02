@@ -10,6 +10,7 @@ import {
   ContractOptions,
   DeployParams,
   RegistryListing,
+  Challenge
 } from '../interfaces'
 
 /**
@@ -40,6 +41,7 @@ interface RegistryDeployParams {
  * appWasMade
  * isWhitelisted
  * listings
+ * challenges
  * name
  * parameterizer
  * token
@@ -80,6 +82,15 @@ export default class extends Deployable {
       account = this.requireAccount(opts)
 
     return await deployed.methods.challenge(listing, data).send({ from: account })
+  }
+
+  /**
+   * Return a challenge corresponding to the given challegeID.
+   */
+  async challenges(challengeID:Nos): Promise<Challenge> {
+    const deployed = this.requireDeployed()
+
+    return await deployed.methods.challenges(challengeID).call()
   }
 
   /**
@@ -125,7 +136,6 @@ export default class extends Deployable {
 
   /**
    * Return a listing corresponding to the given listing hash.
-   * Note the underlying contract returns an array here
    */
   async listings(listing:string): Promise<RegistryListing> {
     const deployed = this.requireDeployed()
