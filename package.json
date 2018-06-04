@@ -1,7 +1,7 @@
 {
-  "name": "@computablelabs/computable.js",
+  "name": "computable",
   "version": "0.1.0",
-  "description": "TBD...",
+  "description": "Javascript library for developing with the Computable protocol",
   "main": "dist/computable.js",
   "module": "dist/index.js",
   "scripts": {
