@@ -9,7 +9,7 @@ export interface RegistryListing {
   whitelisted:boolean; // Indicates registry status
   owner:string; // Owner of listing
   unstakedDeposit:Nos; // Number of tokens in the listing not locked in a challenge
-  challengeID:Nos; // Corresponds to a pollID in PLCRVoting
+  challengeID?:Nos; // Corresponds to a pollID in PLCRVoting
 }
 
 interface TokenClaims {
@@ -22,5 +22,5 @@ export interface Challenge {
   resolved:boolean; // Indication of whether the challenge has been resolved
   stake:Nos; // Number of tokens at stake for either party during a challenge
   totalTokens:Nos; // (remaining) Number of tokens used in voting by the winning side
-  tokenClaims:TokenClaims;
+  tokenClaims?:TokenClaims; // Indication of whether a voter has claimed a reward yet
 }
