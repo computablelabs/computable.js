@@ -30,7 +30,7 @@ let eip20:Eip20,
   voter:string,
   proposer:string
 
-describe('Registry: Claim Reward', () => {
+fdescribe('Registry: Claim Reward', () => {
   beforeEach(async () => {
     [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
 
@@ -84,7 +84,22 @@ describe('Registry: Claim Reward', () => {
   })
 
   it('should transfer the correct number of tokens once a challenge has been resolved', async () => {
+    const listBytes = stringToBytes(web3, 'listing.com')
 
+    // Apply
+    const tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+    expect(tx1).toBeTruthy()
+    const applicantStartingBal = maybeParseInt(await eip20.balanceOf(applicant))
+
+    // Challenge
+    const challID = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
+    expect(challID).toBeTruthy()
+
+
+    // Commit applicant vote 
+    const tx2 = await voting.commitVote(web3, challID, applicant, 0, 500, 420)
+    //expect(tx2).toBeTruthy()
   })
 
 })
