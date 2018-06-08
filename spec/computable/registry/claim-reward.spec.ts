@@ -97,9 +97,14 @@ fdescribe('Registry: Claim Reward', () => {
     expect(challID).toBeTruthy()
 
 
-    // Commit applicant vote 
-    const tx2 = await voting.commitVote(web3, challID, applicant, 0, 500, 420)
-    //expect(tx2).toBeTruthy()
+    // Commit vote 
+    const tx2 = await voting.commitVote(web3, challID, voter, 0, 500, 420)
+    expect(tx2).toBeTruthy()
+    await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
+
+    // Reveal vote
+    const tx3 = await voting.revealVote(challID, 0, 420)
+    //expect(tx3).toBeTruthy()
   })
 
 })
