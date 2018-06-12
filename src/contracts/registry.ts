@@ -8,20 +8,11 @@ import { TransactionReceipt } from '../../node_modules/web3/types.d'
 import {
   Keyed,
   ContractOptions,
+  RegistryDeployParams,
   DeployParams,
   RegistryListing,
   Challenge
 } from '../interfaces'
-
-/**
- * Shape of the parameter object that should be passed to this class during a deploy.
- */
-interface RegistryDeployParams {
-  tokenAddress: string; // deployed address of the token that this contract references
-  votingAddress: string; // deployed address of a PLCRVoting contract this contract references
-  parameterizerAddress: string; // deployed address of a Parameterizer this contract references
-  name: string; // The name of this registry
-}
 
 /**
  * Registry
