@@ -1,20 +1,15 @@
 import Web3 from 'web3'
-import { Keyed, ContractOptions, DeployParams } from '../interfaces'
+import {
+  Keyed,
+  ContractOptions,
+  DeployParams,
+  Eip20DeployParams,
+} from '../interfaces'
 import Deployable from '../abstracts/deployable'
 import tokenJson from '../../computable/build/contracts/EIP20.json'
 import { Contract, TransactionReceipt } from '../../node_modules/web3/types.d'
 import { Nos } from '../types'
 import { Token, GAS, GAS_PRICE } from '../../src/constants'
-
-/**
- * Note that the 3 "Vanity" properties are not mandatory, and me be unused by some implementations
- */
-interface Eip20DeployParams {
-  supply?:Nos; // Initial token amount
-  name?:string; // Vanity name of this token
-  decimals?:Nos; // Vanity number of decimal places to show
-  symbol?:Nos; // Vanity shorthand for this token
-}
 
 export default class extends Deployable {
   /**
