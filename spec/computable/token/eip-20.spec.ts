@@ -4,11 +4,24 @@ import { Token } from '../../../src/constants'
 import Eip20 from '../../../src/contracts/eip-20'
 import { maybeParseInt } from '../../../src/helpers'
 
-// TODO use the web3 IProvider?
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
+let server:any,
+  provider:any,
+  web3:Web3,
+  accounts:string[],
+  eip20:Eip20
 
-let accounts:string[], eip20:Eip20
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8544)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8544')
+  web3 = new Web3(provider)
+})
+
+afterAll(() => {
+  server.close()
+  server = null
+})
 
 describe('EIP20 Token', () => {
   beforeEach(async () => {

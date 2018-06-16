@@ -30,6 +30,7 @@ let eip20:Eip20,
   voter:string,
   proposer:string
 
+// TODO also displays timing issues with WS server ascertain...
 describe('Registry: Challenge', () => {
   beforeEach(async () => {
     [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()

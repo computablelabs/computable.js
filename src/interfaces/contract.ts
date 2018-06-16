@@ -1,4 +1,5 @@
 import { Nos } from '../types'
+import { BlockType } from '../../node_modules/web3/types.d'
 
 /**
  * Contracts have some repeatedly used options which may, or may not be passed
@@ -21,4 +22,17 @@ export interface DeployParams {
   abi:any;
   bytecode:string;
   args?:any[];
+}
+
+/**
+ * When fetching an event emitter on a deployed contract instance, there
+ * is an optional options object that can be passed with this shape
+ *
+ * NOTE: We do not support passing the optional callback as we inforce
+ * the use of 'on' instead
+ */
+export interface EventEmitterOptions {
+  filter?: object;
+  fromBlock?: BlockType;
+  topics?: string[];
 }

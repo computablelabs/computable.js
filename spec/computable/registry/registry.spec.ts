@@ -8,16 +8,24 @@ import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
-
-let accounts:string[],
+let web3:Web3,
+  server:any,
+  provider:any,
+  accounts:string[],
   eip20:Eip20,
   dll:Contract,
   store:Contract,
   voting:Voting,
   parameterizer:Parameterizer,
   registry:Registry
+
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8552)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8552')
+  web3 = new Web3(provider)
+})
 
 describe('Registry', () => {
   beforeEach(async () => {
