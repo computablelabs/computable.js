@@ -1,28 +1,40 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract, HttpProvider } from '../../../node_modules/web3/types.d'
+import { Contract } from '../../../node_modules/web3/types.d'
 import { increaseTime } from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import {
-  eventReturnValues,
+  onData,
   deployDll,
   deployAttributeStore,
-  maybeParseInt,
+  maybeParseInt
 } from '../../../src/helpers'
 
-// TODO define the return of ganache.provider
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
-
-let accounts:string[],
+let web3:Web3,
+  server:any, // TODO we can import these declarations
+  provider:any,
+  accounts:string[],
   eip20:Eip20,
   dll:Contract,
   store:Contract,
   voting:Voting,
   parameterizer:Parameterizer
+
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8541)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8541')
+  web3 = new Web3(provider)
+})
+
+afterAll(() => {
+  server.close()
+  server = null
+})
 
 describe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
@@ -65,10 +77,14 @@ describe('Parameterizer: challengeReparameterization', () => {
   it('should leave params intact if a proposal loses a challenge', async () => {
     const startingBalZero = await eip20.balanceOf(accounts[0]),
       startingBalOne = await eip20.balanceOf(accounts[1]),
-      propID = eventReturnValues('_ReparameterizationProposal',
-        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID')
+      emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
 
-    const tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+    parameterizer.proposeReparameterization('voteQuorum', 51)
+
+    const log = await onData(emitter),
+      propID = log.returnValues.propID,
+      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+
     expect(tx1).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
@@ -92,12 +108,19 @@ describe('Parameterizer: challengeReparameterization', () => {
   it('should set new params if a proposal wins a challenge', async () => {
     const startingBalZero = await eip20.balanceOf(accounts[0]),
       startingBalOne = await eip20.balanceOf(accounts[1]),
+      reParamEmitter = parameterizer.getEventEmitter('_ReparameterizationProposal'),
+      challEmitter = parameterizer.getEventEmitter('_NewChallenge')
 
-      propID = eventReturnValues('_ReparameterizationProposal',
-        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID'),
+    parameterizer.proposeReparameterization('voteQuorum', 51)
 
-      challID = eventReturnValues('_NewChallenge',
-        await parameterizer.challengeReparameterization(propID, { from: accounts[1] }), 'challengeID'),
+    const log1 = await onData(reParamEmitter),
+      propID = log1.returnValues.propID
+
+
+    parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+
+    const log2 = await onData(challEmitter),
+      challID = log2.returnValues.challengeID,
 
       // accounts[2] as voter here TODO setup some spec-level constants
       tx2 = await voting.commitVote(web3, challID, accounts[2], 1, 10, 420)
@@ -115,5 +138,4 @@ describe('Parameterizer: challengeReparameterization', () => {
     const quorum = await parameterizer.get('voteQuorum')
     expect(quorum).toBe('51')
   })
-
 })

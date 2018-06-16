@@ -3,15 +3,22 @@ import Web3 from 'web3'
 import { Addresses } from '../../../src/constants'
 import Eip20 from '../../../src/contracts/eip-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
-import { maybeParseInt, eventReturnValues } from '../../../src/helpers'
+import { maybeParseInt, onData } from '../../../src/helpers'
 
-// TODO use the web3 IProvider?
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
-
-let accounts:string[],
+let web3:Web3,
+  server:any,
+  provider:any,
+  accounts:string[],
   eip20:Eip20,
   parameterizer:Parameterizer
+
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8548)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8548')
+  web3 = new Web3(provider)
+})
 
 describe('Parameterizer: Reparamaterize', () => {
   beforeEach(async () => {
@@ -61,9 +68,13 @@ describe('Parameterizer: Reparamaterize', () => {
       const applicantStartingBalance = await eip20.balanceOf(accounts[0])
       expect(applicantStartingBalance).toBe('5000000')
 
-      // propId is nested in the event TODO change to using the event listener when they work
-      const propID = eventReturnValues('_ReparameterizationProposal',
-        await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID'),
+      // the emitter must be fetched before the proposition is made or it wont fire
+      const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
+      parameterizer.proposeReparameterization('voteQuorum', 51)
+
+      // its ok to await the event after the proposition, as long as the emitter was fetched first
+      const log = await onData(emitter),
+        propID = log.returnValues.propID,
         proposed = await parameterizer.proposals(propID)
 
       expect(proposed.name).toBe('voteQuorum')

@@ -129,6 +129,7 @@ describe('Registry: Apply', () => {
       }
     })
 
+    // TODO the WS listener never fires if we use it here, investigate why
     it('should revert if applicationExpiry would overflow', async () => {
       const BN = web3.utils.BN,
         eth = web3.eth,
