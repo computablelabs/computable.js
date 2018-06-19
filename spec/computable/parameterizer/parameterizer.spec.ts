@@ -9,11 +9,10 @@ let server:any, provider:any, web3:Web3, accounts:string[], parameterizer:Parame
 // startup the test rpc making sure a websocket server is running
 beforeAll(() => {
   server = ganache.server({ws:true})
-  server.listen(8545)
-  server.on('close', () => console.log('stopped listening'))
+  server.listen(8445)
 
   // TODO use the web3 IProvider?
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8545')
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8445')
   web3 = new Web3(provider)
 })
 

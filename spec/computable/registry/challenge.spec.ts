@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract, Block } from '../../../node_modules/web3/types.d'
+import { Contract, Block } from 'web3/types.d'
 import { stringToBytes, increaseTime, whitelist } from '../../helpers'
 import Eip20 from '../../../src/contracts/eip-20'
 import Voting from '../../../src/contracts/plcr-voting'
