@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract } from '../../../node_modules/web3/types.d'
+import { Contract } from 'web3/types.d'
 import { increaseTime } from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Parameterizer from '../../../src/contracts/parameterizer'

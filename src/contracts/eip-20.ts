@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import { Contract, TransactionReceipt } from 'web3/types.d'
 import {
   Keyed,
   ContractOptions,
@@ -7,7 +8,6 @@ import {
 } from '../interfaces'
 import Deployable from '../abstracts/deployable'
 import tokenJson from '../../computable/build/contracts/EIP20.json'
-import { Contract, TransactionReceipt } from '../../node_modules/web3/types.d'
 import { Nos } from '../types'
 import { Token, GAS, GAS_PRICE } from '../../src/constants'
 

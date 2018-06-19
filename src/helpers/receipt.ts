@@ -3,7 +3,7 @@
  * objects that are returned from any-and-all contract class transactions
  */
 
-import { TransactionReceipt } from '../../node_modules/web3/types.d'
+import { TransactionReceipt } from 'web3/types.d'
 
 /**
  * Access the data held in receipt.events.name.returnValues.

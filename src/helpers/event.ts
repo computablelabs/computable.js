@@ -1,4 +1,4 @@
-import { EventEmitter, EventLog } from '../../node_modules/web3/types.d'
+import { EventEmitter, EventLog } from 'web3/types.d'
 /**
  * The callback-based Event Emitter system exposed in Web3's `.on` paradigm
  * can be 'promisified' via this helper so that you can use async/await with it.

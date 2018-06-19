@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Contract } from '../../node_modules/web3/types.d'
+import { Contract } from 'web3/types.d'
 import dllJson from '../../computable/build/contracts/DLL.json'
 import storeJson from '../../computable/build/contracts/AttributeStore.json'
 import {

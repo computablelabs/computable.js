@@ -1,5 +1,5 @@
+import { BlockType } from 'web3/types.d'
 import { Nos } from '../types'
-import { BlockType } from '../../node_modules/web3/types.d'
 
 /**
  * Contracts have some repeatedly used options which may, or may not be passed
