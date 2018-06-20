@@ -22,7 +22,7 @@ export interface RegistryListing {
   challengeID?:Nos; // Corresponds to a pollID in PLCRVoting
 }
 
-interface TokenClaims {
+export interface TokenClaims {
   [key:string]: boolean;
 }
 
