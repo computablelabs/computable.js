@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { EventEmitter, EventLog } from 'web3/types.d'
 import { increaseTime } from '../../helpers'
 import { onData } from '../../../src/helpers'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
 
@@ -12,7 +12,7 @@ let server:any,
   provider:any,
   web3:Web3,
   accounts:string[],
-  eip20:Eip20,
+  erc20:Erc20,
   parameterizer:Parameterizer
 
 beforeAll(() => {
@@ -32,9 +32,9 @@ describe('Parameterizer: canBeSet', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(accounts[0])
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(accounts[0])
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     parameterizer = new Parameterizer(accounts[0])
     // using dummy address for voting here
@@ -42,7 +42,7 @@ describe('Parameterizer: canBeSet', () => {
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
-    await eip20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(parameterizerAddress, 1000000)
   })
 
   it('should be truthy if a proposal passed its application stage with no challenge', async () => {

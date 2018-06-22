@@ -4,7 +4,7 @@ import { Contract } from 'web3/types.d'
 import { increaseTime } from '../../helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Parameterizer from '../../../src/contracts/parameterizer'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import {
   onData,
@@ -17,7 +17,7 @@ let web3:Web3,
   server:any, // TODO we can import these declarations
   provider:any,
   accounts:string[],
-  eip20:Eip20,
+  erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
@@ -40,9 +40,9 @@ describe('Parameterizer: challengeReparameterization', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(accounts[0])
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(accounts[0])
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -63,20 +63,20 @@ describe('Parameterizer: challengeReparameterization', () => {
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm (and is the default account)
-    await eip20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(parameterizerAddress, 1000000)
     // challenger (accounts[1]) needs token funds to spend
-    await eip20.transfer(accounts[1], 500000)
+    await erc20.transfer(accounts[1], 500000)
     // parameterizer must be approved to spend on [1]'s behalf
-    await eip20.approve(parameterizerAddress, 450000, { from: accounts[1] })
+    await erc20.approve(parameterizerAddress, 450000, { from: accounts[1] })
     // voter needs funds
-    await eip20.transfer(accounts[2], 500000)
+    await erc20.transfer(accounts[2], 500000)
     // approve voting by voter
-    await eip20.approve(votingAddress, 450000, { from: accounts[2] })
+    await erc20.approve(votingAddress, 450000, { from: accounts[2] })
   })
 
   it('should leave params intact if a proposal loses a challenge', async () => {
-    const startingBalZero = await eip20.balanceOf(accounts[0]),
-      startingBalOne = await eip20.balanceOf(accounts[1]),
+    const startingBalZero = await erc20.balanceOf(accounts[0]),
+      startingBalOne = await erc20.balanceOf(accounts[1]),
       emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
 
     parameterizer.proposeReparameterization('voteQuorum', 51)
@@ -96,18 +96,18 @@ describe('Parameterizer: challengeReparameterization', () => {
     // nothing should have changed as it was challenged
     expect(voteQ).toBe('50')
 
-    const finalBalZero = await eip20.balanceOf(accounts[0])
+    const finalBalZero = await erc20.balanceOf(accounts[0])
     // proposer loses their deposit
     expect(maybeParseInt(finalBalZero)).toBe(maybeParseInt(startingBalZero) - ParameterDefaults.P_MIN_DEPOSIT)
 
     // edge case, the challenger gets both deposits back b/c there were no voters
-    const finalBalOne = await eip20.balanceOf(accounts[1])
+    const finalBalOne = await erc20.balanceOf(accounts[1])
     expect(maybeParseInt(finalBalOne)).toBe(maybeParseInt(startingBalOne) + ParameterDefaults.P_MIN_DEPOSIT)
   })
 
   it('should set new params if a proposal wins a challenge', async () => {
-    const startingBalZero = await eip20.balanceOf(accounts[0]),
-      startingBalOne = await eip20.balanceOf(accounts[1]),
+    const startingBalZero = await erc20.balanceOf(accounts[0]),
+      startingBalOne = await erc20.balanceOf(accounts[1]),
       reParamEmitter = parameterizer.getEventEmitter('_ReparameterizationProposal'),
       challEmitter = parameterizer.getEventEmitter('_NewChallenge')
 
