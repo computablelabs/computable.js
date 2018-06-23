@@ -4,10 +4,10 @@ import {
   Keyed,
   ContractOptions,
   DeployParams,
-  Eip20DeployParams,
+  Erc20DeployParams,
 } from '../interfaces'
 import Deployable from '../abstracts/deployable'
-import tokenJson from '../../computable/build/contracts/EIP20.json'
+import tokenJson from '../../computable/build/contracts/ConstructableToken.json'
 import { Nos } from '../types'
 import { Token, GAS, GAS_PRICE } from '../../src/constants'
 
@@ -15,7 +15,7 @@ export default class extends Deployable {
   /**
    * An amount of funds an owner has given a spender permission to use
    */
-  async allowance(owner:string, spender:string): Promise<string> {
+  async allowance(owner:string, spender:string): Promise<Nos> {
     const deployed = this.requireDeployed()
 
     return deployed.methods.allowance(owner, spender).call()
@@ -40,50 +40,22 @@ export default class extends Deployable {
   }
 
   /**
-   * Retrun the number of decimals that should be shown by this token
-   */
-  async decimals(): Promise<Nos> {
-    const deployed = this.requireDeployed()
-
-    return deployed.methods.decimals().call()
-  }
-
-  /**
    * Pepare the deploy options, passing them along with the instantiated web3 and optional
    * contract options to the super class' deployContract method.
    * @see abstracts/deployable#deployContract
    */
-  async deploy(web3:Web3, params:Eip20DeployParams = {}, opts?:ContractOptions): Promise<string> {
+  async deploy(web3:Web3, params:Erc20DeployParams = {}, opts?:ContractOptions): Promise<string> {
     const dp:DeployParams = {
       abi: tokenJson.abi,
       bytecode: tokenJson.bytecode,
       args:[
-        params.supply || Token.supply,
-        params.name || Token.name,
-        params.decimals || Token.decimals,
-        params.symbol || Token.symbol
+        params.address || this.defaultAccount,
+        params.supply || Token.supply
       ]
+
     }
 
     return super.deployContract(web3, dp, opts)
-  }
-
-  /**
-   * Retrun the vanity name of this token
-   */
-  async name(): Promise<string> {
-    const deployed = this.requireDeployed()
-
-    return deployed.methods.name().call()
-  }
-
-  /**
-   * Retrun the vanity symbol of this token
-   */
-  async symbol(): Promise<string> {
-    const deployed = this.requireDeployed()
-
-    return deployed.methods.symbol().call()
   }
 
   /**

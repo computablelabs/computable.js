@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { Contract } from 'web3/types.d'
 import { deployDll, deployAttributeStore } from '../../../src/helpers'
 import { stringToBytes, increaseTime } from '../../helpers'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
@@ -13,7 +13,7 @@ let web3:Web3,
   server:any,
   provider:any,
   accounts:string[],
-  eip20:Eip20,
+  erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
@@ -32,9 +32,9 @@ describe('Registry', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(accounts[0])
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(accounts[0])
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -57,8 +57,8 @@ describe('Registry', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await eip20.approve(votingAddress, 1000000)
-    await eip20.approve(registryAddress, 1000000)
+    await erc20.approve(votingAddress, 1000000)
+    await erc20.approve(registryAddress, 1000000)
   })
 
   it('returns true if application expiry was previously initialized', async () => {
