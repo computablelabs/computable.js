@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const deployable_1 = __importDefault(require("../abstracts/deployable"));
-const EIP20_json_1 = __importDefault(require("../../computable/build/contracts/EIP20.json"));
+const ConstructableToken_json_1 = __importDefault(require("../../computable/build/contracts/ConstructableToken.json"));
 const constants_1 = require("../../src/constants");
 class default_1 extends deployable_1.default {
     /**
@@ -43,15 +43,6 @@ class default_1 extends deployable_1.default {
         });
     }
     /**
-     * Retrun the number of decimals that should be shown by this token
-     */
-    decimals() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const deployed = this.requireDeployed();
-            return deployed.methods.decimals().call();
-        });
-    }
-    /**
      * Pepare the deploy options, passing them along with the instantiated web3 and optional
      * contract options to the super class' deployContract method.
      * @see abstracts/deployable#deployContract
@@ -60,34 +51,14 @@ class default_1 extends deployable_1.default {
         const _super = name => super[name];
         return __awaiter(this, void 0, void 0, function* () {
             const dp = {
-                abi: EIP20_json_1.default.abi,
-                bytecode: EIP20_json_1.default.bytecode,
+                abi: ConstructableToken_json_1.default.abi,
+                bytecode: ConstructableToken_json_1.default.bytecode,
                 args: [
-                    params.supply || constants_1.Token.supply,
-                    params.name || constants_1.Token.name,
-                    params.decimals || constants_1.Token.decimals,
-                    params.symbol || constants_1.Token.symbol
+                    params.address || this.defaultAccount,
+                    params.supply || constants_1.Token.supply
                 ]
             };
             return _super("deployContract").call(this, web3, dp, opts);
-        });
-    }
-    /**
-     * Retrun the vanity name of this token
-     */
-    name() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const deployed = this.requireDeployed();
-            return deployed.methods.name().call();
-        });
-    }
-    /**
-     * Retrun the vanity symbol of this token
-     */
-    symbol() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const deployed = this.requireDeployed();
-            return deployed.methods.symbol().call();
         });
     }
     /**
