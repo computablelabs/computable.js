@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const deployable_1 = __importDefault(require("../abstracts/deployable"));
 const PLCRVoting_json_1 = __importDefault(require("../../computable/build/contracts/PLCRVoting.json"));
-const helpers_1 = require("../../src/helpers");
+const helpers_1 = require("../helpers");
 /**
  * PLCR Voting
  */

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const deployable_1 = __importDefault(require("../abstracts/deployable"));
 const ConstructableToken_json_1 = __importDefault(require("../../computable/build/contracts/ConstructableToken.json"));
-const constants_1 = require("../../src/constants");
+const constants_1 = require("../constants");
 class default_1 extends deployable_1.default {
     /**
      * An amount of funds an owner has given a spender permission to use
