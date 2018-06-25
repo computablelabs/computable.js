@@ -6,6 +6,8 @@
   "module": "dist/index.js",
   "scripts": {
     "test": "jasmine-ts ./spec/**/*.spec.ts",
+    "build": "./node_modules/typescript/bin/tsc",
+    "build:dry": "./node_modules/typescript/bin/tsc -noEmit",
     "test-init": "./node_modules/.bin/jasmine-ts init"
   },
   "keywords": [
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "@types/node": "^9.6.5",
+    "@types/underscore": "^1.8.8",
     "ganache-cli": "^6.1.0",
     "jasmine": "^3.1.0",
     "jasmine-spec-reporter": "^4.2.1",

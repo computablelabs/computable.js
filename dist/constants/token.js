@@ -4,9 +4,6 @@ const address_1 = require("./address");
 const general_1 = require("./general");
 exports.Token = {
     address: '0x337cDDa6D41A327c5ad456166CCB781a9722AFf9',
-    decimals: 2,
-    name: 'ComputableCoin',
-    symbol: 'CC',
     supply: 5000000,
 };
 const holderOne = {
