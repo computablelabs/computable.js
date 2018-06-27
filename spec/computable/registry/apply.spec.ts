@@ -1,8 +1,8 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract, Block } from '../../../node_modules/web3/types.d'
+import { Contract, Block } from 'web3/types.d'
 import { stringToBytes, increaseTime } from '../../helpers'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
@@ -18,7 +18,7 @@ const provider:any = ganache.provider(),
   web3 = new Web3(provider)
 
 let accounts:string[],
-  eip20:Eip20,
+  erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
@@ -29,9 +29,9 @@ describe('Registry: Apply', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(accounts[0])
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(accounts[0])
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -54,13 +54,13 @@ describe('Registry: Apply', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await eip20.approve(votingAddress, 1000000)
-    await eip20.approve(registryAddress, 1000000)
+    await erc20.approve(votingAddress, 1000000)
+    await erc20.approve(registryAddress, 1000000)
 
     // 1st account needs funding
-    await eip20.transfer(accounts[1], 500000)
-    await eip20.approve(registryAddress, 250000, { from: accounts[1] })
-    await eip20.approve(parameterizerAddress, 250000, { from: accounts[1] })
+    await erc20.transfer(accounts[1], 500000)
+    await erc20.approve(registryAddress, 250000, { from: accounts[1] })
+    await erc20.approve(parameterizerAddress, 250000, { from: accounts[1] })
   })
 
   it('allows a new application', async () => {
@@ -107,7 +107,7 @@ describe('Registry: Apply', () => {
   describe('token tranfer functionality', () => {
     it('reverts if token transfer from user fails', async () => {
       // change the approved funding for 0th account to 0
-      await eip20.approve(registry.getAddress(), 0, { from: accounts[0]})
+      await erc20.approve(registry.getAddress(), 0, { from: accounts[0]})
 
       try {
         await registry.apply(stringToBytes(web3, 'nope.com'), ParameterDefaults.MIN_DEPOSIT)
@@ -129,6 +129,7 @@ describe('Registry: Apply', () => {
       }
     })
 
+    // TODO the WS listener never fires if we use it here, investigate why
     it('should revert if applicationExpiry would overflow', async () => {
       const BN = web3.utils.BN,
         eth = web3.eth,

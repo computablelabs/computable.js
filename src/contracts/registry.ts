@@ -1,27 +1,18 @@
 import Web3 from 'web3'
+import { TransactionReceipt } from 'web3/types.d'
 import { GAS, GAS_PRICE, Errors } from '../constants'
 import Deployable from '../abstracts/deployable'
 import { Nos } from '../types'
 import registryJson from '../../computable/build/contracts/Registry.json'
 // TODO PR web3 to export these properly
-import { TransactionReceipt } from '../../node_modules/web3/types.d'
 import {
   Keyed,
   ContractOptions,
+  RegistryDeployParams,
   DeployParams,
   RegistryListing,
   Challenge
 } from '../interfaces'
-
-/**
- * Shape of the parameter object that should be passed to this class during a deploy.
- */
-interface RegistryDeployParams {
-  tokenAddress: string; // deployed address of the token that this contract references
-  votingAddress: string; // deployed address of a PLCRVoting contract this contract references
-  parameterizerAddress: string; // deployed address of a Parameterizer this contract references
-  name: string; // The name of this registry
-}
 
 /**
  * Registry

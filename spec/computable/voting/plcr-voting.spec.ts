@@ -1,36 +1,45 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract } from '../../../node_modules/web3/types.d'
+import { Contract } from 'web3/types.d'
 import { ParameterDefaults, NAME } from '../../../src/constants'
-import {
-  eventReturnValues,
-  deployDll,
-  deployAttributeStore,
-} from '../../../src/helpers'
+import { onData, deployDll, deployAttributeStore } from '../../../src/helpers'
 import { stringToBytes } from '../../helpers'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
-
-let accounts:string[],
-  eip20:Eip20,
+let web3:Web3,
+  server:any,
+  provider:any,
+  accounts:string[],
+  erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
   parameterizer:Parameterizer,
   registry:Registry
 
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8553)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8553')
+  web3 = new Web3(provider)
+})
+
+afterAll(() => {
+  server.close()
+  server = null
+})
+
 describe('PLCRVoting', () => {
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(accounts[0])
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(accounts[0])
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -53,16 +62,16 @@ describe('PLCRVoting', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await eip20.approve(votingAddress, 1000000)
-    await eip20.approve(registryAddress, 1000000)
+    await erc20.approve(votingAddress, 1000000)
+    await erc20.approve(registryAddress, 1000000)
     // 1st account, as challenger, needs funds
-    await eip20.transfer(accounts[1], 500000)
+    await erc20.transfer(accounts[1], 500000)
     // 2nd account as voter needs funds
-    await eip20.transfer(accounts[2], 500000)
+    await erc20.transfer(accounts[2], 500000)
     // registry needs to be approved to spend ond the challenger's behalf
-    await eip20.approve(registryAddress, 450000, { from: accounts[1] })
+    await erc20.approve(registryAddress, 450000, { from: accounts[1] })
     // voting needs approval from voter
-    await eip20.approve(votingAddress, 450000, { from: accounts[2] })
+    await erc20.approve(votingAddress, 450000, { from: accounts[2] })
   })
 
   it('has deployed', () => {
@@ -79,13 +88,16 @@ describe('PLCRVoting', () => {
     expect(tx1).toBeTruthy()
     expect(tx2).toBeTruthy()
 
-    const challID1 = eventReturnValues('_Challenge',
-      await registry.challenge(domainOne, '', { from: accounts[1] }), 'challengeID')
+    const emitter = registry.getEventEmitter('_Challenge')
+
+    registry.challenge(domainOne, '', { from: accounts[1] })
+
+    const log1 = await onData(emitter), challID1 = log1.returnValues.challengeID
     expect(challID1).toBeTruthy()
 
+    registry.challenge(domainTwo, '', { from: accounts[1] })
 
-    const challID2 = eventReturnValues('_Challenge',
-      await registry.challenge(domainTwo, '', { from: accounts[1] }), 'challengeID')
+    const log2 = await onData(emitter), challID2 = log2.returnValues.challengeID
     expect(challID2).toBeTruthy()
 
     // args: last 3 are vote, tokens, salt

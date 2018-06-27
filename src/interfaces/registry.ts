@@ -4,6 +4,16 @@
 
 import { Nos } from '../types'
 
+/**
+ * Shape of the parameter object that should be passed to the registry class during a deploy.
+ */
+export interface RegistryDeployParams {
+  tokenAddress: string; // deployed address of the token that this contract references
+  votingAddress: string; // deployed address of a PLCRVoting contract this contract references
+  parameterizerAddress: string; // deployed address of a Parameterizer this contract references
+  name: string; // The name of this registry
+}
+
 export interface RegistryListing {
   applicationExpiry:Nos; // Expiration date of apply stage
   whitelisted:boolean; // Indicates registry status
@@ -12,7 +22,7 @@ export interface RegistryListing {
   challengeID?:Nos; // Corresponds to a pollID in PLCRVoting
 }
 
-interface TokenClaims {
+export interface TokenClaims {
   [key:string]: boolean;
 }
 

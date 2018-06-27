@@ -1,7 +1,12 @@
 import Web3 from 'web3'
-import { Contract } from '../../node_modules/web3/types.d'
-import { Keyed, ContractOptions, DeployParams } from '../interfaces'
+import { Contract, EventEmitter } from 'web3/types.d'
 import { Errors, GAS, GAS_PRICE } from '../constants'
+import {
+  Keyed,
+  ContractOptions,
+  DeployParams,
+  EventEmitterOptions,
+} from '../interfaces'
 
 export default abstract class implements Keyed {
   [key:string]: any
@@ -42,6 +47,19 @@ export default abstract class implements Keyed {
 
   getDeployed(): Contract|undefined { return this.deployed }
 
+  /**
+   * Given the name of a solidity event, return the subscription object for it. These
+   * objects are event emitters with an `on` method which accepts:
+   * * `data`
+   * * `change`
+   * * `error`
+   * see the web3 @types EventEmitter
+   */
+  getEventEmitter(name:string, opts?:EventEmitterOptions): EventEmitter {
+    const emitter = this.requireEmitter(name, opts)
+    return emitter
+  }
+
   requireAccount(opts?:ContractOptions): string {
     const account = opts && opts.from || this.defaultAccount
     if (!account) throw Errors.NO_ACCOUNT_AVAILABLE
@@ -51,6 +69,12 @@ export default abstract class implements Keyed {
   requireDeployed(): Contract {
     if (!this.deployed) throw Errors.CONTRACT_NOT_DEPLOYED
     return this.deployed
+  }
+
+  requireEmitter(name:string, opts?:EventEmitterOptions): EventEmitter {
+    const deployed = this.requireDeployed()
+    if (!deployed.events[name]) throw Errors.NO_SUCH_EVENT
+    return deployed.events[name](opts)
   }
 
   setDefaultAccount(acct:string): void { this.defaultAccount = acct }

@@ -1,8 +1,8 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract, Block } from '../../../node_modules/web3/types.d'
+import { Contract, Block } from 'web3/types.d'
 import { stringToBytes, increaseTime, whitelist } from '../../helpers'
-import Eip20 from '../../../src/contracts/eip-20'
+import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
@@ -18,7 +18,7 @@ import {
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
 
-let eip20:Eip20,
+let erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
@@ -30,13 +30,14 @@ let eip20:Eip20,
   voter:string,
   proposer:string
 
+// TODO also displays timing issues with WS server ascertain...
 describe('Registry: Challenge', () => {
   beforeEach(async () => {
     [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
 
-    eip20 = new Eip20(owner)
-    const tokenAddress = await eip20.deploy(web3)
-    eip20.setProvider(provider)
+    erc20 = new Erc20(owner)
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
     dll = await deployDll(web3, owner)
     dll.setProvider(provider)
@@ -59,33 +60,33 @@ describe('Registry: Challenge', () => {
     registry.setProvider(provider)
 
     //owner approves voting and reg to spend
-    // await eip20.approve(votingAddress, 1000000)
-    await eip20.approve(registryAddress, 1000000)
+    // await erc20.approve(votingAddress, 1000000)
+    await erc20.approve(registryAddress, 1000000)
 
     // applicant needs funding
-    await eip20.transfer(applicant, 500000)
-    await eip20.approve(registryAddress, 250000, { from: applicant })
-    await eip20.approve(parameterizerAddress, 250000, { from: applicant })
+    await erc20.transfer(applicant, 500000)
+    await erc20.approve(registryAddress, 250000, { from: applicant })
+    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
 
     // challenger needs funding
-    await eip20.transfer(challenger, 500000)
-    await eip20.approve(registryAddress, 250000, { from: challenger })
-    await eip20.approve(parameterizerAddress, 250000, { from: challenger })
+    await erc20.transfer(challenger, 500000)
+    await erc20.approve(registryAddress, 250000, { from: challenger })
+    await erc20.approve(parameterizerAddress, 250000, { from: challenger })
 
     // voter needs funding
-    await eip20.transfer(voter, 600000)
-    await eip20.approve(registryAddress, 200000, { from: voter })
-    await eip20.approve(parameterizerAddress, 200000, { from: voter })
-    await eip20.approve(votingAddress, 200000, { from: voter })
+    await erc20.transfer(voter, 600000)
+    await erc20.approve(registryAddress, 200000, { from: voter })
+    await erc20.approve(parameterizerAddress, 200000, { from: voter })
+    await erc20.approve(votingAddress, 200000, { from: voter })
 
     // funds for proposer
-    await eip20.transfer(proposer, 100000)
-    await eip20.approve(parameterizerAddress, 100000, { from: proposer })
+    await erc20.transfer(proposer, 100000)
+    await erc20.approve(parameterizerAddress, 100000, { from: proposer })
   })
 
   it('should challenge an application', async () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
-      challengerStartingBal = maybeParseInt(await eip20.balanceOf(challenger))
+      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
@@ -101,7 +102,7 @@ describe('Registry: Challenge', () => {
     // should be falsy as it is challenged
     expect(isWhitelisted).toBe(false)
 
-    const challengerFinalBal = maybeParseInt(await eip20.balanceOf(challenger))
+    const challengerFinalBal = maybeParseInt(await erc20.balanceOf(challenger))
     // NOTE: no voters so challenger gets all of the stake
     const expectedFinalBal = challengerStartingBal + ParameterDefaults.MIN_DEPOSIT
 
@@ -110,7 +111,7 @@ describe('Registry: Challenge', () => {
 
   it('can challenge a listing', async () => {
     const listBytes = stringToBytes(web3, 'gunnareject.net'),
-      challengerStartingBal = maybeParseInt(await eip20.balanceOf(challenger))
+      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
     // move through to whitelisted, allow min_deposit to default
     const whitelisted = await whitelist(provider, registry, listBytes, applicant)
@@ -125,7 +126,7 @@ describe('Registry: Challenge', () => {
     expect(await registry.isWhitelisted(listBytes)).toBe(false) // should revert to falsy with challenge
 
     // token dispensation as the first spec, all to challenger as there were no voters
-    const challengerFinalBal = maybeParseInt(await eip20.balanceOf(challenger))
+    const challengerFinalBal = maybeParseInt(await erc20.balanceOf(challenger))
     // NOTE: no voters so challenger gets all of the stake
     const expectedFinalBal = challengerStartingBal + ParameterDefaults.MIN_DEPOSIT
 
@@ -193,7 +194,7 @@ describe('Registry: Challenge', () => {
 
   it('should touch and remove a listing with a deposit below the current min', async () => {
     const listBytes = stringToBytes(web3, 'gunnaremove.net'),
-      applicantStartBal = await eip20.balanceOf(applicant),
+      applicantStartBal = await erc20.balanceOf(applicant),
       // move through to whitelisted
       whitelisted = await whitelist(provider, registry, listBytes, applicant)
 
@@ -207,13 +208,13 @@ describe('Registry: Challenge', () => {
     await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
     await parameterizer.processProposal(propID)
 
-    const challengerStartBal = await eip20.balanceOf(challenger)
+    const challengerStartBal = await erc20.balanceOf(challenger)
     await registry.challenge(listBytes, '', { from: challenger })
-    const challengerFinalBal = await eip20.balanceOf(challenger)
+    const challengerFinalBal = await erc20.balanceOf(challenger)
 
     // no token change should have occured
     expect(challengerStartBal).toBe(challengerFinalBal)
-    const applicantFinalBal = await eip20.balanceOf(applicant)
+    const applicantFinalBal = await erc20.balanceOf(applicant)
     expect(applicantStartBal).toBe(applicantFinalBal)
     // listing should no longer be whitelisted as it does not meet min dep requirement
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
@@ -259,7 +260,7 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     // overwrite the approved amount for the challenger with 0
-    await eip20.approve(registry.getAddress(), 0, { from: challenger })
+    await erc20.approve(registry.getAddress(), 0, { from: challenger })
 
     try {
       await registry.challenge(listBytes, '', { from: challenger })

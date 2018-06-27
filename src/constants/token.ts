@@ -4,9 +4,6 @@ import { ONE_THOUSAND } from './general'
 
 export const Token:AToken =  {
   address: '0x337cDDa6D41A327c5ad456166CCB781a9722AFf9',
-  decimals: 2,
-  name: 'ComputableCoin',
-  symbol: 'CC',
   supply: 5000000,
 }
 

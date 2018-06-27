@@ -1,21 +1,16 @@
 import Web3 from 'web3'
-import { GAS, GAS_PRICE, Errors } from '../../src/constants'
-import { Keyed, ContractOptions, DeployParams } from '../interfaces'
+import { TransactionReceipt } from 'web3/types.d'
+import { GAS, GAS_PRICE, Errors } from '../constants'
 import Deployable from '../abstracts/deployable'
 import { Nos } from '../types'
 import votingJson from '../../computable/build/contracts/PLCRVoting.json'
-import { TransactionReceipt } from '../../node_modules/web3/types.d'
-import { updateBytecode } from '../../src/helpers'
-
-/**
- * Shape of the parameter object that should be passed to this class on deploy.
- * All three args are mandatory.
- */
-interface VotingDeployParams {
-  tokenAddress: string; // Address of the token refereced by this contract
-  dllAddress: string; // Address of the deployed DLL contract this contract is `using`
-  attributeStoreAddress: string; // Address of the deployed Attribute Store contract this contract is `using`
-}
+import { updateBytecode } from '../helpers'
+import {
+  Keyed,
+  ContractOptions,
+  VotingDeployParams,
+  DeployParams,
+} from '../interfaces'
 
 /**
  * PLCR Voting
