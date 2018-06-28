@@ -17,93 +17,96 @@ import {
 const provider:any = ganache.provider(),
   web3 = new Web3(provider)
 
-//let eip20:Eip20,
-//  dll:Contract,
-//  store:Contract,
-//  voting:Voting,
-//  parameterizer:Parameterizer,
-//  registry:Registry,
-//  owner:string,
-//  applicant:string,
-//  challenger:string,
-//  voter:string,
-//  proposer:string
+let erc20:Erc20,
+  dll:Contract,
+  store:Contract,
+  voting:Voting,
+  parameterizer:Parameterizer,
+  registry:Registry,
+  owner:string,
+  applicant:string,
+  challenger:string,
+  voter:string,
+  proposer:string
 
 fdescribe('Registry: Claim Reward', () => {
   beforeEach(async () => {
-    //[owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
+    [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
 
-    //eip20 = new Eip20(owner)
-    //const tokenAddress = await eip20.deploy(web3)
-    //eip20.setProvider(provider)
+    erc20 = new Erc20(owner)
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
 
-    //dll = await deployDll(web3, owner)
-    //dll.setProvider(provider)
-    //const dllAddress = dll.options.address
+    dll = await deployDll(web3, owner)
+    dll.setProvider(provider)
+    const dllAddress = dll.options.address
 
-    //store = await deployAttributeStore(web3, owner)
-    //store.setProvider(provider)
-    //const attributeStoreAddress = store.options.address
+    store = await deployAttributeStore(web3, owner)
+    store.setProvider(provider)
+    const attributeStoreAddress = store.options.address
 
-    //voting = new Voting(owner)
-    //const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
-    //voting.setProvider(provider)
+    voting = new Voting(owner)
+    const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
+    voting.setProvider(provider)
 
-    //parameterizer = new Parameterizer(owner)
-    //const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
-    //parameterizer.setProvider(provider)
+    parameterizer = new Parameterizer(owner)
+    const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
+    parameterizer.setProvider(provider)
 
-    //registry = new Registry(owner)
-    //const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
-    //registry.setProvider(provider)
+    registry = new Registry(owner)
+    const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
+    registry.setProvider(provider)
 
-    ////owner approves voting and reg to spend
-    //// await eip20.approve(votingAddress, 1000000)
-    //await eip20.approve(registryAddress, 1000000)
+    //owner approves voting and reg to spend
+    // await erc20.approve(votingAddress, 1000000)
+    await erc20.approve(registryAddress, 1000000)
 
-    //// applicant needs funding
-    //await eip20.transfer(applicant, 500000)
-    //await eip20.approve(registryAddress, 250000, { from: applicant })
-    //await eip20.approve(parameterizerAddress, 250000, { from: applicant })
+    // applicant needs funding
+    await erc20.transfer(applicant, 500000)
+    await erc20.approve(registryAddress, 250000, { from: applicant })
+    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
 
-    //// challenger needs funding
-    //await eip20.transfer(challenger, 500000)
-    //await eip20.approve(registryAddress, 250000, { from: challenger })
-    //await eip20.approve(parameterizerAddress, 250000, { from: challenger })
+    // challenger needs funding
+    await erc20.transfer(challenger, 500000)
+    await erc20.approve(registryAddress, 250000, { from: challenger })
+    await erc20.approve(parameterizerAddress, 250000, { from: challenger })
 
-    //// voter needs funding
-    //await eip20.transfer(voter, 600000)
-    //await eip20.approve(registryAddress, 200000, { from: voter })
-    //await eip20.approve(parameterizerAddress, 200000, { from: voter })
-    //await eip20.approve(votingAddress, 200000, { from: voter })
+    // voter needs funding
+    await erc20.transfer(voter, 600000)
+    await erc20.approve(registryAddress, 200000, { from: voter })
+    await erc20.approve(parameterizerAddress, 200000, { from: voter })
+    await erc20.approve(votingAddress, 200000, { from: voter })
 
-    //// funds for proposer
-    //await eip20.transfer(proposer, 100000)
-    //await eip20.approve(parameterizerAddress, 100000, { from: proposer })
+    // funds for proposer
+    await erc20.transfer(proposer, 100000)
+    await erc20.approve(parameterizerAddress, 100000, { from: proposer })
   })
 
   it('should transfer the correct number of tokens once a challenge has been resolved', async () => {
-    //const listBytes = stringToBytes(web3, 'listing.com')
+    const listBytes = stringToBytes(web3, 'listing.net'),
+      applicantStartingBal = maybeParseInt(await erc20.balanceOf(applicant)),
+      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
     //// Apply
-    //const tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
-    //expect(tx1).toBeTruthy()
-    //const applicantStartingBal = maybeParseInt(await eip20.balanceOf(applicant))
+    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    expect(tx1).toBeTruthy()
 
     //// Challenge
-    //const challID = eventReturnValues('_Challenge',
-    //  await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    //expect(challID).toBeTruthy()
-
+    const challID = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
+    expect(challID).toBeTruthy()
 
     //// Commit vote 
-    //const tx2 = await voting.commitVote(web3, challID, voter, 0, 500, 420)
-    //expect(tx2).toBeTruthy()
-    //await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
+    // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
+    await voting.commitVote(web3, challID, voter, 0, 10, 420)
+    await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
 
     //// Reveal vote
-    //const tx3 = await voting.revealVote(challID, 0, 420)
-    ////expect(tx3).toBeTruthy()
+    await voting.revealVote(challID, 0, 420, { from: voter })
+    await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
+    await registry.updateStatus(listBytes)
+
+    expect(await registry.isWhitelisted(listBytes)).toBe(false)
   })
 
 })
