@@ -29,7 +29,7 @@ let erc20:Erc20,
   voter:string,
   proposer:string
 
-fdescribe('Registry: Claim Reward', () => {
+describe('Registry: Claim Reward', () => {
   beforeEach(async () => {
     [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
 
@@ -84,8 +84,7 @@ fdescribe('Registry: Claim Reward', () => {
 
   it('should transfer the correct number of tokens once a challenge has been resolved', async () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
-      applicantStartingBal = maybeParseInt(await erc20.balanceOf(applicant)),
-      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
+      voterStartingBalance = maybeParseInt(await erc20.balanceOf(voter))
 
     //// Apply
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
@@ -107,6 +106,24 @@ fdescribe('Registry: Claim Reward', () => {
     await registry.updateStatus(listBytes)
 
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
+
+    //// Compute voter reward
+    const voterReward = maybeParseInt(await registry.voterReward(voter, challID, 420))
+    const voterExpectedBalance = voterStartingBalance + voterReward
+
+    //// Voter claims reward
+    await registry.claimReward(challID, 420, {from: voter})
+
+    //// Voter withdraws voting rights
+    await voting.withdrawVotingRights(10, {from: voter})
+
+    //// Get final voter balance
+    const voterFinalBalance = maybeParseInt(await erc20.balanceOf(voter))
+
+    //// Compare expected final balance with actual final balance
+    expect(voterFinalBalance).toBe(voterExpectedBalance)
+
+
   })
 
 })

@@ -27,6 +27,10 @@ import {
  * challenge
  * updateStatus
  *
+ * Token Functions:
+ * ----------------
+ * claimReward
+ *
  * Getters:
  * -------
  * appWasMade
@@ -37,6 +41,7 @@ import {
  * parameterizer
  * token
  * voting
+ * voterReward
  */
 
 export default class extends Deployable {
@@ -173,11 +178,28 @@ export default class extends Deployable {
   }
 
   /**
+   * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+   */
+  async claimReward(challengeId:string, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const account = this.requireAccount(opts),
+      deployed = this.requireDeployed()
+    return await deployed.methods.claimReward(challengeId, salt).send({from: account})
+  }
+
+  /**
    * Return the address of the plcr-voting referenced by this contract instance
    */
   async voting(): Promise<string> {
     const deployed = this.requireDeployed()
 
     return await deployed.methods.voting().call()
+  }
+
+ /**
+  * Return the voter's token reward for the given poll.
+  */
+  async voterReward(voter:string, challengeId:string, salt:Nos): Promise<Nos> {
+    const deployed = this.requireDeployed()
+    return await deployed.methods.voterReward(voter, challengeId, salt).call()
   }
 }
