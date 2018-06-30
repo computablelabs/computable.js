@@ -14,10 +14,11 @@ import {
   eventReturnValues,
 } from '../../../src/helpers'
 
-const provider:any = ganache.provider(),
-  web3 = new Web3(provider)
-
-let erc20:Erc20,
+let web3:Web3,
+  server:any,
+  provider:any,
+  accounts:string[],
+  erc20:Erc20,
   dll:Contract,
   store:Contract,
   voting:Voting,
@@ -28,6 +29,20 @@ let erc20:Erc20,
   challenger:string,
   voter:string,
   proposer:string
+
+beforeAll(() => {
+  server = ganache.server({ws:true})
+  server.listen(8556)
+
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8556')
+  web3 = new Web3(provider)
+})
+
+afterAll(() => {
+  server.close()
+  server = null
+})
+
 
 describe('Registry: Claim Reward', () => {
   beforeEach(async () => {
@@ -57,8 +72,6 @@ describe('Registry: Claim Reward', () => {
     const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
     registry.setProvider(provider)
 
-    //owner approves voting and reg to spend
-    // await erc20.approve(votingAddress, 1000000)
     await erc20.approve(registryAddress, 1000000)
 
     // applicant needs funding
