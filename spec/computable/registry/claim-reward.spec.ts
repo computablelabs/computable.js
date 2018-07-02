@@ -11,7 +11,7 @@ import {
   deployDll,
   deployAttributeStore,
   maybeParseInt,
-  eventReturnValues,
+  onData,
 } from '../../../src/helpers'
 
 let web3:Web3,
@@ -99,44 +99,49 @@ describe('Registry: Claim Reward', () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
       voterStartingBalance = maybeParseInt(await erc20.balanceOf(voter))
 
-    //// Apply
+    // Apply
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
-    //// Challenge
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
+    // get the event emitter for the _Challenge event before causing it to be fired
+    const emitter = registry.getEventEmitter('_Challenge')
+
+    // Challenge, we don't have to await this as we will await the message back below
+    registry.challenge(listBytes, '', { from: challenger })
+
+    // wait on the event to get pushed to you, then inspect it. TODO we'll rewrite eventReturnValues for this
+    // in a separate PR
+    const eventLog = await onData(emitter), challID = eventLog.returnValues.challengeID
+
     expect(challID).toBeTruthy()
 
-    //// Commit vote 
+    // Commit vote
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
     await voting.commitVote(web3, challID, voter, 0, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
 
-    //// Reveal vote
+    // Reveal vote
     await voting.revealVote(challID, 0, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
 
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
 
-    //// Compute voter reward
+    // Compute voter reward
     const voterReward = maybeParseInt(await registry.voterReward(voter, challID, 420))
     const voterExpectedBalance = voterStartingBalance + voterReward
 
-    //// Voter claims reward
+    // Voter claims reward
     await registry.claimReward(challID, 420, {from: voter})
 
-    //// Voter withdraws voting rights
+    // Voter withdraws voting rights
     await voting.withdrawVotingRights(10, {from: voter})
 
-    //// Get final voter balance
+    // Get final voter balance
     const voterFinalBalance = maybeParseInt(await erc20.balanceOf(voter))
 
-    //// Compare expected final balance with actual final balance
+    // Compare expected final balance with actual final balance
     expect(voterFinalBalance).toBe(voterExpectedBalance)
-
-
   })
 
 })
