@@ -29,9 +29,9 @@ let web3:Web3,
 
 beforeAll(() => {
   server = ganache.server({ws:true})
-  server.listen(8559)
+  server.listen(8560)
 
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8559')
+  provider = new Web3.providers.WebsocketProvider('ws://localhost:8560')
   web3 = new Web3(provider)
 })
 
@@ -40,4 +40,82 @@ afterAll(() => {
   server = null
 })
 
-fdescribe('Registry: Exit', () => {
+fdescribe('Registry: Withdraw', () => {
+  beforeEach(async () => {
+    [owner, applicant] = await web3.eth.getAccounts()
+
+    erc20 = new Erc20(owner)
+    const tokenAddress = await erc20.deploy(web3)
+    erc20.setProvider(provider)
+
+    dll = await deployDll(web3, owner)
+    dll.setProvider(provider)
+    const dllAddress = dll.options.address
+
+    store = await deployAttributeStore(web3, owner)
+    store.setProvider(provider)
+    const attributeStoreAddress = store.options.address
+
+    voting = new Voting(owner)
+    const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
+    voting.setProvider(provider)
+
+    parameterizer = new Parameterizer(owner)
+    const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
+    parameterizer.setProvider(provider)
+
+    registry = new Registry(owner)
+    const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
+    registry.setProvider(provider)
+
+    await erc20.approve(registryAddress, 1000000)
+
+    // applicant needs funding
+    await erc20.transfer(applicant, 500000)
+    await erc20.approve(registryAddress, 250000, { from: applicant })
+    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
+
+  })
+
+  it('should not withdraw tokens from a listing that has a deposit === minDeposit', async () => {
+    const listBytes = stringToBytes(web3, 'dontchallenge.net'),
+      applicantStartingBalance = maybeParseInt(await erc20.balanceOf(applicant))
+
+    // Apply
+    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    expect(tx1).toBeTruthy()
+
+    // Check that the listing has been posted
+    const listing = await registry.listings(listBytes)
+    expect(listing).toBeTruthy()
+
+    // Listing is un-challenged during apply stage and subsequently whitelisted.
+    await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
+    const tx2 = await registry.updateStatus(listBytes)
+    expect(tx2).toBeTruthy()
+    expect(await registry.isWhitelisted(listBytes)).toBe(true)
+
+    //// Exit 
+    //const tx3 = registry.exit(listBytes, { from: applicant })
+    //expect(tx3).toBeTruthy()
+    //expect(await registry.isWhitelisted(listBytes)).toBe(false)
+
+    //// The applicant's tokens should be returned on exit
+    //const applicantFinalBalance = maybeParseInt(await erc20.balanceOf(applicant))
+    //expect(applicantStartingBalance).toBe(applicantFinalBalance)
+
+    // Get original deposit
+    const origDeposit = maybeParseInt(listing.unstakedDeposit)
+    expect(origDeposit).toBe(ParameterDefaults.MIN_DEPOSIT)
+
+    // Withdraw 
+    const withdrawAmount = ParameterDefaults.MIN_DEPOSIT/2.0
+    const tx3 = registry.withdraw(listBytes, withdrawAmount, { from: applicant })
+    expect(tx3).toBeTruthy()
+
+    const listingAfterWithdraw = await registry.listings(listBytes)
+    expect(listing).toBeTruthy()
+
+  })
+
+})
