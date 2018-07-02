@@ -93,6 +93,14 @@ export default class extends Deployable {
   }
 
   /**
+   * Withdraws ERC20 tokens from the voting contract to revoke one-to-one voting rights.
+   */
+  async withdrawVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const deployed = this.requireDeployed(), account = this.requireAccount(opts)
+    return deployed.methods.withdrawVotingRights(tokens).send({ from: account })
+  }
+
+  /**
    * Reveals vote cast and secret salt used in generating commitHash to attribute committed tokens
    */
   async revealVote(pollID:Nos, vote:Nos, salt:Nos, opts?: ContractOptions): Promise<TransactionReceipt> {
