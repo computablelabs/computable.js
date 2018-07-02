@@ -40,7 +40,7 @@ afterAll(() => {
   server = null
 })
 
-fdescribe('Registry: Exit', () => {
+describe('Registry: Exit', () => {
   beforeEach(async () => {
     [owner, applicant] = await web3.eth.getAccounts()
 
