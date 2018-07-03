@@ -78,4 +78,12 @@ describe('Registry', () => {
     expect(name).toBe(NAME)
   })
 
+  it('can be instantiated from an existing deployment', async () => {
+    const address = registry.getAddress(),
+      other = new Registry(accounts[0]),
+      works = await other.at(web3, { address })
+
+    expect(works).toBe(true)
+  })
+
 })

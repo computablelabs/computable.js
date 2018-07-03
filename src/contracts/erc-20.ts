@@ -31,6 +31,10 @@ export default class extends Deployable {
     return await deployed.methods.approve(address, amount).send({ from: account })
   }
 
+  /**
+   * Set our deployed refernce from an already deployed contract
+   * @see abstracts/deployable#at
+   */
   async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
     const ap:AtParams = {
       address: params.address,

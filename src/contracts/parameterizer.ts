@@ -9,6 +9,7 @@ import {
   Keyed,
   ContractOptions,
   DeployParams,
+  AtParams,
   ParameterizerDeployParams,
   ParameterizerProposal,
 } from '../interfaces'
@@ -39,6 +40,19 @@ import {
  * set
  */
 export default class extends Deployable {
+  /**
+   * Set our deployed refernce from an already deployed contract
+   * @see abstracts/deployable#at
+   */
+  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+    const ap:AtParams = {
+      address: params.address,
+      abi: parameterizerJson.abi,
+      from: params.from,
+    }
+
+    return super.at(web3, ap, opts)
+  }
   /**
    * Determines if a proposal passed its application stage without a challenge
    */

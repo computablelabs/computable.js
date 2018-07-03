@@ -46,7 +46,7 @@ describe('Erc20 Token', () => {
     it('can be initialized from an already deployed address', async () => {
       const address = erc20.getAddress(),
         other:Erc20 = new Erc20(accounts[0]),
-        works = await other.at(web3, { address, from: accounts[0] })
+        works = await other.at(web3, { address })
 
       expect(works).toBe(true)
       // should have the same bal...

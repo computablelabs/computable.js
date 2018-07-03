@@ -10,6 +10,7 @@ import {
   ContractOptions,
   VotingDeployParams,
   DeployParams,
+  AtParams,
 } from '../interfaces'
 
 /**
@@ -17,6 +18,20 @@ import {
  */
 
 export default class extends Deployable {
+  /**
+   * Set our deployed refernce from an already deployed contract
+   * @see abstracts/deployable#at
+   */
+  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+    const ap:AtParams = {
+      address: params.address,
+      abi: votingJson.abi,
+      from: params.from,
+    }
+
+    return super.at(web3, ap, opts)
+  }
+
   /**
    * Commits vote using a created hash with secret salt to conceal vote until reveal
    */
