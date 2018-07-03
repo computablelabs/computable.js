@@ -27,7 +27,7 @@ let web3:Web3,
   owner:string,
   applicant:string
 
-fdescribe('Registry: Exit', () => {
+describe('Registry: Exit', () => {
 
   beforeAll(() => {
     server = ganache.server({ws:true})
