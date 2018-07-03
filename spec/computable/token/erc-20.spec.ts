@@ -10,20 +10,20 @@ let server:any,
   accounts:string[],
   erc20:Erc20
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8544)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8544')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 describe('Erc20 Token', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8544)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8544')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -40,6 +40,17 @@ describe('Erc20 Token', () => {
 
     it('gives initial balance to owner', async () => {
       const bal = await erc20.balanceOf(accounts[0])
+      expect(maybeParseInt(bal)).toBe(5000000)
+    })
+
+    it('can be initialized from an already deployed address', async () => {
+      const address = erc20.getAddress(),
+        other:Erc20 = new Erc20(accounts[0]),
+        works = await other.at(web3, { address, from: accounts[0] })
+
+      expect(works).toBe(true)
+      // should have the same bal...
+      const bal = await other.balanceOf(accounts[0])
       expect(maybeParseInt(bal)).toBe(5000000)
     })
   })

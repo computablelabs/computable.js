@@ -19,15 +19,20 @@ let web3:Web3,
   parameterizer:Parameterizer,
   registry:Registry
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8552)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8552')
-  web3 = new Web3(provider)
-})
-
 describe('Registry', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8552)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8552')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 

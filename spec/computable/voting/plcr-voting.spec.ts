@@ -20,20 +20,20 @@ let web3:Web3,
   parameterizer:Parameterizer,
   registry:Registry
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8553)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8553')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 describe('PLCRVoting', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8553)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8553')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
