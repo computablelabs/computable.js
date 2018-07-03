@@ -42,4 +42,16 @@ describe('Parameterizer', () => {
     const minD = await parameterizer.get('minDeposit')
     expect(maybeParseInt(minD)).toBe(10)
   })
+
+  it('can be instantiated from an existing deployment', async () => {
+    const address = parameterizer.getAddress(),
+      other = new Parameterizer(accounts[0]),
+      works = await other.at(web3, { address })
+
+    expect(works).toBe(true)
+    expect(other.getDeployed()).toBeTruthy()
+
+    const quorum = await other.get('voteQuorum')
+    expect(maybeParseInt(quorum)).toBe(50)
+  })
 })

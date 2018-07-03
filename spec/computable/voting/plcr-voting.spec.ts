@@ -79,6 +79,14 @@ describe('PLCRVoting', () => {
     expect(voting.getAddress()).toBeTruthy()
   })
 
+  it('can be instantiated from an existing deployment', async () => {
+    const address = voting.getAddress(),
+      other = new Voting(accounts[0]),
+      works = await other.at(web3, { address })
+
+    expect(works).toBe(true)
+  })
+
   it('commits vote, updates DLL state', async () => {
     const domainOne = stringToBytes(web3, 'one.net'),
       domainTwo = stringToBytes(web3, 'two.net'),
