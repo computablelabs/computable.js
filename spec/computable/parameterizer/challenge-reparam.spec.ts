@@ -23,20 +23,20 @@ let web3:Web3,
   voting:Voting,
   parameterizer:Parameterizer
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8541)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8541')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 describe('Parameterizer: challengeReparameterization', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8541)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8541')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 

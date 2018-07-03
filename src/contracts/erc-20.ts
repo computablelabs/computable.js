@@ -4,6 +4,7 @@ import {
   Keyed,
   ContractOptions,
   DeployParams,
+  AtParams,
   Erc20DeployParams,
 } from '../interfaces'
 import Deployable from '../abstracts/deployable'
@@ -28,6 +29,16 @@ export default class extends Deployable {
       account = this.requireAccount(opts)
 
     return await deployed.methods.approve(address, amount).send({ from: account })
+  }
+
+  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+    const ap:AtParams = {
+      address: params.address,
+      abi: tokenJson.abi,
+      from: params.from,
+    }
+
+    return super.at(web3, ap, opts)
   }
 
   /**

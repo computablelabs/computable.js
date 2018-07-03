@@ -15,20 +15,20 @@ let server:any,
   erc20:Erc20,
   parameterizer:Parameterizer
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8546)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8546')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 describe('Parameterizer: canBeSet', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8546)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8546')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
