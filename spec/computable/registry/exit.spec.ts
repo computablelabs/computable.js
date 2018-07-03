@@ -27,20 +27,21 @@ let web3:Web3,
   owner:string,
   applicant:string
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8559)
+fdescribe('Registry: Exit', () => {
 
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8559')
-  web3 = new Web3(provider)
-})
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8559)
 
-afterAll(() => {
-  server.close()
-  server = null
-})
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8559')
+    web3 = new Web3(provider)
+  })
 
-describe('Registry: Exit', () => {
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     [owner, applicant] = await web3.eth.getAccounts()
 
