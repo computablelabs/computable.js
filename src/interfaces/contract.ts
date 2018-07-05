@@ -25,6 +25,15 @@ export interface DeployParams {
 }
 
 /**
+ * Fetching an already deployed contract instance requires a different set of params than deploy
+ */
+export interface AtParams {
+  address:string;
+  abi?:any;
+  from?:string;
+}
+
+/**
  * When fetching an event emitter on a deployed contract instance, there
  * is an optional options object that can be passed with this shape
  *

@@ -30,21 +30,20 @@ let web3:Web3,
   voter:string,
   proposer:string
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8556)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8556')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
-
 describe('Registry: Claim Reward', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8556)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8556')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     [owner, applicant, challenger, voter, proposer] = await web3.eth.getAccounts()
 

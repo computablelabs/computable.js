@@ -10,6 +10,7 @@ import {
   ContractOptions,
   RegistryDeployParams,
   DeployParams,
+  AtParams,
   RegistryListing,
   Challenge
 } from '../interfaces'
@@ -66,6 +67,20 @@ export default class extends Deployable {
     const deployed = this.requireDeployed()
 
     return deployed.methods.appWasMade(listing).call()
+  }
+
+  /**
+   * Set our deployed refernce from an already deployed contract
+   * @see abstracts/deployable#at
+   */
+  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+    const ap:AtParams = {
+      address: params.address,
+      abi: registryJson.abi,
+      from: params.from,
+    }
+
+    return super.at(web3, ap, opts)
   }
 
   /**

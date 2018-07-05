@@ -20,20 +20,20 @@ let web3:Web3,
   parameterizer:Parameterizer,
   registry:Registry
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8553)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8553')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 describe('PLCRVoting', () => {
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8553)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8553')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
 
@@ -77,6 +77,14 @@ describe('PLCRVoting', () => {
   it('has deployed', () => {
     expect(voting).toBeTruthy()
     expect(voting.getAddress()).toBeTruthy()
+  })
+
+  it('can be instantiated from an existing deployment', async () => {
+    const address = voting.getAddress(),
+      other = new Voting(accounts[0]),
+      works = await other.at(web3, { address })
+
+    expect(works).toBe(true)
   })
 
   it('commits vote, updates DLL state', async () => {

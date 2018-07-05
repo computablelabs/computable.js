@@ -5,6 +5,7 @@ import {
   Keyed,
   ContractOptions,
   DeployParams,
+  AtParams,
   EventEmitterOptions,
 } from '../interfaces'
 
@@ -20,9 +21,33 @@ export default abstract class implements Keyed {
   constructor(account?:string) { account && this.setDefaultAccount(account) }
 
   /**
+   * Similar to deployContract, but using the address of an already deployed instance.
+   * Returns truthy if fetched
+   *
+   * TODO introduce try/catch error handling
+   */
+  protected async at(web3:Web3, params:AtParams, opts?:ContractOptions ): Promise<boolean> {
+    const account = this.requireAccount(opts)
+
+    this.deployed = await new web3.eth.Contract(
+      params.abi,
+      params.address,
+      {
+        from: params.from || account,
+        gas: opts && opts.gas || GAS,
+        gasPrice: opts && opts.gasPrice || GAS_PRICE
+      }
+    )
+
+    return !!this.deployed
+  }
+
+  /**
    * Given an instantiated web3 instance and some params -  deploy this contract.
    * The deploy params are prepared by the subclass then passed here.
    * Contract options are optionally passed from the original caller.
+   *
+   * TODO introduce try/catch error handling
    */
   protected async deployContract(web3:Web3, params:DeployParams, opts?:ContractOptions): Promise<string> {
     const account = this.requireAccount(opts)
