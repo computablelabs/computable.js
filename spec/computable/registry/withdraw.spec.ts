@@ -27,20 +27,21 @@ let web3:Web3,
   owner:string,
   applicant:string
 
-beforeAll(() => {
-  server = ganache.server({ws:true})
-  server.listen(8560)
-
-  provider = new Web3.providers.WebsocketProvider('ws://localhost:8560')
-  web3 = new Web3(provider)
-})
-
-afterAll(() => {
-  server.close()
-  server = null
-})
-
 fdescribe('Registry: Withdraw', () => {
+
+  beforeAll(() => {
+    server = ganache.server({ws:true})
+    server.listen(8560)
+
+    provider = new Web3.providers.WebsocketProvider('ws://localhost:8560')
+    web3 = new Web3(provider)
+  })
+
+  afterAll(() => {
+    server.close()
+    server = null
+  })
+
   beforeEach(async () => {
     [owner, applicant] = await web3.eth.getAccounts()
 
@@ -95,26 +96,25 @@ fdescribe('Registry: Withdraw', () => {
     expect(tx2).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
-    //// Exit 
-    //const tx3 = registry.exit(listBytes, { from: applicant })
-    //expect(tx3).toBeTruthy()
-    //expect(await registry.isWhitelisted(listBytes)).toBe(false)
-
-    //// The applicant's tokens should be returned on exit
-    //const applicantFinalBalance = maybeParseInt(await erc20.balanceOf(applicant))
-    //expect(applicantStartingBalance).toBe(applicantFinalBalance)
-
     // Get original deposit
     const origDeposit = maybeParseInt(listing.unstakedDeposit)
     expect(origDeposit).toBe(ParameterDefaults.MIN_DEPOSIT)
 
     // Withdraw 
-    const withdrawAmount = ParameterDefaults.MIN_DEPOSIT/2.0
-    const tx3 = registry.withdraw(listBytes, withdrawAmount, { from: applicant })
-    expect(tx3).toBeTruthy()
+    try {
+      const withdrawAmount = ParameterDefaults.MIN_DEPOSIT/2.0
+      const tx3 = await registry.withdraw(listBytes, withdrawAmount, { from: applicant })
+    } catch (err) {
+      // TODO: Do we want a more robust error detection scheme?
+      expect(err.toString().includes('revert')).toBe(true)
+    }
 
-    const listingAfterWithdraw = await registry.listings(listBytes)
-    expect(listing).toBeTruthy()
+    // Get after failed withdraw deposit
+    const listingAfterDeposit = await registry.listings(listBytes)
+    const depositAfterWithdraw = maybeParseInt(listingAfterDeposit.unstakedDeposit)
+
+    // Check deposit not changed
+    expect(origDeposit).toBe(depositAfterWithdraw)
 
   })
 
