@@ -1,0 +1,8 @@
+# Addresses of deployed contracts
+
+## Ropsten
+
+* Token: 0xf1063e6Dcc8c78386eDB389d3EA1778931ca3061
+* Voting: 0xA25F8a5cFd767114575FcdFF60D3603183e9d764
+* Parameterizer: 0x9751004358f6320C3AE869a548Fb64A931aa74D3
+* Registry: 0xa22B323d710d8e017c1b5C0A1e3ABc00B5333a70

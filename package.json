@@ -34,6 +34,7 @@
     "jasmine": "^3.1.0",
     "jasmine-spec-reporter": "^4.2.1",
     "jasmine-ts": "^0.2.1",
+    "truffle-hdwallet-provider": "0.0.5",
     "typescript": "^2.8.1"
   },
   "dependencies": {
