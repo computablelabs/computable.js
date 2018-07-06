@@ -68,6 +68,8 @@ const deploy = async () => {
   registry = new Registry(account)
   registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: 'Computable TCR v0.1.0' }, { gas: TEST_NET_GAS, gasPrice: TEST_NET_GAS_PRICE })
   console.log(`REGISTRY ADDRESS: ${registryAddress}`)
+
+  // TODO should prob have node process exit here rather than mash ^C
 }
 
 deploy()
