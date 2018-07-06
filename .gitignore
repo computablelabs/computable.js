@@ -37,3 +37,6 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# let's not give away any...
+secrets.json
