@@ -21,6 +21,7 @@ import {
  * Publisher Interface:
  * -------------------
  * apply
+ * withdraw
  * exit
  *
  * Token Holder Interface:
@@ -122,6 +123,19 @@ export default class extends Deployable {
     }
 
     return super.deployContract(web3, dp, opts)
+  }
+
+  /**
+   * Allows the owner of a listingHash to decrease their unstaked deposit.
+   *
+   * @param listing listing that msg.sender is the owner of
+   * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+   */
+  async withdraw(listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
+
+    return await deployed.methods.withdraw(listing, tokens).send({ from: account })
   }
 
   /**
