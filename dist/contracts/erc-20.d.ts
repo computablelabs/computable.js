@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
-import { ContractOptions, Erc20DeployParams } from '../interfaces';
+import { ContractOptions, AtParams, Erc20DeployParams } from '../interfaces';
 import Deployable from '../abstracts/deployable';
 import { Nos } from '../types';
 export default class  extends Deployable {
@@ -12,6 +12,11 @@ export default class  extends Deployable {
      * Grant permission to a spender located at the given address to use up to the given amount of funds
      */
     approve(address: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     /**
      * Return the current balance of the given address
      */

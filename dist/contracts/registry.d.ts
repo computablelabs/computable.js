@@ -2,19 +2,24 @@ import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
 import Deployable from '../abstracts/deployable';
 import { Nos } from '../types';
-import { ContractOptions, RegistryDeployParams, RegistryListing, Challenge } from '../interfaces';
+import { ContractOptions, RegistryDeployParams, AtParams, RegistryListing, Challenge } from '../interfaces';
 /**
  * Registry
  *
  * Publisher Interface:
  * -------------------
  * apply
+ * withdraw
  * exit
  *
  * Token Holder Interface:
  * ----------------------
  * challenge
  * updateStatus
+ *
+ * Token Functions:
+ * ----------------
+ * claimReward
  *
  * Getters:
  * -------
@@ -26,6 +31,7 @@ import { ContractOptions, RegistryDeployParams, RegistryListing, Challenge } fro
  * parameterizer
  * token
  * voting
+ * voterReward
  */
 export default class  extends Deployable {
     /**
@@ -39,6 +45,11 @@ export default class  extends Deployable {
      * Returns a bool that indicates if `apply` was called for a given listing hash
      */
     appWasMade(listing: string): Promise<boolean>;
+    /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     /**
      * Starts a poll for a listingHash which is either in the apply stage or already in the whitelist.
      * Tokens are taken from the challenger and the applicant's deposits are locked.
@@ -56,6 +67,13 @@ export default class  extends Deployable {
      * @see abstracts/deployable#deployContract
      */
     deploy(web3: Web3, params: RegistryDeployParams, opts?: ContractOptions): Promise<string>;
+    /**
+     * Allows the owner of a listingHash to decrease their unstaked deposit.
+     *
+     * @param listing listing that msg.sender is the owner of
+     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     */
+    withdraw(listing: string, tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     /**
      * Allows the owner of a listingHash to remove the listingHash from the whitelist
      * Returns all tokens to the owner of the listingHash
@@ -88,7 +106,15 @@ export default class  extends Deployable {
      */
     updateStatus(listing: string, opts?: ContractOptions): Promise<TransactionReceipt>;
     /**
+     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+     */
+    claimReward(challengeId: string, salt: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    /**
      * Return the address of the plcr-voting referenced by this contract instance
      */
     voting(): Promise<string>;
+    /**
+     * Return the voter's token reward for the given poll.
+     */
+    voterReward(voter: string, challengeId: string, salt: Nos): Promise<Nos>;
 }

@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import { Contract, EventEmitter } from 'web3/types.d';
-import { Keyed, ContractOptions, DeployParams, EventEmitterOptions } from '../interfaces';
+import { Keyed, ContractOptions, DeployParams, AtParams, EventEmitterOptions } from '../interfaces';
 export default abstract class  implements Keyed {
     [key: string]: any;
     defaultAccount?: string;
@@ -11,9 +11,18 @@ export default abstract class  implements Keyed {
      */
     constructor(account?: string);
     /**
+     * Similar to deployContract, but using the address of an already deployed instance.
+     * Returns truthy if fetched
+     *
+     * TODO introduce try/catch error handling
+     */
+    protected at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
+    /**
      * Given an instantiated web3 instance and some params -  deploy this contract.
      * The deploy params are prepared by the subclass then passed here.
      * Contract options are optionally passed from the original caller.
+     *
+     * TODO introduce try/catch error handling
      */
     protected deployContract(web3: Web3, params: DeployParams, opts?: ContractOptions): Promise<string>;
     getAddress(): string;

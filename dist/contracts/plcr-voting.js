@@ -19,6 +19,21 @@ const helpers_1 = require("../helpers");
  */
 class default_1 extends deployable_1.default {
     /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3, params, opts) {
+        const _super = name => super[name];
+        return __awaiter(this, void 0, void 0, function* () {
+            const ap = {
+                address: params.address,
+                abi: PLCRVoting_json_1.default.abi,
+                from: params.from,
+            };
+            return _super("at").call(this, web3, ap, opts);
+        });
+    }
+    /**
      * Commits vote using a created hash with secret salt to conceal vote until reveal
      */
     commitVote(web3, pollID, voter, vote, tokens, salt, opts) {
@@ -78,6 +93,15 @@ class default_1 extends deployable_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
             return deployed.methods.requestVotingRights(tokens).send({ from: account });
+        });
+    }
+    /**
+     * Withdraws ERC20 tokens from the voting contract to revoke one-to-one voting rights.
+     */
+    withdrawVotingRights(tokens, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed(), account = this.requireAccount(opts);
+            return deployed.methods.withdrawVotingRights(tokens).send({ from: account });
         });
     }
     /**

@@ -19,12 +19,17 @@ const Registry_json_1 = __importDefault(require("../../computable/build/contract
  * Publisher Interface:
  * -------------------
  * apply
+ * withdraw
  * exit
  *
  * Token Holder Interface:
  * ----------------------
  * challenge
  * updateStatus
+ *
+ * Token Functions:
+ * ----------------
+ * claimReward
  *
  * Getters:
  * -------
@@ -36,6 +41,7 @@ const Registry_json_1 = __importDefault(require("../../computable/build/contract
  * parameterizer
  * token
  * voting
+ * voterReward
  */
 class default_1 extends deployable_1.default {
     /**
@@ -57,6 +63,21 @@ class default_1 extends deployable_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             return deployed.methods.appWasMade(listing).call();
+        });
+    }
+    /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3, params, opts) {
+        const _super = name => super[name];
+        return __awaiter(this, void 0, void 0, function* () {
+            const ap = {
+                address: params.address,
+                abi: Registry_json_1.default.abi,
+                from: params.from,
+            };
+            return _super("at").call(this, web3, ap, opts);
         });
     }
     /**
@@ -99,6 +120,18 @@ class default_1 extends deployable_1.default {
                 ]
             };
             return _super("deployContract").call(this, web3, dp, opts);
+        });
+    }
+    /**
+     * Allows the owner of a listingHash to decrease their unstaked deposit.
+     *
+     * @param listing listing that msg.sender is the owner of
+     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     */
+    withdraw(listing, tokens, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed(), account = this.requireAccount(opts);
+            return yield deployed.methods.withdraw(listing, tokens).send({ from: account });
         });
     }
     /**
@@ -168,12 +201,30 @@ class default_1 extends deployable_1.default {
         });
     }
     /**
+     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+     */
+    claimReward(challengeId, salt, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const account = this.requireAccount(opts), deployed = this.requireDeployed();
+            return yield deployed.methods.claimReward(challengeId, salt).send({ from: account });
+        });
+    }
+    /**
      * Return the address of the plcr-voting referenced by this contract instance
      */
     voting() {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             return yield deployed.methods.voting().call();
+        });
+    }
+    /**
+     * Return the voter's token reward for the given poll.
+     */
+    voterReward(voter, challengeId, salt) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            return yield deployed.methods.voterReward(voter, challengeId, salt).call();
         });
     }
 }

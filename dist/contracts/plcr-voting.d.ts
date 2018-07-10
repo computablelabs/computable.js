@@ -2,11 +2,16 @@ import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
 import Deployable from '../abstracts/deployable';
 import { Nos } from '../types';
-import { ContractOptions, VotingDeployParams } from '../interfaces';
+import { ContractOptions, VotingDeployParams, AtParams } from '../interfaces';
 /**
  * PLCR Voting
  */
 export default class  extends Deployable {
+    /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     /**
      * Commits vote using a created hash with secret salt to conceal vote until reveal
      */
@@ -34,6 +39,10 @@ export default class  extends Deployable {
      * Assumes that `account` has approved the voting contract to spend on their behalf.
      */
     requestVotingRights(tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    /**
+     * Withdraws ERC20 tokens from the voting contract to revoke one-to-one voting rights.
+     */
+    withdrawVotingRights(tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     /**
      * Reveals vote cast and secret salt used in generating commitHash to attribute committed tokens
      */

@@ -41,6 +41,21 @@ const Parameterizer_json_1 = __importDefault(require("../../computable/build/con
  */
 class default_1 extends deployable_1.default {
     /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3, params, opts) {
+        const _super = name => super[name];
+        return __awaiter(this, void 0, void 0, function* () {
+            const ap = {
+                address: params.address,
+                abi: Parameterizer_json_1.default.abi,
+                from: params.from,
+            };
+            return _super("at").call(this, web3, ap, opts);
+        });
+    }
+    /**
      * Determines if a proposal passed its application stage without a challenge
      */
     canBeSet(propID) {

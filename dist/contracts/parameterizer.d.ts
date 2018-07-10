@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
 import Deployable from '../abstracts/deployable';
 import { Nos } from '../types';
-import { ContractOptions, ParameterizerDeployParams, ParameterizerProposal } from '../interfaces';
+import { ContractOptions, AtParams, ParameterizerDeployParams, ParameterizerProposal } from '../interfaces';
 /**
  * Parameterizer
  *
@@ -29,6 +29,11 @@ import { ContractOptions, ParameterizerDeployParams, ParameterizerProposal } fro
  * set
  */
 export default class  extends Deployable {
+    /**
+     * Set our deployed refernce from an already deployed contract
+     * @see abstracts/deployable#at
+     */
+    at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     /**
      * Determines if a proposal passed its application stage without a challenge
      */
