@@ -8,6 +8,7 @@ import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import {
   onData,
+  eventReturnValues,
   deployDll,
   deployAttributeStore,
   maybeParseInt
@@ -81,8 +82,7 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     parameterizer.proposeReparameterization('voteQuorum', 51)
 
-    const log = await onData(emitter),
-      propID = log.returnValues.propID,
+    const propID = eventReturnValues('propID', await onData(emitter)),
       tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
 
     expect(tx1).toBeTruthy()
@@ -113,15 +113,11 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     parameterizer.proposeReparameterization('voteQuorum', 51)
 
-    const log1 = await onData(reParamEmitter),
-      propID = log1.returnValues.propID
-
+    const propID = eventReturnValues('propID', await onData(reParamEmitter))
 
     parameterizer.challengeReparameterization(propID, { from: accounts[1] })
 
-    const log2 = await onData(challEmitter),
-      challID = log2.returnValues.challengeID,
-
+    const challID = eventReturnValues('challengeID', await onData(challEmitter)),
       // accounts[2] as voter here TODO setup some spec-level constants
       tx2 = await voting.commitVote(web3, challID, accounts[2], 1, 10, 420)
 

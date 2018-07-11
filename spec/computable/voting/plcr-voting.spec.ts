@@ -2,12 +2,17 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types.d'
 import { ParameterDefaults, NAME } from '../../../src/constants'
-import { onData, deployDll, deployAttributeStore } from '../../../src/helpers'
 import { stringToBytes } from '../../helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
+import {
+  onData,
+  deployDll,
+  deployAttributeStore,
+  eventReturnValues,
+} from '../../../src/helpers'
 
 let web3:Web3,
   server:any,
@@ -100,12 +105,12 @@ describe('PLCRVoting', () => {
 
     registry.challenge(domainOne, '', { from: accounts[1] })
 
-    const log1 = await onData(emitter), challID1 = log1.returnValues.challengeID
+    const challID1 = eventReturnValues('challengeID', await onData(emitter))
     expect(challID1).toBeTruthy()
 
     registry.challenge(domainTwo, '', { from: accounts[1] })
 
-    const log2 = await onData(emitter), challID2 = log2.returnValues.challengeID
+    const challID2 = eventReturnValues('challengeID', await onData(emitter))
     expect(challID2).toBeTruthy()
 
     // args: last 3 are vote, tokens, salt

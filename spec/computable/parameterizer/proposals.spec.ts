@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { Addresses } from '../../../src/constants'
 import Erc20 from '../../../src/contracts/erc-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
-import { maybeParseInt, onData } from '../../../src/helpers'
+import { maybeParseInt, onData, eventReturnValues } from '../../../src/helpers'
 
 let web3:Web3,
   server:any,
@@ -78,8 +78,7 @@ describe('Parameterizer: Reparamaterize', () => {
       parameterizer.proposeReparameterization('voteQuorum', 51)
 
       // its ok to await the event after the proposition, as long as the emitter was fetched first
-      const log = await onData(emitter),
-        propID = log.returnValues.propID,
+      const propID = eventReturnValues('propID', await onData(emitter)),
         proposed = await parameterizer.proposals(propID)
 
       expect(proposed.name).toBe('voteQuorum')

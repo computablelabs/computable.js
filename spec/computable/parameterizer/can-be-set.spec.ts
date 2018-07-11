@@ -2,7 +2,7 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { EventEmitter, EventLog } from 'web3/types.d'
 import { increaseTime } from '../../helpers'
-import { onData } from '../../../src/helpers'
+import { onData, eventReturnValues } from '../../../src/helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
@@ -50,8 +50,7 @@ describe('Parameterizer: canBeSet', () => {
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
     parameterizer.proposeReparameterization('voteQuorum', 51)
     // the await here returns the full event log object
-    const log = await onData(emitter),
-      propID = log.returnValues.propID
+    const propID = eventReturnValues('propID', await onData(emitter))
 
     expect(propID).toBeTruthy()
     // @ts-ignore:2532 // TODO pr Web3 to fix their EventEmitter interface
@@ -61,8 +60,6 @@ describe('Parameterizer: canBeSet', () => {
     emitter.off('data')
     // @ts-ignore:2532
     expect(Object.keys(emitter._events).length).toBe(0)
-    // const propID = eventReturnValues('_ReparameterizationProposal',
-      // await parameterizer.proposeReparameterization('voteQuorum', 51), 'propID')
 
     increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
     increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
@@ -74,9 +71,8 @@ describe('Parameterizer: canBeSet', () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
     parameterizer.proposeReparameterization('dispensationPct', 58)
-    // the await here returns the full event log object
-    const log = await onData(emitter),
-      propID = log.returnValues.propID
+
+    const propID = eventReturnValues('propID', await onData(emitter))
 
     expect(propID).toBeTruthy()
     expect(await parameterizer.canBeSet(propID)).toBe(false)

@@ -1,7 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { increaseTime } from '../../helpers'
-import { onData } from '../../../src/helpers'
+import { onData, eventReturnValues } from '../../../src/helpers'
 import { Addresses, ParameterDefaults } from '../../../src/constants'
 import Erc20 from '../../../src/contracts/erc-20'
 import Parameterizer from '../../../src/contracts/parameterizer'
@@ -49,8 +49,7 @@ describe('Parameterizer: Process a proposal', () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     parameterizer.proposeReparameterization('voteQuorum', 51)
 
-    const log = await onData(emitter),
-      propID = log.returnValues.propID
+    const propID = eventReturnValues('propID', await onData(emitter))
 
     await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
 
