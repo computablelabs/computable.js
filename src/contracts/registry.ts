@@ -22,6 +22,7 @@ import {
  * -------------------
  * apply
  * withdraw
+ * deposit
  * exit
  *
  * Token Holder Interface:
@@ -106,6 +107,15 @@ export default class extends Deployable {
   }
 
   /**
+   * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+   */
+  async claimReward(challengeId:string, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const account = this.requireAccount(opts),
+      deployed = this.requireDeployed()
+    return await deployed.methods.claimReward(challengeId, salt).send({from: account})
+  }
+
+  /**
    * Pepare the deploy options, passing them along with the instantiated web3 and optional
    * contract options to the super class' _deploy method.
    * @see abstracts/deployable#deployContract
@@ -126,16 +136,15 @@ export default class extends Deployable {
   }
 
   /**
-   * Allows the owner of a listingHash to decrease their unstaked deposit.
-   *
+   * Allow the owner of a listing to increase their unstaked deposit
    * @param listing listing that msg.sender is the owner of
-   * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+   * @param amount how much to increase by
    */
-  async withdraw(listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+  async deposit(listing:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const account = this.requireAccount(opts),
+      deployed = this.requireDeployed()
 
-    return await deployed.methods.withdraw(listing, tokens).send({ from: account })
+    return await deployed.methods.deposit(listing, amount).send({ from: account })
   }
 
   /**
@@ -207,15 +216,6 @@ export default class extends Deployable {
   }
 
   /**
-   * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
-   */
-  async claimReward(challengeId:string, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const account = this.requireAccount(opts),
-      deployed = this.requireDeployed()
-    return await deployed.methods.claimReward(challengeId, salt).send({from: account})
-  }
-
-  /**
    * Return the address of the plcr-voting referenced by this contract instance
    */
   async voting(): Promise<string> {
@@ -230,5 +230,18 @@ export default class extends Deployable {
   async voterReward(voter:string, challengeId:string, salt:Nos): Promise<Nos> {
     const deployed = this.requireDeployed()
     return await deployed.methods.voterReward(voter, challengeId, salt).call()
+  }
+
+  /**
+   * Allows the owner of a listingHash to decrease their unstaked deposit.
+   *
+   * @param listing listing that msg.sender is the owner of
+   * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+   */
+  async withdraw(listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
+
+    return await deployed.methods.withdraw(listing, tokens).send({ from: account })
   }
 }

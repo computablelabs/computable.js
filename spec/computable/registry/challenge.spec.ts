@@ -12,7 +12,7 @@ import {
   deployDll,
   deployAttributeStore,
   maybeParseInt,
-  eventReturnValues,
+  eventsReturnValues as eventReturnValues,
 } from '../../../src/helpers'
 
 const provider:any = ganache.provider(),

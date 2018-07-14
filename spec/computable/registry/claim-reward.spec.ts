@@ -12,6 +12,7 @@ import {
   deployAttributeStore,
   maybeParseInt,
   onData,
+  eventReturnValues
 } from '../../../src/helpers'
 
 let web3:Web3,
@@ -108,9 +109,8 @@ describe('Registry: Claim Reward', () => {
     // Challenge, we don't have to await this as we will await the message back below
     registry.challenge(listBytes, '', { from: challenger })
 
-    // wait on the event to get pushed to you, then inspect it. TODO we'll rewrite eventReturnValues for this
-    // in a separate PR
-    const eventLog = await onData(emitter), challID = eventLog.returnValues.challengeID
+    // the desired event attribute can be pulled from the raw EventLog with `eventReturnValues`
+    const challID = eventReturnValues('challengeID', await onData(emitter))
 
     expect(challID).toBeTruthy()
 

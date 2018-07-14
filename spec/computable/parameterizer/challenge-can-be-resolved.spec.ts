@@ -2,7 +2,7 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types.d'
 import { increaseTime } from '../../helpers'
-import { onData } from '../../../src/helpers'
+import { onData, eventReturnValues } from '../../../src/helpers'
 import { deployDll, deployAttributeStore } from '../../../src/helpers'
 import { ParameterDefaults } from '../../../src/constants'
 import Erc20 from '../../../src/contracts/erc-20'
@@ -68,11 +68,10 @@ describe('Parameterizer: challengeCanBeResolved', () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
     parameterizer.proposeReparameterization('voteQuorum', 51)
-    // the await here returns the full event log object
-    const log = await onData(emitter),
-      propID = log.returnValues.propID
 
-    const tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+    const propID = eventReturnValues('propID', await onData(emitter)),
+      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+
     expect(tx1).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
@@ -86,10 +85,9 @@ describe('Parameterizer: challengeCanBeResolved', () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     parameterizer.proposeReparameterization('voteQuorum', 51)
 
-    const log = await onData(emitter),
-      propID = log.returnValues.propID
+    const propID = eventReturnValues('propID', await onData(emitter)),
+      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
 
-    const tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
     expect(tx1).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)

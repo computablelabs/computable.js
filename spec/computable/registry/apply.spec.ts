@@ -11,7 +11,7 @@ import {
   deployDll,
   deployAttributeStore,
   maybeParseInt,
-  eventReturnValues,
+  eventsReturnValues,
 } from '../../../src/helpers'
 
 const provider:any = ganache.provider(),
@@ -141,7 +141,7 @@ describe('Registry: Apply', () => {
       // greater than 2^256-1
       const maxUint = new BN(2).pow(new BN(256)).sub(bigOne),
         applyStageLen = maxUint.sub(new BN(block.timestamp)).add(bigOne),
-        propID = eventReturnValues('_ReparameterizationProposal',
+        propID = eventsReturnValues('_ReparameterizationProposal',
           await parameterizer.proposeReparameterization('applyStageLen',
             applyStageLen.toString(10), { from: accounts[1] }), 'propID')
 
