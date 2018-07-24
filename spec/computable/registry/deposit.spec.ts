@@ -30,7 +30,7 @@ let web3:Web3,
   challenger:string
 
 // TODO also displays timing issues with WS server ascertain...
-fdescribe('Registry: Challenge', () => {
+describe('Registry: Challenge', () => {
   beforeAll(() => {
     server = ganache.server({ws:true})
     server.listen(8458)
