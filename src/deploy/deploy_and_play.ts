@@ -96,13 +96,13 @@ registry._
     await token.approve(registryAddress, 250000, { from: account })
     await token.approve(parameterizerAddress, 250000, { from: account })
 
-    console.log(registry).watch(function(error, event1) {
-      console.log("event triggered", event1)
-       Reload when a new vote is recorded
-    })
+    //console.log(registry).watch(function(error, event1) {
+   //  console.log("event triggered", event1)
+     //  Reload when a new vote is recorded
+    //})
 
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT,"fetchable data is possible!")
     //console.log(tx1)
     const listing = await registry.listings(listBytes)
     console.log(listing)

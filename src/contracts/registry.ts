@@ -168,6 +168,12 @@ export default class extends Deployable {
     return await deployed.methods.isWhitelisted(listing).call()
   }
 
+  async getData(listing:string): Promise<string> {
+    const deployed = this.requireDeployed()
+
+    return await deployed.methods.getData(listing).call()
+  }
+
   /**
    * Return a listing corresponding to the given listing hash.
    */
