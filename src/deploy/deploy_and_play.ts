@@ -43,10 +43,10 @@ let web3:Web3,
   registryAddress:string
 
 // we can use the http provider for deployment..
-mnemonic = "frog tattoo suffer copper evoke suggest fancy bag hire sport trophy orient"
-provider = new HDWalletProvider(mnemonic, "http://localhost:8545")
+mnemonic = "west laugh clever ability word mother paddle also era general game street"
+provider = new HDWalletProvider(mnemonic, "http://localhost:8544")
 web3 = new Web3(provider)
-account = "0x179fdbcbd58a7edf3b130625d542936df4390d5f"
+account = "0x58dd3f84c96b68704525adaace1cf277430f8680"
 
 
 
