@@ -124,6 +124,11 @@ export default class extends Deployable {
 
     return await deployed.methods.revealVote(pollID, vote, salt).send({ from: account })
   }
+  async commitPeriodActive(pollID:Nos,opts?: ContractOptions): Promise<TransactionReceipt> {
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
+    return await deployed.methods.commitPeriodActive(pollID).send({from:account})
+  }
 }
 
 

@@ -43,10 +43,10 @@ let web3:Web3,
   registryAddress:string
 
 // we can use the http provider for deployment..
-mnemonic = "west laugh clever ability word mother paddle also era general game street"
-provider = new HDWalletProvider(mnemonic, "http://localhost:8544")
+mnemonic = "milk mercy talent live life holiday echo young nephew life rose drop"
+provider = new HDWalletProvider(mnemonic, "http://localhost:7288")
 web3 = new Web3(provider)
-account = "0x58dd3f84c96b68704525adaace1cf277430f8680"
+account = "0x7a7e00d1eb8cf3985e579004b3ebe38931b8a765"
 
 
 
@@ -95,17 +95,26 @@ registry._
     await token.transfer(account, 500000)
     await token.approve(registryAddress, 250000, { from: account })
     await token.approve(parameterizerAddress, 250000, { from: account })
+    await token.approve(votingAddress, 1000000,{from:account})
 
     //console.log(registry).watch(function(error, event1) {
    //  console.log("event triggered", event1)
      //  Reload when a new vote is recorded
     //})
 
-    const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT,"fetchable data is possible!")
+    const listBytes = account // stringToBytes(web3, 'listing.com'),
+     const tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT,"fetchable data is possible!")
     //console.log(tx1)
     const listing = await registry.listings(listBytes)
-    console.log(listing)
+    const tx2 = await registry.challenge(listBytes)
+    //console.log(tx2)
+    console.log(listing['challengeID'])
+    console.log("commit period active")
+    console.log(await voting.commitPeriodActive(await listing['challengeID']))
+    //await voting.commitVote(web3,'0',account,0,10,420)
+    //const tx4 = await voting.revealVote('0', 1, 182, { from: account })
+    //await voting.commitVote(web3, challID, voter, 0, 10, 420)
+    //console.log(tx3)
     //const length = await parameterizer.get("applyStageLen")
     //console.log(length)
     return(1)
@@ -121,12 +130,11 @@ registry._
 
 
 
-
 const fetch_listing_status = async () => {
-  const listBytes2 = stringToBytes(web3, 'listing2.com'),
-  tx2 = await registry.apply(listBytes2, ParameterDefaults.MIN_DEPOSIT)
+  //const listBytes2 = stringToBytes(web3, 'listing2.com'),
+  //tx2 = await registry.apply(listBytes2, ParameterDefaults.MIN_DEPOSIT)
 
-  const listBytes = stringToBytes(web3, 'listing.com')
+  const listBytes = account //stringToBytes(web3, 'listing.com')
   await registry.updateStatus(listBytes)
   const listing1 = await registry.listings(listBytes)
   console.log(listing1)
@@ -140,7 +148,9 @@ deploy().then(v => {setTimeout(function(){
 
 
 
-}, 6000);}) 
+}, 6000);})
+
+console.log("Yo.") 
 
 
 
