@@ -7,10 +7,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Access the data held in receipt.events.name.returnValues.
  */
-function eventReturnValues(name, tx, refinement) {
+function eventsReturnValues(name, tx, refinement) {
     const ret = tx.events && tx.events[name] && tx.events[name].returnValues;
     if (!ret)
         return;
     return refinement ? ret[refinement] : ret;
 }
-exports.eventReturnValues = eventReturnValues;
+exports.eventsReturnValues = eventsReturnValues;

@@ -20,6 +20,7 @@ const Registry_json_1 = __importDefault(require("../../computable/build/contract
  * -------------------
  * apply
  * withdraw
+ * deposit
  * exit
  *
  * Token Holder Interface:
@@ -102,6 +103,15 @@ class default_1 extends deployable_1.default {
         });
     }
     /**
+     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+     */
+    claimReward(challengeId, salt, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const account = this.requireAccount(opts), deployed = this.requireDeployed();
+            return yield deployed.methods.claimReward(challengeId, salt).send({ from: account });
+        });
+    }
+    /**
      * Pepare the deploy options, passing them along with the instantiated web3 and optional
      * contract options to the super class' _deploy method.
      * @see abstracts/deployable#deployContract
@@ -123,15 +133,14 @@ class default_1 extends deployable_1.default {
         });
     }
     /**
-     * Allows the owner of a listingHash to decrease their unstaked deposit.
-     *
+     * Allow the owner of a listing to increase their unstaked deposit
      * @param listing listing that msg.sender is the owner of
-     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     * @param amount how much to increase by
      */
-    withdraw(listing, tokens, opts) {
+    deposit(listing, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.withdraw(listing, tokens).send({ from: account });
+            const account = this.requireAccount(opts), deployed = this.requireDeployed();
+            return yield deployed.methods.deposit(listing, amount).send({ from: account });
         });
     }
     /**
@@ -201,15 +210,6 @@ class default_1 extends deployable_1.default {
         });
     }
     /**
-     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
-     */
-    claimReward(challengeId, salt, opts) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const account = this.requireAccount(opts), deployed = this.requireDeployed();
-            return yield deployed.methods.claimReward(challengeId, salt).send({ from: account });
-        });
-    }
-    /**
      * Return the address of the plcr-voting referenced by this contract instance
      */
     voting() {
@@ -225,6 +225,18 @@ class default_1 extends deployable_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             return yield deployed.methods.voterReward(voter, challengeId, salt).call();
+        });
+    }
+    /**
+     * Allows the owner of a listingHash to decrease their unstaked deposit.
+     *
+     * @param listing listing that msg.sender is the owner of
+     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     */
+    withdraw(listing, tokens, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed(), account = this.requireAccount(opts);
+            return yield deployed.methods.withdraw(listing, tokens).send({ from: account });
         });
     }
 }
