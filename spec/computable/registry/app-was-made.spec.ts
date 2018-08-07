@@ -1,13 +1,17 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types.d'
-import { deployDll, deployAttributeStore } from '../../../src/helpers'
-import { stringToBytes, increaseTime } from '../../helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 import { ParameterDefaults, NAME } from '../../../src/constants'
+import {
+  deployDll,
+  deployAttributeStore,
+  stringToBytes,
+  increaseTime
+} from '../../../src/helpers'
 
 let web3:Web3,
   server:any,

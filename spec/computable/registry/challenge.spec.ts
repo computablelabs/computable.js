@@ -1,7 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract, Block } from 'web3/types.d'
-import { stringToBytes, increaseTime, whitelist } from '../../helpers'
+import { whitelist } from '../../helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
@@ -13,6 +13,8 @@ import {
   deployAttributeStore,
   maybeParseInt,
   eventsReturnValues as eventReturnValues,
+  stringToBytes,
+  increaseTime,
 } from '../../../src/helpers'
 
 const provider:any = ganache.provider(),

@@ -1,5 +1,5 @@
 import { Nos } from '../../src/types'
-import { increaseTime } from '.'
+import { increaseTime } from '../../src/helpers'
 import Registry from '../../src/contracts/registry'
 import { ParameterDefaults } from '../../src/constants'
 
