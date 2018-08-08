@@ -4,7 +4,6 @@ function maybeParseInt(arg, radix = 10) {
     return typeof arg === 'string' ? parseInt(arg, radix) : arg;
 }
 exports.maybeParseInt = maybeParseInt;
-// NOTE the web3 typed IProvider is incomplete (no sendAsync etc...) TODO flush it out
 function increaseTime(provider, seconds) {
     return new Promise((resolve, reject) => provider.send({
         id: new Date().getSeconds(),

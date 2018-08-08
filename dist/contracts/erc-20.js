@@ -15,28 +15,18 @@ const deployable_1 = __importDefault(require("../abstracts/deployable"));
 const ConstructableToken_json_1 = __importDefault(require("../../computable/build/contracts/ConstructableToken.json"));
 const constants_1 = require("../constants");
 class default_1 extends deployable_1.default {
-    /**
-     * An amount of funds an owner has given a spender permission to use
-     */
     allowance(owner, spender) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             return deployed.methods.allowance(owner, spender).call();
         });
     }
-    /**
-     * Grant permission to a spender located at the given address to use up to the given amount of funds
-     */
     approve(address, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
             return yield deployed.methods.approve(address, amount).send({ from: account });
         });
     }
-    /**
-     * Set our deployed refernce from an already deployed contract
-     * @see abstracts/deployable#at
-     */
     at(web3, params, opts) {
         const _super = name => super[name];
         return __awaiter(this, void 0, void 0, function* () {
@@ -48,20 +38,12 @@ class default_1 extends deployable_1.default {
             return _super("at").call(this, web3, ap, opts);
         });
     }
-    /**
-     * Return the current balance of the given address
-     */
     balanceOf(address) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             return yield deployed.methods.balanceOf(address).call();
         });
     }
-    /**
-     * Pepare the deploy options, passing them along with the instantiated web3 and optional
-     * contract options to the super class' deployContract method.
-     * @see abstracts/deployable#deployContract
-     */
     deploy(web3, params = {}, opts) {
         const _super = name => super[name];
         return __awaiter(this, void 0, void 0, function* () {
@@ -76,18 +58,12 @@ class default_1 extends deployable_1.default {
             return _super("deployContract").call(this, web3, dp, opts);
         });
     }
-    /**
-     * Move the given number of funds from the msg.sender to a given address
-     */
     transfer(address, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
             return yield deployed.methods.transfer(address, amount).send({ from: account });
         });
     }
-    /**
-     * Move the given number of funds from one given address to another given address
-     */
     transferFrom(from, to, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
