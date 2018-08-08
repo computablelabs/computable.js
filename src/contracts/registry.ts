@@ -233,6 +233,14 @@ export default class extends Deployable {
   }
 
   /**
+   * Determines whether the given listingHash can be whitelisted.
+   */
+  async canBeWhitelisted(listing:string): Promise<boolean> {
+    const deployed = this.requireDeployed()
+    return await deployed.methods.canBeWhitelisted(listing).call()
+  }
+
+  /**
    * Allows the owner of a listingHash to decrease their unstaked deposit.
    *
    * @param listing listing that msg.sender is the owner of
