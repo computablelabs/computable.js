@@ -131,8 +131,6 @@ export default class extends Deployable {
   async commitPeriodActive(pollID:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    //let tx1, prevPollID// TODO use these to verify intermediate steps or catch errors?
-
     return await deployed.methods.commitPeriodActive(pollID).call()
 
   }
@@ -142,8 +140,6 @@ export default class extends Deployable {
    */
   async revealPeriodActive(pollID:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
-
-    //let tx1, prevPollID// TODO use these to verify intermediate steps or catch errors?
 
     return await deployed.methods.revealPeriodActive(pollID).call()
 
