@@ -124,6 +124,31 @@ export default class extends Deployable {
 
     return await deployed.methods.revealVote(pollID, vote, salt).send({ from: account })
   }
+
+  /**
+   * Checks if the commit period is still active for the specified poll.
+   */
+  async commitPeriodActive(pollID:Nos) : Promise<boolean> {
+    const deployed = this.requireDeployed()
+
+    //let tx1, prevPollID// TODO use these to verify intermediate steps or catch errors?
+
+    return await deployed.methods.commitPeriodActive(pollID).call()
+
+  }
+
+  /**
+   * Checks if the reveal period is still active for the specified poll.
+   */
+  async revealPeriodActive(pollID:Nos) : Promise<boolean> {
+    const deployed = this.requireDeployed()
+
+    //let tx1, prevPollID// TODO use these to verify intermediate steps or catch errors?
+
+    return await deployed.methods.revealPeriodActive(pollID).call()
+
+  }
+
 }
 
 

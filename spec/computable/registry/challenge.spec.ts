@@ -271,4 +271,44 @@ describe('Registry: Challenge', () => {
       expect(err).toBeTruthy()
     }
   })
+
+
+  it('poll commit period is active during challenge.', async () => {
+    const listBytes = stringToBytes(web3, 'listing.net'),
+      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
+
+    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    expect(tx1).toBeTruthy()
+
+    const challID = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
+    expect(challID).toBeTruthy()
+
+    const commitActive = await voting.commitPeriodActive(challID)
+    expect(commitActive).toBe(true)
+  })
+
+  it('reveal period is active after reveal.', async () => {
+    const listBytes = stringToBytes(web3, 'listing.net'),
+      challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
+
+    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    expect(tx1).toBeTruthy()
+
+    const challID = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
+    expect(challID).toBeTruthy()
+
+    // Reveal period not yet active
+    const revealActive = await voting.revealPeriodActive(challID)
+    expect(revealActive).toBe(false)
+
+    // Increase time past the commit stage
+    await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
+
+    // Now in reveal period
+    const revealAfter = await voting.revealPeriodActive(challID)
+    expect(revealAfter).toBe(true)
+  })
+
 })
