@@ -5,6 +5,7 @@ before_install: dpkg --compare-versions `npm -v` ge 5.10.0 || npm i -g npm@^5.10
 install:
   - npm install
 script:
+  - npm test
+after_script:
   - npm run build:clean
   - npm run build
-  - npm test
