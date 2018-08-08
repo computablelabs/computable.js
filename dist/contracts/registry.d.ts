@@ -10,6 +10,7 @@ import { ContractOptions, RegistryDeployParams, AtParams, RegistryListing, Chall
  * -------------------
  * apply
  * withdraw
+ * deposit
  * exit
  *
  * Token Holder Interface:
@@ -62,18 +63,21 @@ export default class  extends Deployable {
      */
     challenges(challengeID: Nos): Promise<Challenge>;
     /**
+     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
+     */
+    claimReward(challengeId: string, salt: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    /**
      * Pepare the deploy options, passing them along with the instantiated web3 and optional
      * contract options to the super class' _deploy method.
      * @see abstracts/deployable#deployContract
      */
     deploy(web3: Web3, params: RegistryDeployParams, opts?: ContractOptions): Promise<string>;
     /**
-     * Allows the owner of a listingHash to decrease their unstaked deposit.
-     *
+     * Allow the owner of a listing to increase their unstaked deposit
      * @param listing listing that msg.sender is the owner of
-     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     * @param amount how much to increase by
      */
-    withdraw(listing: string, tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    deposit(listing: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     /**
      * Allows the owner of a listingHash to remove the listingHash from the whitelist
      * Returns all tokens to the owner of the listingHash
@@ -106,10 +110,6 @@ export default class  extends Deployable {
      */
     updateStatus(listing: string, opts?: ContractOptions): Promise<TransactionReceipt>;
     /**
-     * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
-     */
-    claimReward(challengeId: string, salt: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
-    /**
      * Return the address of the plcr-voting referenced by this contract instance
      */
     voting(): Promise<string>;
@@ -117,4 +117,11 @@ export default class  extends Deployable {
      * Return the voter's token reward for the given poll.
      */
     voterReward(voter: string, challengeId: string, salt: Nos): Promise<Nos>;
+    /**
+     * Allows the owner of a listingHash to decrease their unstaked deposit.
+     *
+     * @param listing listing that msg.sender is the owner of
+     * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
+     */
+    withdraw(listing: string, tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
 }

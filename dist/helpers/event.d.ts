@@ -11,3 +11,11 @@ import { EventEmitter, EventLog } from 'web3/types.d';
 export declare function onData(emitter: EventEmitter): Promise<EventLog>;
 export declare function onChanged(emitter: EventEmitter): Promise<EventLog>;
 export declare function onError(emitter: EventEmitter): Promise<Error>;
+/**
+ * The websocket enabled version of this method. Note that, in the `receipt` helper there
+ * is a function of a similar name, "eventsReturnValues", however, that method is meant to work with `TransactionReceipt` objects,
+ * while this one is for the `EventLog` returned from an `onData` emitter.
+ *
+ * Generally this is the preferred method, as you should be using websockets.
+ */
+export declare function eventReturnValues(name: string, log: EventLog): any;
