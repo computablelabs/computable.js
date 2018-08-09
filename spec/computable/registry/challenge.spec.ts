@@ -311,7 +311,7 @@ describe('Registry: Challenge', () => {
     expect(revealAfter).toBe(true)
   })
 
-  it('Registry can be waitlisted after application stage length.', async () => {
+  it('Registry can be whitelisted after application stage length.', async () => {
     const listBytes = stringToBytes(web3, 'listing.net')
 
     const beforeResult = await registry.canBeWhitelisted(listBytes)
