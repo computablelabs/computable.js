@@ -311,4 +311,22 @@ describe('Registry: Challenge', () => {
     expect(revealAfter).toBe(true)
   })
 
+  it('Registry can be whitelisted after application stage length.', async () => {
+    const listBytes = stringToBytes(web3, 'listing.net')
+
+    const beforeResult = await registry.canBeWhitelisted(listBytes)
+    expect(beforeResult).toBe(false)
+
+    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    expect(tx1).toBeTruthy()
+
+    const result = await registry.canBeWhitelisted(listBytes)
+    expect(result).toBe(false)
+
+    await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
+
+    const resultAfterCommitStage = await registry.canBeWhitelisted(listBytes)
+    expect(resultAfterCommitStage).toBe(true)
+  })
+
 })
