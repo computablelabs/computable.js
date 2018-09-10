@@ -37,7 +37,7 @@ export default class extends Deployable {
    */
   async commitVote(
     web3:Web3,
-    pollID:string,
+    id:Nos,
     voter:string,
     vote:Nos,
     tokens:Nos,
@@ -48,12 +48,12 @@ export default class extends Deployable {
       deployed = this.requireDeployed(),
       hash = this.getVoteSaltHash(web3, vote, salt)
 
-    let tx1, prevPollID// TODO use these to verify intermediate steps or catch errors?
+    let tx1, prevID// TODO use these to verify intermediate steps or catch errors?
 
     tx1 = await this.requestVotingRights(tokens, { from: voter })
-    prevPollID = await this.getInsertPointForNumTokens(voter, tokens, pollID)
+    prevID = await this.getInsertPointForNumTokens(voter, tokens, id)
 
-    return await deployed.methods.commitVote(pollID, hash, tokens, prevPollID).send({ from: voter })
+    return await deployed.methods.commitVote(id, hash, tokens, prevID).send({ from: voter })
   }
   /**
    * Pepare the deploy options, passing them along with the instantiated web3 and optional
@@ -78,14 +78,14 @@ export default class extends Deployable {
   /**
    * Takes the last node in the user's DLL and iterates backwards through the list searching
    * for a node with a value less than or equal to the provided tokens value. When such a node
-   * is found, if the provided pollID matches the found nodeID, this operation is an in-place
+   * is found, if the provided poll ID matches the found nodeID, this operation is an in-place
    * update. In that case, return the previous node of the node being updated. Otherwise return the
    * first node that was found with a value less than or equal to the provided tokens.
    */
-  async getInsertPointForNumTokens(voter:string, tokens:Nos, pollID:string): Promise<Nos> {
+  async getInsertPointForNumTokens(voter:string, tokens:Nos, id:Nos): Promise<Nos> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.getInsertPointForNumTokens(voter, tokens, pollID).call()
+    return await deployed.methods.getInsertPointForNumTokens(voter, tokens, id).call()
   }
 
   /**
@@ -118,33 +118,31 @@ export default class extends Deployable {
   /**
    * Reveals vote cast and secret salt used in generating commitHash to attribute committed tokens
    */
-  async revealVote(pollID:Nos, vote:Nos, salt:Nos, opts?: ContractOptions): Promise<TransactionReceipt> {
+  async revealVote(id:Nos, vote:Nos, salt:Nos, opts?: ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    return await deployed.methods.revealVote(pollID, vote, salt).send({ from: account })
+    return await deployed.methods.revealVote(id, vote, salt).send({ from: account })
   }
 
   /**
    * Checks if the commit period is still active for the specified poll.
    */
-  async commitPeriodActive(pollID:Nos) : Promise<boolean> {
+  async commitPeriodActive(id:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.commitPeriodActive(pollID).call()
+    return await deployed.methods.commitPeriodActive(id).call()
 
   }
 
   /**
    * Checks if the reveal period is still active for the specified poll.
    */
-  async revealPeriodActive(pollID:Nos) : Promise<boolean> {
+  async revealPeriodActive(id:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.revealPeriodActive(pollID).call()
-
+    return await deployed.methods.revealPeriodActive(id).call()
   }
-
 }
 
 

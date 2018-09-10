@@ -93,9 +93,9 @@ describe('Registry: Challenge', () => {
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
@@ -119,9 +119,9 @@ describe('Registry: Challenge', () => {
     const whitelisted = await whitelist(provider, registry, listBytes, applicant)
     expect(whitelisted).toBe(true)
 
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
@@ -141,18 +141,18 @@ describe('Registry: Challenge', () => {
 
     expect(tx1).toBeTruthy()
 
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
     // should be able to fetch the actual challenge object
-    const chall:Challenge = await registry.challenges(challID)
+    const chall:Challenge = await registry.challenges(id)
     expect(chall).toBeTruthy()
 
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
-    await voting.commitVote(web3, challID, voter, 1, 10, 420)
+    await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(challID, 1, 420, { from: voter })
+    await voting.revealVote(id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
 
@@ -174,13 +174,13 @@ describe('Registry: Challenge', () => {
 
     expect(whitelisted).toBe(true)
     // challenge it...
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
     // vote to support
-    await voting.commitVote(web3, challID, voter, 1, 10, 420)
+    await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(challID, 1, 420, { from: voter })
+    await voting.revealVote(id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
     // with the support vote should have succeeded
@@ -241,9 +241,9 @@ describe('Registry: Challenge', () => {
     expect(whitelisted).toBe(true)
 
     // challenge 1
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
     try {
       // attempt the 2nd
@@ -280,11 +280,11 @@ describe('Registry: Challenge', () => {
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
-    const commitActive = await voting.commitPeriodActive(challID)
+    const commitActive = await voting.commitPeriodActive(id)
     expect(commitActive).toBe(true)
   })
 
@@ -295,19 +295,19 @@ describe('Registry: Challenge', () => {
     const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
-    const challID = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'challengeID')
-    expect(challID).toBeTruthy()
+    const id = eventReturnValues('_Challenge',
+      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+    expect(id).toBeTruthy()
 
     // Reveal period not yet active
-    const revealActive = await voting.revealPeriodActive(challID)
+    const revealActive = await voting.revealPeriodActive(id)
     expect(revealActive).toBe(false)
 
     // Increase time past the commit stage
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
 
     // Now in reveal period
-    const revealAfter = await voting.revealPeriodActive(challID)
+    const revealAfter = await voting.revealPeriodActive(id)
     expect(revealAfter).toBe(true)
   })
 

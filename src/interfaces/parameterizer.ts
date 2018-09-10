@@ -27,7 +27,7 @@ export interface ParameterizerDeployParams {
 
 export interface ParameterizerProposal {
   appExpiry:Nos;
-  challengeID:Nos;
+  challenge:Nos;
   deposit:Nos;
   name:string;
   owner:string;
