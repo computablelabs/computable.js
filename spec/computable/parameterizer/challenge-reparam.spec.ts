@@ -105,6 +105,7 @@ describe('Parameterizer: challengeReparameterization', () => {
     expect(maybeParseInt(finalBalOne)).toBe(maybeParseInt(startingBalOne) + ParameterDefaults.P_MIN_DEPOSIT)
   })
 
+  // TODO propID is not an ID but a hash - will be changed to propHash in the future
   it('should set new params if a proposal wins a challenge', async () => {
     const startingBalZero = await erc20.balanceOf(accounts[0]),
       startingBalOne = await erc20.balanceOf(accounts[1]),
@@ -117,15 +118,15 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     parameterizer.challengeReparameterization(propID, { from: accounts[1] })
 
-    const challID = eventReturnValues('challengeID', await onData(challEmitter)),
+    const id = eventReturnValues('id', await onData(challEmitter)),
       // accounts[2] as voter here TODO setup some spec-level constants
-      tx2 = await voting.commitVote(web3, challID, accounts[2], 1, 10, 420)
+      tx2 = await voting.commitVote(web3, id, accounts[2], 1, 10, 420)
 
     expect(tx2).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
 
-    const tx3 = await voting.revealVote(challID, 1, 420, { from: accounts[2] })
+    const tx3 = await voting.revealVote(id, 1, 420, { from: accounts[2] })
     expect(tx3).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)

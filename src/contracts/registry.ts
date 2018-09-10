@@ -98,21 +98,21 @@ export default class extends Deployable {
   }
 
   /**
-   * Return a challenge corresponding to the given challegeID.
+   * Return a challenge corresponding to the given ID.
    */
-  async challenges(challengeID:Nos): Promise<Challenge> {
+  async challenges(id:Nos): Promise<Challenge> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.challenges(challengeID).call()
+    return await deployed.methods.challenges(id).call()
   }
 
   /**
    * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
    */
-  async claimReward(challengeId:string, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  async claimReward(id:Nos, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
       deployed = this.requireDeployed()
-    return await deployed.methods.claimReward(challengeId, salt).send({from: account})
+    return await deployed.methods.claimReward(id, salt).send({from: account})
   }
 
   /**
@@ -227,9 +227,9 @@ export default class extends Deployable {
  /**
   * Return the voter's token reward for the given poll.
   */
-  async voterReward(voter:string, challengeId:string, salt:Nos): Promise<Nos> {
+  async voterReward(voter:string, id:Nos, salt:Nos): Promise<Nos> {
     const deployed = this.requireDeployed()
-    return await deployed.methods.voterReward(voter, challengeId, salt).call()
+    return await deployed.methods.voterReward(voter, id, salt).call()
   }
 
   /**

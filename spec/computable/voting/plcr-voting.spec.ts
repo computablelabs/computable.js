@@ -105,25 +105,25 @@ describe('PLCRVoting', () => {
 
     registry.challenge(domainOne, '', { from: accounts[1] })
 
-    const challID1 = eventReturnValues('challengeID', await onData(emitter))
-    expect(challID1).toBeTruthy()
+    const id1 = eventReturnValues('id', await onData(emitter))
+    expect(id1).toBeTruthy()
 
     registry.challenge(domainTwo, '', { from: accounts[1] })
 
-    const challID2 = eventReturnValues('challengeID', await onData(emitter))
-    expect(challID2).toBeTruthy()
+    const id2 = eventReturnValues('id', await onData(emitter))
+    expect(id2).toBeTruthy()
 
     // args: last 3 are vote, tokens, salt
-    const tx5 = await voting.commitVote(web3, challID1, accounts[2], 1, 10, 420)
+    const tx5 = await voting.commitVote(web3, id1, accounts[2], 1, 10, 420)
     expect(tx5).toBeTruthy()
     // bump the num tokens here...
-    const tx6 = await voting.commitVote(web3, challID2, accounts[2], 1, 11, 420)
+    const tx6 = await voting.commitVote(web3, id2, accounts[2], 1, 11, 420)
     expect(tx6).toBeTruthy()
     // insert point for less than the default (10) should then be 0
-    const pt = await voting.getInsertPointForNumTokens(accounts[2], 9, challID1)
+    const pt = await voting.getInsertPointForNumTokens(accounts[2], 9, id1)
     expect(pt).toBe('0')
     // converse should be true for more...
-    const pt2 = await voting.getInsertPointForNumTokens(accounts[2], 12, challID2)
+    const pt2 = await voting.getInsertPointForNumTokens(accounts[2], 12, id2)
     expect(pt2).toBe('1')
   })
 

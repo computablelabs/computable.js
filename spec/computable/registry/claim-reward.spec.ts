@@ -111,28 +111,28 @@ describe('Registry: Claim Reward', () => {
     registry.challenge(listBytes, '', { from: challenger })
 
     // the desired event attribute can be pulled from the raw EventLog with `eventReturnValues`
-    const challID = eventReturnValues('challengeID', await onData(emitter))
+    const id = eventReturnValues('id', await onData(emitter))
 
-    expect(challID).toBeTruthy()
+    expect(id).toBeTruthy()
 
     // Commit vote
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
-    await voting.commitVote(web3, challID, voter, 0, 10, 420)
+    await voting.commitVote(web3, id, voter, 0, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
 
     // Reveal vote
-    await voting.revealVote(challID, 0, 420, { from: voter })
+    await voting.revealVote(id, 0, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(listBytes)
 
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
 
     // Compute voter reward
-    const voterReward = maybeParseInt(await registry.voterReward(voter, challID, 420))
+    const voterReward = maybeParseInt(await registry.voterReward(voter, id, 420))
     const voterExpectedBalance = voterStartingBalance + voterReward
 
     // Voter claims reward
-    await registry.claimReward(challID, 420, {from: voter})
+    await registry.claimReward(id, 420, {from: voter})
 
     // Voter withdraws voting rights
     await voting.withdrawVotingRights(10, {from: voter})
