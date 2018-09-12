@@ -6,10 +6,10 @@
   "module": "dist/index.js",
   "scripts": {
     "test": "jasmine-ts ./spec/**/*.spec.ts",
-    "build": "./node_modules/typescript/bin/tsc -p ./tsbuild.json",
+    "build": "npm run build:clean && tsc -p ./tsbuild.json",
     "build:clean": " rm -rf ./dist/abstracts && rm -rf ./dist/constants && rm -rf ./dist/contracts && rm -rf ./dist/deploy && rm -rf ./dist/helpers && rm -rf ./dist/interfaces && rm -rf ./dist/types",
-    "build:dry": "./node_modules/typescript/bin/tsc -noEmit -p ./tsbuild.json",
-    "test-init": "./node_modules/.bin/jasmine-ts init"
+    "build:dry": "tsc -noEmit -p ./tsbuild.json",
+    "test-init": "jasmine-ts init"
   },
   "keywords": [
     "Computable",
