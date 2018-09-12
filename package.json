@@ -5,7 +5,7 @@
   "main": "dist/computable.js",
   "module": "dist/index.js",
   "scripts": {
-    "test": "jasmine-ts ./spec/**/*.spec.ts",
+    "test": "JASMINE_CONFIG_PATH=./spec/support/jasmine.json jasmine-ts",
     "build": "npm run build:clean && tsc -p ./tsbuild.json",
     "build:clean": " rm -rf ./dist/abstracts && rm -rf ./dist/constants && rm -rf ./dist/contracts && rm -rf ./dist/deploy && rm -rf ./dist/helpers && rm -rf ./dist/interfaces && rm -rf ./dist/types",
     "build:dry": "tsc -noEmit -p ./tsbuild.json",
