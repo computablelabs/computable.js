@@ -8,8 +8,8 @@ export default class  extends Deployable {
     appWasMade(listing: string): Promise<boolean>;
     at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     challenge(listing: string, data?: string, opts?: ContractOptions): Promise<TransactionReceipt>;
-    challenges(challengeID: Nos): Promise<Challenge>;
-    claimReward(challengeId: string, salt: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    challenges(id: Nos): Promise<Challenge>;
+    claimReward(id: Nos, salt: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     deploy(web3: Web3, params: RegistryDeployParams, opts?: ContractOptions): Promise<string>;
     deposit(listing: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     exit(listing: string, opts?: ContractOptions): Promise<TransactionReceipt>;
@@ -20,6 +20,7 @@ export default class  extends Deployable {
     token(): Promise<string>;
     updateStatus(listing: string, opts?: ContractOptions): Promise<TransactionReceipt>;
     voting(): Promise<string>;
-    voterReward(voter: string, challengeId: string, salt: Nos): Promise<Nos>;
+    voterReward(voter: string, id: Nos, salt: Nos): Promise<Nos>;
+    canBeWhitelisted(listing: string): Promise<boolean>;
     withdraw(listing: string, tokens: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
 }

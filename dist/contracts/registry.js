@@ -43,16 +43,16 @@ class default_1 extends deployable_1.default {
             return yield deployed.methods.challenge(listing, data).send({ from: account });
         });
     }
-    challenges(challengeID) {
+    challenges(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            return yield deployed.methods.challenges(challengeID).call();
+            return yield deployed.methods.challenges(id).call();
         });
     }
-    claimReward(challengeId, salt, opts) {
+    claimReward(id, salt, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts), deployed = this.requireDeployed();
-            return yield deployed.methods.claimReward(challengeId, salt).send({ from: account });
+            return yield deployed.methods.claimReward(id, salt).send({ from: account });
         });
     }
     deploy(web3, params, opts) {
@@ -125,10 +125,16 @@ class default_1 extends deployable_1.default {
             return yield deployed.methods.voting().call();
         });
     }
-    voterReward(voter, challengeId, salt) {
+    voterReward(voter, id, salt) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            return yield deployed.methods.voterReward(voter, challengeId, salt).call();
+            return yield deployed.methods.voterReward(voter, id, salt).call();
+        });
+    }
+    canBeWhitelisted(listing) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            return yield deployed.methods.canBeWhitelisted(listing).call();
         });
     }
     withdraw(listing, tokens, opts) {

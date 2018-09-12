@@ -26,13 +26,13 @@ class default_1 extends deployable_1.default {
             return _super("at").call(this, web3, ap, opts);
         });
     }
-    commitVote(web3, pollID, voter, vote, tokens, salt, opts) {
+    commitVote(web3, id, voter, vote, tokens, salt, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts), deployed = this.requireDeployed(), hash = this.getVoteSaltHash(web3, vote, salt);
-            let tx1, prevPollID;
+            let tx1, prevID;
             tx1 = yield this.requestVotingRights(tokens, { from: voter });
-            prevPollID = yield this.getInsertPointForNumTokens(voter, tokens, pollID);
-            return yield deployed.methods.commitVote(pollID, hash, tokens, prevPollID).send({ from: voter });
+            prevID = yield this.getInsertPointForNumTokens(voter, tokens, id);
+            return yield deployed.methods.commitVote(id, hash, tokens, prevID).send({ from: voter });
         });
     }
     deploy(web3, params, opts) {
@@ -48,10 +48,10 @@ class default_1 extends deployable_1.default {
             return _super("deployContract").call(this, web3, dp, opts);
         });
     }
-    getInsertPointForNumTokens(voter, tokens, pollID) {
+    getInsertPointForNumTokens(voter, tokens, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            return yield deployed.methods.getInsertPointForNumTokens(voter, tokens, pollID).call();
+            return yield deployed.methods.getInsertPointForNumTokens(voter, tokens, id).call();
         });
     }
     getVoteSaltHash(web3, vote, salt) {
@@ -69,22 +69,22 @@ class default_1 extends deployable_1.default {
             return deployed.methods.withdrawVotingRights(tokens).send({ from: account });
         });
     }
-    revealVote(pollID, vote, salt, opts) {
+    revealVote(id, vote, salt, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.revealVote(pollID, vote, salt).send({ from: account });
+            return yield deployed.methods.revealVote(id, vote, salt).send({ from: account });
         });
     }
-    commitPeriodActive(pollID) {
+    commitPeriodActive(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            return yield deployed.methods.commitPeriodActive(pollID).call();
+            return yield deployed.methods.commitPeriodActive(id).call();
         });
     }
-    revealPeriodActive(pollID) {
+    revealPeriodActive(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            return yield deployed.methods.revealPeriodActive(pollID).call();
+            return yield deployed.methods.revealPeriodActive(id).call();
         });
     }
 }

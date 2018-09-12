@@ -55,6 +55,7 @@ export default class extends Deployable {
 
     return await deployed.methods.commitVote(id, hash, tokens, prevID).send({ from: voter })
   }
+
   /**
    * Pepare the deploy options, passing them along with the instantiated web3 and optional
    * contract options to the super class' _deploy method.
@@ -102,7 +103,8 @@ export default class extends Deployable {
    * Assumes that `account` has approved the voting contract to spend on their behalf.
    */
   async requestVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(), account = this.requireAccount(opts)
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
 
     return deployed.methods.requestVotingRights(tokens).send({ from: account })
   }
@@ -111,7 +113,9 @@ export default class extends Deployable {
    * Withdraws ERC20 tokens from the voting contract to revoke one-to-one voting rights.
    */
   async withdrawVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(), account = this.requireAccount(opts)
+    const deployed = this.requireDeployed(),
+      account = this.requireAccount(opts)
+
     return deployed.methods.withdrawVotingRights(tokens).send({ from: account })
   }
 
@@ -132,7 +136,6 @@ export default class extends Deployable {
     const deployed = this.requireDeployed()
 
     return await deployed.methods.commitPeriodActive(id).call()
-
   }
 
   /**
@@ -144,5 +147,4 @@ export default class extends Deployable {
     return await deployed.methods.revealPeriodActive(id).call()
   }
 }
-
 
