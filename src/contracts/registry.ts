@@ -58,7 +58,13 @@ export default class extends Deployable {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    return await deployed.methods.apply(listing, tokens, data).send({ from: account })
+    // return await deployed.methods.apply(listing, tokens, data).send({ from: account })
+
+    const tx = deployed.methods.apply(listing, tokens, data)
+
+    console.log('apply tx: ', tx)
+
+    return await tx.send({ from: account })
   }
 
   /**

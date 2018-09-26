@@ -17,7 +17,9 @@ class default_1 extends deployable_1.default {
     apply(listing, tokens, data = '', opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.apply(listing, tokens, data).send({ from: account });
+            const tx = deployed.methods.apply(listing, tokens, data);
+            console.log('apply tx: ', tx);
+            return yield tx.send({ from: account });
         });
     }
     appWasMade(listing) {
