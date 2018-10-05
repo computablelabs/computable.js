@@ -4,6 +4,7 @@ import { GAS, GAS_PRICE, Errors } from '../constants'
 import Deployable from '../abstracts/deployable'
 import { Nos } from '../types'
 import registryJson from '../../computable/build/contracts/Registry.json'
+import { sendSignedTransaction } from '../helpers'
 // TODO PR web3 to export these properly
 import {
   Keyed,
@@ -54,11 +55,17 @@ export default class extends Deployable {
    * @param tokens The number of ERC20 tokens a user is willing to potentially stake
    * @param data Extra data relevant to the application. Think IPFS hashes.
    */
-  async apply(listing:string, tokens:Nos, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
+  async apply(web3:Web3, listing:string, tokens:Nos, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    return await deployed.methods.apply(listing, tokens, data).send({ from: account })
+    // the presence of opts.sign (or lack thereof) determines how we call for this (value should be a private key)
+    if (opts && opts.sign) {
+      // the called method is always responsible for getting the abi encoded method here
+      const encoded = deployed.methods.apply(listing, tokens, data).encodeABI()
+      // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
+      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return await deployed.methods.apply(listing, tokens, data).send(Object.assign({ from: account }, opts || {}))
   }
 
   /**

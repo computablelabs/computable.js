@@ -90,7 +90,7 @@ describe('Registry: Challenge', () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
       challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
@@ -116,7 +116,7 @@ describe('Registry: Challenge', () => {
       challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
     // move through to whitelisted, allow min_deposit to default
-    const whitelisted = await whitelist(provider, registry, listBytes, applicant)
+    const whitelisted = await whitelist(web3, provider, registry, listBytes, applicant) // TODO we likely can get the provider from web3 here // TODO we likely can get the provider from web3 here
     expect(whitelisted).toBe(true)
 
     const id = eventReturnValues('_Challenge',
@@ -137,7 +137,7 @@ describe('Registry: Challenge', () => {
 
   it('can overturn an appliction challenge', async () => {
     const listBytes = stringToBytes(web3, 'challengeDenied.net'),
-      tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+      tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
 
     expect(tx1).toBeTruthy()
 
@@ -170,7 +170,7 @@ describe('Registry: Challenge', () => {
   it('can overturn a listing challenge', async () => {
     const listBytes = stringToBytes(web3, 'winner.net'),
       // move through to whitelisted - the diff between this and the above...
-      whitelisted = await whitelist(provider, registry, listBytes, applicant)
+      whitelisted = await whitelist(web3, provider, registry, listBytes, applicant)
 
     expect(whitelisted).toBe(true)
     // challenge it...
@@ -198,7 +198,7 @@ describe('Registry: Challenge', () => {
     const listBytes = stringToBytes(web3, 'gunnaremove.net'),
       applicantStartBal = await erc20.balanceOf(applicant),
       // move through to whitelisted
-      whitelisted = await whitelist(provider, registry, listBytes, applicant)
+      whitelisted = await whitelist(web3, provider, registry, listBytes, applicant)
 
     expect(whitelisted).toBe(true)
 
@@ -236,7 +236,7 @@ describe('Registry: Challenge', () => {
 
   it('reverts if a challenge occurs on a listing with an open challenge', async () => {
     const listBytes = stringToBytes(web3, '2challenges.com'),
-      whitelisted = await whitelist(provider, registry, listBytes, applicant)
+      whitelisted = await whitelist(web3, provider, registry, listBytes, applicant)
 
     expect(whitelisted).toBe(true)
 
@@ -257,7 +257,7 @@ describe('Registry: Challenge', () => {
 
   it('reverts if token transfer from challenger fails', async () => {
     const listBytes = stringToBytes(web3, 'brokeasschallenger.co'),
-      tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+      tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
 
     expect(tx1).toBeTruthy()
 
@@ -277,7 +277,7 @@ describe('Registry: Challenge', () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
       challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
@@ -292,7 +292,7 @@ describe('Registry: Challenge', () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
       challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
@@ -317,7 +317,7 @@ describe('Registry: Challenge', () => {
     const beforeResult = await registry.canBeWhitelisted(listBytes)
     expect(beforeResult).toBe(false)
 
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     const result = await registry.canBeWhitelisted(listBytes)

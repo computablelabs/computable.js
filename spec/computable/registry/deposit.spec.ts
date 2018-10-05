@@ -89,7 +89,7 @@ describe('Registry: Challenge', () => {
 
   it('can increase the deposit for a specific listing', async () => {
     const listBytes = stringToBytes(web3, 'listing.net'),
-      whitelisted = await whitelist(provider, registry, listBytes, applicant),
+      whitelisted = await whitelist(web3, provider, registry, listBytes, applicant),
       incBy = ParameterDefaults.MIN_DEPOSIT / 2
 
     let listing:RegistryListing, unstaked:Nos
@@ -113,7 +113,7 @@ describe('Registry: Challenge', () => {
 
   it('should revert if sender not the listing owner', async () => {
     const listBytes = stringToBytes(web3, 'nope.net')
-    await whitelist(provider, registry, listBytes, applicant)
+    await whitelist(web3, provider, registry, listBytes, applicant)
 
     try {
       await registry.deposit(listBytes, 5, { from: challenger })

@@ -87,7 +87,7 @@ describe('Registry: Exit', () => {
       applicantStartingBalance = maybeParseInt(await erc20.balanceOf(applicant))
 
     // Apply
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     // Check that the listing has been posted
@@ -100,7 +100,7 @@ describe('Registry: Exit', () => {
     expect(tx2).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
-    // Exit 
+    // Exit
     const tx3 = registry.exit(listBytes, { from: applicant })
     expect(tx3).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(false)

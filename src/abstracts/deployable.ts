@@ -35,7 +35,7 @@ export default abstract class implements Keyed {
       {
         from: params.from || account,
         gas: opts && opts.gas || GAS,
-        gasPrice: opts && opts.gasPrice || GAS_PRICE
+        gasPrice: opts && opts.gasPrice || GAS_PRICE // TODO this needs to have [env] vars for local, testNet, mainNet etc...
       }
     )
 

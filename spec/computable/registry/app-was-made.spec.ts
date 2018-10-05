@@ -72,7 +72,7 @@ describe('Registry', () => {
 
   it('returns true if application expiry was previously initialized', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT) // apply
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT) // apply
 
     let result = await registry.appWasMade(listBytes)
 
