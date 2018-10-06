@@ -15,7 +15,16 @@ import {
   increaseTime,
 } from '../../../src/helpers'
 
-const provider:any = ganache.provider(),
+// define users and private keys so we can test signed transactions as well
+const users = [{
+    secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
+    balance: 1000000000000,
+  }, {
+    secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
+    balance: 1000000000000,
+  }]
+
+const provider:any = ganache.provider({ accounts: users }),
   web3 = new Web3(provider)
 
 let accounts:string[],
@@ -66,7 +75,8 @@ describe('Registry: Apply', () => {
 
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
+      // use a signed transacion, should behave the same as a non-signed
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)})
 
     const listing = await registry.listings(listBytes)
     expect(listing).toBeTruthy()

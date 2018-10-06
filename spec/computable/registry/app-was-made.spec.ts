@@ -24,9 +24,21 @@ let web3:Web3,
   parameterizer:Parameterizer,
   registry:Registry
 
+const users = [{
+    secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
+    balance: 1000000000000,
+  }, {
+    secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
+    balance: 1000000000000,
+  }]
+
 describe('Registry', () => {
   beforeAll(() => {
-    server = ganache.server({ws:true})
+    server = ganache.server({
+      ws:true,
+      accounts: users,
+    })
+
     server.listen(8555)
 
     provider = new Web3.providers.WebsocketProvider('ws://localhost:8555')
@@ -72,7 +84,8 @@ describe('Registry', () => {
 
   it('returns true if application expiry was previously initialized', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT) // apply
+      // apply with a signed transaction here...
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)})
 
     let result = await registry.appWasMade(listBytes)
 
