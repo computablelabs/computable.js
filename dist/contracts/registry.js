@@ -13,11 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const deployable_1 = __importDefault(require("../abstracts/deployable"));
 const Registry_json_1 = __importDefault(require("../../computable/build/contracts/Registry.json"));
+const helpers_1 = require("../helpers");
 class default_1 extends deployable_1.default {
-    apply(listing, tokens, data = '', opts) {
+    apply(web3, listing, tokens, data = '', opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.apply(listing, tokens, data).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.apply(listing, tokens, data).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.apply(listing, tokens, data).send(Object.assign({ from: account }, opts || {}));
         });
     }
     appWasMade(listing) {

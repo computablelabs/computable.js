@@ -4,6 +4,7 @@ export interface ContractOptions {
     from?: string;
     gas?: any;
     gasPrice?: any;
+    sign?: string;
 }
 export interface DeployParams {
     abi: any;

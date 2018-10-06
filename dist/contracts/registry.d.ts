@@ -4,7 +4,7 @@ import Deployable from '../abstracts/deployable';
 import { Nos } from '../types';
 import { ContractOptions, RegistryDeployParams, AtParams, RegistryListing, Challenge } from '../interfaces';
 export default class  extends Deployable {
-    apply(listing: string, tokens: Nos, data?: string, opts?: ContractOptions): Promise<TransactionReceipt>;
+    apply(web3: Web3, listing: string, tokens: Nos, data?: string, opts?: ContractOptions): Promise<TransactionReceipt>;
     appWasMade(listing: string): Promise<boolean>;
     at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     challenge(listing: string, data?: string, opts?: ContractOptions): Promise<TransactionReceipt>;
