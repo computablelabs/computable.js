@@ -93,7 +93,7 @@ describe('Registry: Withdraw', () => {
 
     // Listing is un-challenged during apply stage and subsequently whitelisted.
     await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
-    const tx2 = await registry.updateStatus(listBytes)
+    const tx2 = await registry.updateStatus(web3, listBytes)
     expect(tx2).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
@@ -104,7 +104,7 @@ describe('Registry: Withdraw', () => {
     // Withdraw
     try {
       const withdrawAmount = ParameterDefaults.MIN_DEPOSIT/2.0
-      const tx3 = await registry.withdraw(listBytes, withdrawAmount, { from: applicant })
+      const tx3 = await registry.withdraw(web3, listBytes, withdrawAmount, { from: applicant })
     } catch (err) {
       // TODO: Do we want a more robust error detection scheme?
       expect(err.toString().includes('revert')).toBe(true)
@@ -116,7 +116,5 @@ describe('Registry: Withdraw', () => {
 
     // Check deposit not changed
     expect(origDeposit).toBe(depositAfterWithdraw)
-
   })
-
 })

@@ -21,6 +21,20 @@ export default abstract class implements Keyed {
   constructor(account?:string) { account && this.setDefaultAccount(account) }
 
   /**
+   * Mixin any passed in to, from, gas && gasPrice contract options and return
+   */
+  protected assignContractOptions(src:Keyed, opts?:ContractOptions): ContractOptions {
+    if(opts) {
+      // delete sign so we don't pass it along
+      delete opts.sign
+      // copy src onto opts so that any overridden props take precedence
+      return Object.assign(opts, src)
+    }
+
+    return src
+  }
+
+  /**
    * Similar to deployContract, but using the address of an already deployed instance.
    * Returns truthy if fetched
    *

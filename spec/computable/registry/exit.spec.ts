@@ -96,19 +96,17 @@ describe('Registry: Exit', () => {
 
     // Listing is un-challenged during apply stage and subsequently whitelisted.
     await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
-    const tx2 = await registry.updateStatus(listBytes)
+    const tx2 = await registry.updateStatus(web3, listBytes)
     expect(tx2).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
     // Exit
-    const tx3 = registry.exit(listBytes, { from: applicant })
+    const tx3 = registry.exit(web3, listBytes, { from: applicant })
     expect(tx3).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
 
     // The applicant's tokens should be returned on exit
     const applicantFinalBalance = maybeParseInt(await erc20.balanceOf(applicant))
     expect(applicantStartingBalance).toBe(applicantFinalBalance)
-
   })
-
 })

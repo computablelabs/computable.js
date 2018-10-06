@@ -17,6 +17,6 @@ export async function whitelist(
 ): Promise<boolean> {
   await registry.apply(web3, listing, deposit, '', { from: account })
   await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
-  await registry.updateStatus(listing, { from: account })
+  await registry.updateStatus(web3, listing, { from: account })
   return await registry.isWhitelisted(listing)
 }
