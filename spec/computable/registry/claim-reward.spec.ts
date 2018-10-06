@@ -101,7 +101,7 @@ describe('Registry: Claim Reward', () => {
       voterStartingBalance = maybeParseInt(await erc20.balanceOf(voter))
 
     // Apply
-    const tx1 = registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
+    const tx1 = registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { from: applicant })
     expect(tx1).toBeTruthy()
 
     // get the event emitter for the _Challenge event before causing it to be fired

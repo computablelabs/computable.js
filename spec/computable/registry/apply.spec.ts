@@ -15,7 +15,16 @@ import {
   increaseTime,
 } from '../../../src/helpers'
 
-const provider:any = ganache.provider(),
+// define users and private keys so we can test signed transactions as well
+const users = [{
+    secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
+    balance: 1000000000000,
+  }, {
+    secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
+    balance: 1000000000000,
+  }]
+
+const provider:any = ganache.provider({ accounts: users }),
   web3 = new Web3(provider)
 
 let accounts:string[],
@@ -66,7 +75,8 @@ describe('Registry: Apply', () => {
 
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+      // use a signed transacion, should behave the same as a non-signed
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)})
 
     const listing = await registry.listings(listBytes)
     expect(listing).toBeTruthy()
@@ -82,12 +92,12 @@ describe('Registry: Apply', () => {
     // we should not have an application yet
     expect(await registry.appWasMade(listBytes)).toBe(false)
 
-    const tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+    const tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
     expect(tx1).toBeTruthy()
 
     // should throw on dupe apply
     try {
-      const tx2 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+      const tx2 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
       // should never be called as catch should happen
       expect(false).toBe(true)
     } catch(err) {
@@ -97,7 +107,7 @@ describe('Registry: Apply', () => {
 
   it('adds a listing that went unchallenged', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      tx1 = await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
 
     await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
     const tx2 = await registry.updateStatus(listBytes)
@@ -111,7 +121,7 @@ describe('Registry: Apply', () => {
       await erc20.approve(registry.getAddress(), 0, { from: accounts[0]})
 
       try {
-        await registry.apply(stringToBytes(web3, 'nope.com'), ParameterDefaults.MIN_DEPOSIT)
+        await registry.apply(web3, stringToBytes(web3, 'nope.com'), ParameterDefaults.MIN_DEPOSIT)
         // should not be called
         expect(false).toBe(true)
       } catch(err) {
@@ -123,7 +133,7 @@ describe('Registry: Apply', () => {
       const listBytes = stringToBytes(web3, 'listing.com')
 
       try {
-        await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT - 1)
+        await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT - 1)
         expect(false).toBe(true)
       } catch(err) {
         expect(err).toBeTruthy()
@@ -158,7 +168,7 @@ describe('Registry: Apply', () => {
       const listBytes = stringToBytes(web3, 'uhoh.net')
 
       try {
-        await registry.apply(listBytes, ParameterDefaults.MIN_DEPOSIT)
+        await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
         expect(false).toBe(true)
       } catch(err) {
         expect(err).toBeTruthy()

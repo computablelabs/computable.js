@@ -95,8 +95,8 @@ describe('PLCRVoting', () => {
   it('commits vote, updates DLL state', async () => {
     const domainOne = stringToBytes(web3, 'one.net'),
       domainTwo = stringToBytes(web3, 'two.net'),
-      tx1 = await registry.apply(domainOne, ParameterDefaults.MIN_DEPOSIT),
-      tx2 = await registry.apply(domainTwo, ParameterDefaults.MIN_DEPOSIT)
+      tx1 = await registry.apply(web3, domainOne, ParameterDefaults.MIN_DEPOSIT),
+      tx2 = await registry.apply(web3, domainTwo, ParameterDefaults.MIN_DEPOSIT)
 
     expect(tx1).toBeTruthy()
     expect(tx2).toBeTruthy()

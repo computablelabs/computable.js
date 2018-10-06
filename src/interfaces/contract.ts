@@ -10,8 +10,9 @@ import { Nos } from '../types'
 export interface ContractOptions {
   to?:string;
   from?:string;
-  gas?:any;
+  gas?:any; //gasLimit
   gasPrice?:any;
+  sign?:string; // value would be a private key
 }
 
 /**
