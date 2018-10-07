@@ -150,21 +150,21 @@ describe('Registry: Challenge', () => {
     expect(chall).toBeTruthy()
 
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
-    // await voting.commitVote(web3, id, voter, 1, 10, 420)
-    // await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    // await voting.revealVote(id, 1, 420, { from: voter })
-    // await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    // await registry.updateStatus(web3, listBytes)
+    await voting.commitVote(web3, id, voter, 1, 10, 420)
+    await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
+    await voting.revealVote(id, 1, 420, { from: voter })
+    await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
+    await registry.updateStatus(web3, listBytes)
 
-    // expect(await registry.isWhitelisted(listBytes)).toBe(true)
+    expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
-    // // check that the token dispensation is correct
-    // const listing:RegistryListing = await registry.listings(listBytes),
-      // actualUnstaked = maybeParseInt(listing.unstakedDeposit),
-      // expectedUnstaked = ParameterDefaults.MIN_DEPOSIT +
-        // (ParameterDefaults.MIN_DEPOSIT * ParameterDefaults.DISPENSATION_PCT / 100)
+    // check that the token dispensation is correct
+    const listing:RegistryListing = await registry.listings(listBytes),
+      actualUnstaked = maybeParseInt(listing.unstakedDeposit),
+      expectedUnstaked = ParameterDefaults.MIN_DEPOSIT +
+        (ParameterDefaults.MIN_DEPOSIT * ParameterDefaults.DISPENSATION_PCT / 100)
 
-    // expect(actualUnstaked === expectedUnstaked).toBe(true)
+    expect(actualUnstaked === expectedUnstaked).toBe(true)
   })
 
   it('can overturn a listing challenge', async () => {
