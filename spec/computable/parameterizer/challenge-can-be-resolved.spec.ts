@@ -37,7 +37,7 @@ describe('Parameterizer: challengeCanBeResolved', () => {
 
     erc20 = new Erc20(accounts[0])
     const tokenAddress = await erc20.deploy(web3)
-    erc20.setProvider(provider)
+    // erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -49,18 +49,18 @@ describe('Parameterizer: challengeCanBeResolved', () => {
 
     voting = new Voting(accounts[0])
     const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
-    voting.setProvider(provider)
+    // voting.setProvider(provider)
 
     parameterizer = new Parameterizer(accounts[0])
     const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress })
-    parameterizer.setProvider(provider)
+    // parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
-    await erc20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(web3, parameterizerAddress, 1000000)
     // challenger (accounts[1]) needs token funds to spend
-    await erc20.transfer(accounts[1], 500000)
+    await erc20.transfer(web3, accounts[1], 500000)
     // parameterizer must be approved to spend on [1]'s behalf
-    await erc20.approve(parameterizerAddress, 450000, { from: accounts[1] })
+    await erc20.approve(web3, parameterizerAddress, 450000, { from: accounts[1] })
   })
 
   it('should be truthy if a challenge is ready to be resolved', async () => {

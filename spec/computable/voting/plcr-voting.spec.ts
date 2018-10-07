@@ -67,16 +67,16 @@ describe('PLCRVoting', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await erc20.approve(votingAddress, 1000000)
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, votingAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
     // 1st account, as challenger, needs funds
-    await erc20.transfer(accounts[1], 500000)
+    await erc20.transfer(web3, accounts[1], 500000)
     // 2nd account as voter needs funds
-    await erc20.transfer(accounts[2], 500000)
+    await erc20.transfer(web3, accounts[2], 500000)
     // registry needs to be approved to spend ond the challenger's behalf
-    await erc20.approve(registryAddress, 450000, { from: accounts[1] })
+    await erc20.approve(web3, registryAddress, 450000, { from: accounts[1] })
     // voting needs approval from voter
-    await erc20.approve(votingAddress, 450000, { from: accounts[2] })
+    await erc20.approve(web3, votingAddress, 450000, { from: accounts[2] })
   })
 
   it('has deployed', () => {

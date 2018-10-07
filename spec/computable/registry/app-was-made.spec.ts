@@ -78,8 +78,8 @@ describe('Registry', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await erc20.approve(votingAddress, 1000000)
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, votingAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
   })
 
   it('returns true if application expiry was previously initialized', async () => {

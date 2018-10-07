@@ -64,13 +64,13 @@ describe('Registry: Apply', () => {
     registry.setProvider(provider)
 
     // 0th account approves voting and reg to spend
-    await erc20.approve(votingAddress, 1000000)
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, votingAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
 
     // 1st account needs funding
-    await erc20.transfer(accounts[1], 500000)
-    await erc20.approve(registryAddress, 250000, { from: accounts[1] })
-    await erc20.approve(parameterizerAddress, 250000, { from: accounts[1] })
+    await erc20.transfer(web3, accounts[1], 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: accounts[1] })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: accounts[1] })
   })
 
   it('allows a new application', async () => {
@@ -118,7 +118,7 @@ describe('Registry: Apply', () => {
   describe('token tranfer functionality', () => {
     it('reverts if token transfer from user fails', async () => {
       // change the approved funding for 0th account to 0
-      await erc20.approve(registry.getAddress(), 0, { from: accounts[0]})
+      await erc20.approve(web3, registry.getAddress(), 0, { from: accounts[0]})
 
       try {
         await registry.apply(web3, stringToBytes(web3, 'nope.com'), ParameterDefaults.MIN_DEPOSIT)

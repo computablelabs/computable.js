@@ -43,7 +43,7 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     erc20 = new Erc20(accounts[0])
     const tokenAddress = await erc20.deploy(web3)
-    erc20.setProvider(provider)
+    // erc20.setProvider(provider)
 
     dll = await deployDll(web3, accounts[0])
     dll.setProvider(provider)
@@ -55,7 +55,7 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     voting = new Voting(accounts[0])
     const votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress })
-    voting.setProvider(provider)
+    // voting.setProvider(provider)
 
     // if you pass an acct to the constructor it will be set as the default account
     parameterizer = new Parameterizer(accounts[0])
@@ -64,15 +64,15 @@ describe('Parameterizer: challengeReparameterization', () => {
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm (and is the default account)
-    await erc20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(web3, parameterizerAddress, 1000000)
     // challenger (accounts[1]) needs token funds to spend
-    await erc20.transfer(accounts[1], 500000)
+    await erc20.transfer(web3, accounts[1], 500000)
     // parameterizer must be approved to spend on [1]'s behalf
-    await erc20.approve(parameterizerAddress, 450000, { from: accounts[1] })
+    await erc20.approve(web3, parameterizerAddress, 450000, { from: accounts[1] })
     // voter needs funds
-    await erc20.transfer(accounts[2], 500000)
+    await erc20.transfer(web3, accounts[2], 500000)
     // approve voting by voter
-    await erc20.approve(votingAddress, 450000, { from: accounts[2] })
+    await erc20.approve(web3, votingAddress, 450000, { from: accounts[2] })
   })
 
   it('should leave params intact if a proposal loses a challenge', async () => {

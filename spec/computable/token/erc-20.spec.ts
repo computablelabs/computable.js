@@ -62,7 +62,7 @@ describe('Erc20 Token', () => {
       // transferSpy = spyOn(spy, 'onTransfer').andCallThrough()
       // erc20.events.Transfer().on('data', spy.onTransfer)
 
-      const result = await erc20.transfer(accounts[1], 5000)
+      const result = await erc20.transfer(web3, accounts[1], 5000)
       // TODO PR to web3 TS type here as they have `status` as string only in the TX Receipt definition.
       // Remove the !! when merged
       expect(!!result.status).toBe(true)
@@ -76,20 +76,20 @@ describe('Erc20 Token', () => {
 
   describe('Approvals', () => {
     it('sender approves account[1] for 1000', async () => {
-      await erc20.approve(accounts[1], 1000)
+      await erc20.approve(web3, accounts[1], 1000)
       const allowance = await erc20.allowance(accounts[0], accounts[1])
       expect(maybeParseInt(allowance)).toBe(1000)
     })
 
     it('sender approves other account for 1000 and withdraws 200 once', async () => {
-      await erc20.approve(accounts[1], 1000)
+      await erc20.approve(web3, accounts[1], 1000)
       const allowance = await erc20.allowance(accounts[0], accounts[1])
       expect(maybeParseInt(allowance)).toBe(1000)
 
       let acct2Bal = await erc20.balanceOf(accounts[2])
       expect(maybeParseInt(acct2Bal)).toBe(0)
 
-      const tx = await erc20.transferFrom(accounts[0], accounts[2], 200, { from: accounts[1] })
+      const tx = await erc20.transferFrom(web3, accounts[0], accounts[2], 200, { from: accounts[1] })
       // TODO same as above
       expect(!!tx.status).toBe(true)
       acct2Bal = await erc20.balanceOf(accounts[2])

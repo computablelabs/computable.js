@@ -70,12 +70,12 @@ describe('Registry: Exit', () => {
     const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
     registry.setProvider(provider)
 
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
 
     // applicant needs funding
-    await erc20.transfer(applicant, 500000)
-    await erc20.approve(registryAddress, 250000, { from: applicant })
-    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
+    await erc20.transfer(web3, applicant, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: applicant })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: applicant })
 
   })
 

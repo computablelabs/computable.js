@@ -74,17 +74,17 @@ describe('Registry: Challenge', () => {
 
     //owner approves voting and reg to spend
     // await erc20.approve(votingAddress, 1000000)
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
 
     // applicant needs funding
-    await erc20.transfer(applicant, 500000)
-    await erc20.approve(registryAddress, 250000, { from: applicant })
-    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
+    await erc20.transfer(web3, applicant, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: applicant })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: applicant })
 
     // challenger needs funding
-    await erc20.transfer(challenger, 500000)
-    await erc20.approve(registryAddress, 250000, { from: challenger })
-    await erc20.approve(parameterizerAddress, 250000, { from: challenger })
+    await erc20.transfer(web3, challenger, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: challenger })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: challenger })
   })
 
   it('can increase the deposit for a specific listing', async () => {

@@ -33,15 +33,15 @@ describe('Parameterizer: canBeSet', () => {
 
     erc20 = new Erc20(accounts[0])
     const tokenAddress = await erc20.deploy(web3)
-    erc20.setProvider(provider)
+    // erc20.setProvider(provider)
 
     parameterizer = new Parameterizer(accounts[0])
     // using dummy address for voting here
     const parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress: Addresses.THREE })
-    parameterizer.setProvider(provider)
+    // parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
-    await erc20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(web3, parameterizerAddress, 1000000)
   })
 
   it('should be truthy if a proposal passed its application stage with no challenge', async () => {
