@@ -98,7 +98,7 @@ describe('Registry', () => {
 
     // reveal stage complete, update status (whitelist it)
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    const tx2 = await registry.updateStatus(listBytes)
+    const tx2 = await registry.updateStatus(web3, listBytes)
     expect(tx2).toBeTruthy()
 
     const isWhitelisted = await registry.isWhitelisted(listBytes)
@@ -108,7 +108,7 @@ describe('Registry', () => {
     expect(result).toBe(true) // still true since was whitelisted
 
     // exit
-    const tx3 = await registry.exit(listBytes)
+    const tx3 = await registry.exit(web3, listBytes)
     expect(tx3).toBeTruthy()
     result = await registry.appWasMade(listBytes) // should be false now as exit was called
     expect(result).toBe(false)

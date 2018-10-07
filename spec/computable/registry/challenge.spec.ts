@@ -94,11 +94,11 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    await registry.updateStatus(listBytes)
+    await registry.updateStatus(web3, listBytes)
 
     const isWhitelisted = await registry.isWhitelisted(listBytes)
     // should be falsy as it is challenged
@@ -116,15 +116,15 @@ describe('Registry: Challenge', () => {
       challengerStartingBal = maybeParseInt(await erc20.balanceOf(challenger))
 
     // move through to whitelisted, allow min_deposit to default
-    const whitelisted = await whitelist(web3, provider, registry, listBytes, applicant) // TODO we likely can get the provider from web3 here // TODO we likely can get the provider from web3 here
+    const whitelisted = await whitelist(web3, provider, registry, listBytes, applicant) // TODO we likely can get the provider from web3 here
     expect(whitelisted).toBe(true)
 
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    await registry.updateStatus(listBytes)
+    await registry.updateStatus(web3, listBytes)
     expect(await registry.isWhitelisted(listBytes)).toBe(false) // should revert to falsy with challenge
 
     // token dispensation as the first spec, all to challenger as there were no voters
@@ -142,7 +142,7 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     // should be able to fetch the actual challenge object
@@ -154,7 +154,7 @@ describe('Registry: Challenge', () => {
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
     await voting.revealVote(id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    await registry.updateStatus(listBytes)
+    await registry.updateStatus(web3, listBytes)
 
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
@@ -175,14 +175,14 @@ describe('Registry: Challenge', () => {
     expect(whitelisted).toBe(true)
     // challenge it...
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
     // vote to support
     await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
     await voting.revealVote(id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    await registry.updateStatus(listBytes)
+    await registry.updateStatus(web3, listBytes)
     // with the support vote should have succeeded
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
 
@@ -211,7 +211,7 @@ describe('Registry: Challenge', () => {
     await parameterizer.processProposal(propID)
 
     const challengerStartBal = await erc20.balanceOf(challenger)
-    await registry.challenge(listBytes, '', { from: challenger })
+    await registry.challenge(web3, listBytes, '', { from: challenger })
     const challengerFinalBal = await erc20.balanceOf(challenger)
 
     // no token change should have occured
@@ -226,7 +226,7 @@ describe('Registry: Challenge', () => {
     const listBytes = stringToBytes(web3, 'nope.com')
 
     try {
-      await registry.challenge(listBytes, '', { from: challenger })
+      await registry.challenge(web3, listBytes, '', { from: challenger })
       // should never be hit
       expect(false).toBe(true)
     } catch(err) {
@@ -242,12 +242,12 @@ describe('Registry: Challenge', () => {
 
     // challenge 1
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     try {
       // attempt the 2nd
-      await registry.challenge(listBytes, '', { from: challenger })
+      await registry.challenge(web3, listBytes, '', { from: challenger })
       // should never be hit
       expect(false).toBe(true)
     } catch(err) {
@@ -265,7 +265,7 @@ describe('Registry: Challenge', () => {
     await erc20.approve(registry.getAddress(), 0, { from: challenger })
 
     try {
-      await registry.challenge(listBytes, '', { from: challenger })
+      await registry.challenge(web3, listBytes, '', { from: challenger })
       expect(false).toBe(true)
     } catch(err) {
       expect(err).toBeTruthy()
@@ -281,7 +281,7 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     const commitActive = await voting.commitPeriodActive(id)
@@ -296,7 +296,7 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     const id = eventReturnValues('_Challenge',
-      await registry.challenge(listBytes, '', { from: challenger }), 'id')
+      await registry.challenge(web3, listBytes, '', { from: challenger }), 'id')
     expect(id).toBeTruthy()
 
     // Reveal period not yet active

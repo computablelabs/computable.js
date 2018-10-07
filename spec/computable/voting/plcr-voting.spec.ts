@@ -103,12 +103,12 @@ describe('PLCRVoting', () => {
 
     const emitter = registry.getEventEmitter('_Challenge')
 
-    registry.challenge(domainOne, '', { from: accounts[1] })
+    registry.challenge(web3, domainOne, '', { from: accounts[1] })
 
     const id1 = eventReturnValues('id', await onData(emitter))
     expect(id1).toBeTruthy()
 
-    registry.challenge(domainTwo, '', { from: accounts[1] })
+    registry.challenge(web3, domainTwo, '', { from: accounts[1] })
 
     const id2 = eventReturnValues('id', await onData(emitter))
     expect(id2).toBeTruthy()

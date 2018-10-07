@@ -108,7 +108,7 @@ describe('Registry: Claim Reward', () => {
     const emitter = registry.getEventEmitter('_Challenge')
 
     // Challenge, we don't have to await this as we will await the message back below
-    registry.challenge(listBytes, '', { from: challenger })
+    registry.challenge(web3, listBytes, '', { from: challenger })
 
     // the desired event attribute can be pulled from the raw EventLog with `eventReturnValues`
     const id = eventReturnValues('id', await onData(emitter))
@@ -123,7 +123,7 @@ describe('Registry: Claim Reward', () => {
     // Reveal vote
     await voting.revealVote(id, 0, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
-    await registry.updateStatus(listBytes)
+    await registry.updateStatus(web3, listBytes)
 
     expect(await registry.isWhitelisted(listBytes)).toBe(false)
 
@@ -132,7 +132,7 @@ describe('Registry: Claim Reward', () => {
     const voterExpectedBalance = voterStartingBalance + voterReward
 
     // Voter claims reward
-    await registry.claimReward(id, 420, {from: voter})
+    await registry.claimReward(web3, id, 420, {from: voter})
 
     // Voter withdraws voting rights
     await voting.withdrawVotingRights(10, {from: voter})

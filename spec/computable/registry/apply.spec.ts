@@ -110,7 +110,7 @@ describe('Registry: Apply', () => {
       tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT)
 
     await increaseTime(provider, ParameterDefaults.APPLY_STAGE_LENGTH + 1)
-    const tx2 = await registry.updateStatus(listBytes)
+    const tx2 = await registry.updateStatus(web3, listBytes)
     expect(tx2).toBeTruthy()
     expect(await registry.isWhitelisted(listBytes)).toBe(true)
   })

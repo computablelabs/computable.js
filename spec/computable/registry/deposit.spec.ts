@@ -102,7 +102,7 @@ describe('Registry: Challenge', () => {
     expect(unstaked).toBe(ParameterDefaults.MIN_DEPOSIT)
 
     // increase the deposit amount by 50%
-    const tx = await registry.deposit(listBytes, incBy, { from: applicant })
+    const tx = await registry.deposit(web3, listBytes, incBy, { from: applicant })
     expect(tx).toBeTruthy()
 
     listing= await registry.listings(listBytes),
@@ -116,7 +116,7 @@ describe('Registry: Challenge', () => {
     await whitelist(web3, provider, registry, listBytes, applicant)
 
     try {
-      await registry.deposit(listBytes, 5, { from: challenger })
+      await registry.deposit(web3, listBytes, 5, { from: challenger })
       // should never hit this
       expect(false).toBe(true)
     } catch(err) {
