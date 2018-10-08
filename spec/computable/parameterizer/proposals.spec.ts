@@ -38,7 +38,7 @@ describe('Parameterizer: Reparamaterize', () => {
     parameterizer.setProvider(provider)
 
     // approve the parameterizer with the token, account[0] has all the balance atm
-    await erc20.approve(parameterizerAddress, 1000000)
+    await erc20.approve(web3, parameterizerAddress, 1000000)
   })
 
   // describe('Expected failures', () => {

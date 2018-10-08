@@ -73,27 +73,27 @@ describe('Registry: Claim Reward', () => {
     const registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: NAME })
     registry.setProvider(provider)
 
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
 
     // applicant needs funding
-    await erc20.transfer(applicant, 500000)
-    await erc20.approve(registryAddress, 250000, { from: applicant })
-    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
+    await erc20.transfer(web3, applicant, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: applicant })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: applicant })
 
     // challenger needs funding
-    await erc20.transfer(challenger, 500000)
-    await erc20.approve(registryAddress, 250000, { from: challenger })
-    await erc20.approve(parameterizerAddress, 250000, { from: challenger })
+    await erc20.transfer(web3, challenger, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: challenger })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: challenger })
 
     // voter needs funding
-    await erc20.transfer(voter, 600000)
-    await erc20.approve(registryAddress, 200000, { from: voter })
-    await erc20.approve(parameterizerAddress, 200000, { from: voter })
-    await erc20.approve(votingAddress, 200000, { from: voter })
+    await erc20.transfer(web3, voter, 600000)
+    await erc20.approve(web3, registryAddress, 200000, { from: voter })
+    await erc20.approve(web3, parameterizerAddress, 200000, { from: voter })
+    await erc20.approve(web3, votingAddress, 200000, { from: voter })
 
     // funds for proposer
-    await erc20.transfer(proposer, 100000)
-    await erc20.approve(parameterizerAddress, 100000, { from: proposer })
+    await erc20.transfer(web3, proposer, 100000)
+    await erc20.approve(web3, parameterizerAddress, 100000, { from: proposer })
   })
 
   it('should transfer the correct number of tokens once a challenge has been resolved', async () => {

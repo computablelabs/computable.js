@@ -63,27 +63,27 @@ describe('Registry: Challenge', () => {
 
     //owner approves voting and reg to spend
     // await erc20.approve(votingAddress, 1000000)
-    await erc20.approve(registryAddress, 1000000)
+    await erc20.approve(web3, registryAddress, 1000000)
 
     // applicant needs funding
-    await erc20.transfer(applicant, 500000)
-    await erc20.approve(registryAddress, 250000, { from: applicant })
-    await erc20.approve(parameterizerAddress, 250000, { from: applicant })
+    await erc20.transfer(web3, applicant, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: applicant })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: applicant })
 
     // challenger needs funding
-    await erc20.transfer(challenger, 500000)
-    await erc20.approve(registryAddress, 250000, { from: challenger })
-    await erc20.approve(parameterizerAddress, 250000, { from: challenger })
+    await erc20.transfer(web3, challenger, 500000)
+    await erc20.approve(web3, registryAddress, 250000, { from: challenger })
+    await erc20.approve(web3, parameterizerAddress, 250000, { from: challenger })
 
     // voter needs funding
-    await erc20.transfer(voter, 600000)
-    await erc20.approve(registryAddress, 200000, { from: voter })
-    await erc20.approve(parameterizerAddress, 200000, { from: voter })
-    await erc20.approve(votingAddress, 200000, { from: voter })
+    await erc20.transfer(web3, voter, 600000)
+    await erc20.approve(web3, registryAddress, 200000, { from: voter })
+    await erc20.approve(web3, parameterizerAddress, 200000, { from: voter })
+    await erc20.approve(web3, votingAddress, 200000, { from: voter })
 
     // funds for proposer
-    await erc20.transfer(proposer, 100000)
-    await erc20.approve(parameterizerAddress, 100000, { from: proposer })
+    await erc20.transfer(web3, proposer, 100000)
+    await erc20.approve(web3, parameterizerAddress, 100000, { from: proposer })
   })
 
   it('should challenge an application', async () => {
@@ -262,7 +262,7 @@ describe('Registry: Challenge', () => {
     expect(tx1).toBeTruthy()
 
     // overwrite the approved amount for the challenger with 0
-    await erc20.approve(registry.getAddress(), 0, { from: challenger })
+    await erc20.approve(web3, registry.getAddress(), 0, { from: challenger })
 
     try {
       await registry.challenge(web3, listBytes, '', { from: challenger })
