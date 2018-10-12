@@ -2,7 +2,7 @@
  * Define and export interfaces which are needed for the registry contract
  */
 
-import { Nos } from '../types'
+import { Nos } from '../@types'
 
 /**
  * Shape of the parameter object that should be passed to the registry class during a deploy.
