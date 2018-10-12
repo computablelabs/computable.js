@@ -8,7 +8,7 @@ import Parameterizer from '../../../src/contracts/parameterizer'
 import Registry from '../../../src/contracts/registry'
 import { ParameterDefaults, NAME } from '../../../src/constants'
 import { RegistryListing  } from '../../../src/interfaces'
-import { Nos } from '../../../src/types'
+import { Nos } from '../../../src/@types'
 import {
   deployDll,
   deployAttributeStore,

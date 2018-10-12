@@ -9,7 +9,7 @@ import {
 } from '../interfaces'
 import Deployable from '../abstracts/deployable'
 import tokenJson from '../../computable/build/contracts/ConstructableToken.json'
-import { Nos } from '../types'
+import { Nos } from '../@types'
 import { Token, GAS, GAS_PRICE } from '../constants'
 import { sendSignedTransaction } from '../helpers'
 

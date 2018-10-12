@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3/types.d'
 import { GAS, GAS_PRICE, Errors } from '../constants'
 import Deployable from '../abstracts/deployable'
-import { Nos } from '../types'
+import { Nos } from '../@types'
 import votingJson from '../../computable/build/contracts/PLCRVoting.json'
 import { updateBytecode } from '../helpers'
 import {
