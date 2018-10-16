@@ -11,6 +11,7 @@ import {
   deployAttributeStore,
   maybeParseInt,
   eventsReturnValues,
+  pastEventsReturnValues,
   stringToBytes,
   increaseTime,
 } from '../../../src/helpers'
@@ -76,7 +77,18 @@ describe('Registry: Apply', () => {
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
       // use a signed transacion, should behave the same as a non-signed
-      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)})
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)}),
+      // grab the block number so we can grab the events that happened
+      block = tx1.blockNumber
+
+    expect(block).toBeTruthy()
+
+    // use eventsReturnValues with getPastEvents to act about the same as an event listener. Why?
+    // for some reason web 3 does not return events with signed transactions...
+    const listingHash = pastEventsReturnValues(await registry.getPastEvents('_Application', {fromBlock: block}),
+      'listingHash')[0] // returns an array
+
+    expect(listingHash).toBeTruthy() // it pads it out with zeroes so not an exact match
 
     const listing = await registry.listings(listBytes)
     expect(listing).toBeTruthy()
