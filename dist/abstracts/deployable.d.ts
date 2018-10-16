@@ -1,5 +1,6 @@
+/// <reference types="web3" />
 import Web3 from 'web3';
-import { Contract, EventEmitter } from 'web3/types.d';
+import { Contract, EventEmitter } from 'web3/types';
 import { Keyed, ContractOptions, DeployParams, AtParams, EventEmitterOptions } from '../interfaces';
 export default abstract class  implements Keyed {
     [key: string]: any;
