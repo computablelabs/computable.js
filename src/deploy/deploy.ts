@@ -1,6 +1,6 @@
 import fs from 'fs'
 import Web3 from 'web3'
-import { Contract } from 'web3/types.d'
+import { Contract } from 'web3/types'
 import HDWalletProvider from 'truffle-hdwallet-provider'
 import {
   TEST_NET_GAS,

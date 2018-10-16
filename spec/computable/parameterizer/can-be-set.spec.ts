@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { EventEmitter, EventLog } from 'web3/types.d'
+import { EventEmitter, EventLog } from 'web3/types'
 import { increaseTime, onData, eventReturnValues } from '../../../src/helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Parameterizer from '../../../src/contracts/parameterizer'

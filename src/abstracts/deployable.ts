@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Contract, EventEmitter } from 'web3/types.d'
+import { Contract, EventEmitter } from 'web3/types'
 import { Errors, GAS, GAS_PRICE } from '../constants'
 import {
   Keyed,
