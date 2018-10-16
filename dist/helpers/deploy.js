@@ -16,7 +16,7 @@ const AttributeStore_json_1 = __importDefault(require("../../computable/build/co
 const constants_1 = require("../constants");
 function deploy(web3, account, abi, bytecode, args = []) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield new web3.eth.Contract(abi, undefined, { gasPrice: constants_1.GAS_PRICE, gas: constants_1.GAS })
+        return yield new web3.eth.Contract(abi, undefined, { gasPrice: String(constants_1.GAS_PRICE), gas: constants_1.GAS })
             .deploy({ data: bytecode, arguments: args })
             .send({ from: account });
     });

@@ -1,4 +1,4 @@
-import { BlockType } from 'web3/types.d';
+import { BlockType } from 'web3/types';
 export interface ContractOptions {
     to?: string;
     from?: string;
