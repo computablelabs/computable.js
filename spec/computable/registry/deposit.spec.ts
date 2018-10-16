@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract } from 'web3/types.d'
+import { Contract } from 'web3/types'
 import { whitelist } from '../../helpers'
 import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'

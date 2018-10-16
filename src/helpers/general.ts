@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { TransactionReceipt } from 'web3/types.d'
+import { TransactionReceipt } from 'web3/types'
 import Tx from 'ethereumjs-tx'
 import { Nos } from '../@types'
 import { ContractOptions } from '../interfaces'

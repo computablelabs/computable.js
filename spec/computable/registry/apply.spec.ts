@@ -1,6 +1,7 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract, Block } from 'web3/types.d'
+import { Contract, Block } from 'web3/types'
+import { BigNumber } from 'bignumber.js'
 import Erc20 from '../../../src/contracts/erc-20'
 import Voting from '../../../src/contracts/plcr-voting'
 import Parameterizer from '../../../src/contracts/parameterizer'
@@ -154,16 +155,15 @@ describe('Registry: Apply', () => {
 
     // TODO the WS listener never fires if we use it here, investigate why
     it('should revert if applicationExpiry would overflow', async () => {
-      const BN = web3.utils.BN,
-        eth = web3.eth,
-        bigOne = new BN(1),
-        block:Block = await eth.getBlock(await eth.getBlockNumber())
+      const eth = web3.eth
+      const bigOne = new BigNumber(1)
+      const block:Block = await eth.getBlock(await eth.getBlockNumber())
 
       expect(block).toBeTruthy()
       // create an applyStageLen that, when added to current block time will be
       // greater than 2^256-1
-      const maxUint = new BN(2).pow(new BN(256)).sub(bigOne),
-        applyStageLen = maxUint.sub(new BN(block.timestamp)).add(bigOne),
+      const maxUint = new BigNumber(2).pow(256).minus(bigOne),
+        applyStageLen = maxUint.minus(new BigNumber(block.timestamp)).plus(bigOne),
         propID = eventsReturnValues('_ReparameterizationProposal',
           await parameterizer.proposeReparameterization('applyStageLen',
             applyStageLen.toString(10), { from: accounts[1] }), 'propID')
