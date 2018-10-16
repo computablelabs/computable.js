@@ -1,6 +1,6 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
-import { Contract } from 'web3/types.d'
+import { Contract } from 'web3/types'
 import { NAME } from '../../../src/constants'
 import { deployDll, deployAttributeStore } from '../../../src/helpers'
 import Erc20 from '../../../src/contracts/erc-20'

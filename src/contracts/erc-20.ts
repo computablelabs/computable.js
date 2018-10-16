@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Contract, TransactionReceipt } from 'web3/types.d'
+import { Contract, TransactionReceipt } from 'web3/types'
 import {
   Keyed,
   ContractOptions,

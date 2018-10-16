@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Contract } from 'web3/types.d'
+import { Contract } from 'web3/types'
 import dllJson from '../../computable/build/contracts/DLL.json'
 import storeJson from '../../computable/build/contracts/AttributeStore.json'
 import {
@@ -19,7 +19,7 @@ async function deploy(
   bytecode:string,
   args: any[] = []
 ): Promise<Contract> {
-  return await new web3.eth.Contract(abi, undefined, {gasPrice: GAS_PRICE, gas: GAS })
+  return await new web3.eth.Contract(abi, undefined, {gasPrice: String(GAS_PRICE), gas: GAS })
     .deploy({ data: bytecode, arguments: args })
     .send({ from: account })
 }
