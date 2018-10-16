@@ -23,7 +23,7 @@ class default_1 extends deployable_1.default {
                 return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
             }
             else
-                return yield deployed.methods.apply(listing, tokens, data).send(Object.assign({ from: account }, opts || {}));
+                return yield deployed.methods.apply(listing, tokens, data).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     appWasMade(listing) {
@@ -43,10 +43,15 @@ class default_1 extends deployable_1.default {
             return _super("at").call(this, web3, ap, opts);
         });
     }
-    challenge(listing, data = '', opts) {
+    challenge(web3, listing, data = '', opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.challenge(listing, data).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.challenge(listing, data).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.challenge(listing, data).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     challenges(id) {
@@ -55,10 +60,15 @@ class default_1 extends deployable_1.default {
             return yield deployed.methods.challenges(id).call();
         });
     }
-    claimReward(id, salt, opts) {
+    claimReward(web3, id, salt, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts), deployed = this.requireDeployed();
-            return yield deployed.methods.claimReward(id, salt).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.claimReward(id, salt).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.claimReward(id, salt).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     deploy(web3, params, opts) {
@@ -77,16 +87,26 @@ class default_1 extends deployable_1.default {
             return _super("deployContract").call(this, web3, dp, opts);
         });
     }
-    deposit(listing, amount, opts) {
+    deposit(web3, listing, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts), deployed = this.requireDeployed();
-            return yield deployed.methods.deposit(listing, amount).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.deposit(listing, amount).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.deposit(listing, amount).send(this.assignContractOptions({ from: account }, opts));
         });
     }
-    exit(listing, opts) {
+    exit(web3, listing, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.exit(listing).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.exit(listing).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.exit(listing).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     isWhitelisted(listing) {
@@ -119,10 +139,15 @@ class default_1 extends deployable_1.default {
             return yield deployed.methods.token().call();
         });
     }
-    updateStatus(listing, opts) {
+    updateStatus(web3, listing, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts), deployed = this.requireDeployed();
-            return yield deployed.methods.updateStatus(listing).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.updateStatus(listing).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.updateStatus(listing).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     voting() {
@@ -143,10 +168,15 @@ class default_1 extends deployable_1.default {
             return yield deployed.methods.canBeWhitelisted(listing).call();
         });
     }
-    withdraw(listing, tokens, opts) {
+    withdraw(web3, listing, tokens, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.withdraw(listing, tokens).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.withdraw(listing, tokens).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.withdraw(listing, tokens).send(this.assignContractOptions({ from: account }, opts));
         });
     }
 }

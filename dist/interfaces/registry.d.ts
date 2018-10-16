@@ -1,4 +1,4 @@
-import { Nos } from '../types';
+import { Nos } from '../@types';
 export interface RegistryDeployParams {
     tokenAddress: string;
     votingAddress: string;

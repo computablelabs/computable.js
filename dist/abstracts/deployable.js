@@ -11,6 +11,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const constants_1 = require("../constants");
 class default_1 {
     constructor(account) { account && this.setDefaultAccount(account); }
+    assignContractOptions(src, opts) {
+        if (opts) {
+            delete opts.sign;
+            return Object.assign(opts, src);
+        }
+        return src;
+    }
     at(web3, params, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const account = this.requireAccount(opts);
