@@ -2,13 +2,13 @@ import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
 import { ContractOptions, AtParams, Erc20DeployParams } from '../interfaces';
 import Deployable from '../abstracts/deployable';
-import { Nos } from '../types';
+import { Nos } from '../@types';
 export default class  extends Deployable {
     allowance(owner: string, spender: string): Promise<Nos>;
-    approve(address: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    approve(web3: Web3, address: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
     at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;
     balanceOf(address: string): Promise<Nos>;
     deploy(web3: Web3, params?: Erc20DeployParams, opts?: ContractOptions): Promise<string>;
-    transfer(address: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
-    transferFrom(from: string, to: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    transfer(web3: Web3, address: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
+    transferFrom(web3: Web3, from: string, to: string, amount: Nos, opts?: ContractOptions): Promise<TransactionReceipt>;
 }

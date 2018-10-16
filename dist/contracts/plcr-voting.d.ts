@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { TransactionReceipt } from 'web3/types.d';
 import Deployable from '../abstracts/deployable';
-import { Nos } from '../types';
+import { Nos } from '../@types';
 import { ContractOptions, VotingDeployParams, AtParams } from '../interfaces';
 export default class  extends Deployable {
     at(web3: Web3, params: AtParams, opts?: ContractOptions): Promise<boolean>;

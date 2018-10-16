@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const deployable_1 = __importDefault(require("../abstracts/deployable"));
 const ConstructableToken_json_1 = __importDefault(require("../../computable/build/contracts/ConstructableToken.json"));
 const constants_1 = require("../constants");
+const helpers_1 = require("../helpers");
 class default_1 extends deployable_1.default {
     allowance(owner, spender) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,10 +22,15 @@ class default_1 extends deployable_1.default {
             return deployed.methods.allowance(owner, spender).call();
         });
     }
-    approve(address, amount, opts) {
+    approve(web3, address, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.approve(address, amount).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.approve(address, amount).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.approve(address, amount).send(this.assignContractOptions({ from: account }, opts));
         });
     }
     at(web3, params, opts) {
@@ -58,16 +64,26 @@ class default_1 extends deployable_1.default {
             return _super("deployContract").call(this, web3, dp, opts);
         });
     }
-    transfer(address, amount, opts) {
+    transfer(web3, address, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.transfer(address, amount).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.transfer(address, amount).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.transfer(address, amount).send(this.assignContractOptions({ from: account }, opts));
         });
     }
-    transferFrom(from, to, amount, opts) {
+    transferFrom(web3, from, to, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed(), account = this.requireAccount(opts);
-            return yield deployed.methods.transferFrom(from, to, amount).send({ from: account });
+            if (opts && opts.sign) {
+                const encoded = deployed.methods.transferFrom(from, to, amount).encodeABI();
+                return yield helpers_1.sendSignedTransaction(web3, deployed.options.address, account, encoded, opts);
+            }
+            else
+                return yield deployed.methods.transferFrom(from, to, amount).send(this.assignContractOptions({ from: account }, opts));
         });
     }
 }

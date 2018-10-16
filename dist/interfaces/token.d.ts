@@ -1,4 +1,4 @@
-import { Nos } from '../types';
+import { Nos } from '../@types';
 export interface Token {
     address: string;
     supply: Nos;
