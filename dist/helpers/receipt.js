@@ -7,3 +7,7 @@ function eventsReturnValues(name, tx, refinement) {
     return refinement ? ret[refinement] : ret;
 }
 exports.eventsReturnValues = eventsReturnValues;
+function pastEventsReturnValues(events, refinement) {
+    return events.map(evt => refinement ? evt.returnValues[refinement] : evt.returnValues);
+}
+exports.pastEventsReturnValues = pastEventsReturnValues;
