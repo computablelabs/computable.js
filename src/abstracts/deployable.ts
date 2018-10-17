@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Contract, EventEmitter } from 'web3/types'
+import { Contract, EventEmitter, EventLog } from 'web3/types'
 import { Errors, GAS, GAS_PRICE } from '../constants'
 import {
   Keyed,
@@ -7,6 +7,7 @@ import {
   DeployParams,
   AtParams,
   EventEmitterOptions,
+  PastEventFilterOptions,
 } from '../interfaces'
 
 export default abstract class implements Keyed {
@@ -97,6 +98,13 @@ export default abstract class implements Keyed {
   getEventEmitter(name:string, opts?:EventEmitterOptions): EventEmitter {
     const emitter = this.requireEmitter(name, opts)
     return emitter
+  }
+
+  async getPastEvents(name:string, opts?:PastEventFilterOptions): Promise<EventLog[]> {
+    const deployed = this.requireDeployed()
+
+    // @ts-ignore:2345
+    return await deployed.getPastEvents(name, opts)
   }
 
   requireAccount(opts?:ContractOptions): string {
