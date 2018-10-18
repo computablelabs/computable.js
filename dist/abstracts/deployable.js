@@ -47,6 +47,12 @@ class default_1 {
         const emitter = this.requireEmitter(name, opts);
         return emitter;
     }
+    getPastEvents(name, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            return yield deployed.getPastEvents(name, opts);
+        });
+    }
     requireAccount(opts) {
         const account = opts && opts.from || this.defaultAccount;
         if (!account)

@@ -1,7 +1,7 @@
 /// <reference types="web3" />
 import Web3 from 'web3';
-import { Contract, EventEmitter } from 'web3/types';
-import { Keyed, ContractOptions, DeployParams, AtParams, EventEmitterOptions } from '../interfaces';
+import { Contract, EventEmitter, EventLog } from 'web3/types';
+import { Keyed, ContractOptions, DeployParams, AtParams, EventEmitterOptions, PastEventFilterOptions } from '../interfaces';
 export default abstract class  implements Keyed {
     [key: string]: any;
     defaultAccount?: string;
@@ -13,6 +13,7 @@ export default abstract class  implements Keyed {
     getAddress(): string;
     getDeployed(): Contract | undefined;
     getEventEmitter(name: string, opts?: EventEmitterOptions): EventEmitter;
+    getPastEvents(name: string, opts?: PastEventFilterOptions): Promise<EventLog[]>;
     requireAccount(opts?: ContractOptions): string;
     requireDeployed(): Contract;
     requireEmitter(name: string, opts?: EventEmitterOptions): EventEmitter;
