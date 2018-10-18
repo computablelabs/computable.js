@@ -25,6 +25,7 @@
     "build": "npm run build:clean && tsc -p ./tsbuild.json && cp -r ./src/@types/** ./dist/@types",
     "build:clean": " rm -rf ./dist",
     "build:dry": "tsc -noEmit -p ./tsbuild.json",
+    "prepublish": "npm run build:clean && npm run build",
     "test-init": "jasmine-ts init"
   },
   "dependencies": {
