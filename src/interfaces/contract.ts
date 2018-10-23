@@ -12,6 +12,7 @@ export interface ContractOptions {
   from?:string;
   gas?:any; //gasLimit
   gasPrice?:any;
+  value?:any;
   sign?:string; // value would be a private key
 }
 

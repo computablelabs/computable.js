@@ -20,10 +20,10 @@ import {
 // define users and private keys so we can test signed transactions as well
 const users = [{
     secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
-    balance: 1000000000000,
+    balance: 1000000000000000000, // 10^18 is one ETH in WEI
   }, {
     secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
-    balance: 1000000000000,
+    balance: 1000000000000000000,
   }]
 
 const provider:any = ganache.provider({ accounts: users }),
@@ -75,12 +75,27 @@ describe('Registry: Apply', () => {
     await erc20.approve(web3, parameterizerAddress, 250000, { from: accounts[1] })
   })
 
+  it('can estimate the gas needed to apply', async () => {
+    const listBytes = stringToBytes(web3, 'estimate.com'),
+      gasPrice = await web3.eth.getGasPrice(), // returns a string representing gas price IN WEI
+      gas = await registry.estimateGas('apply', undefined, listBytes, ParameterDefaults.MIN_DEPOSIT, '')
+
+
+    expect(gasPrice).toBeTruthy()
+    expect(gas).toBeTruthy()
+    // console.log(gasPrice) // looks to be about 2 Gwei - which, i think, is pretty realistic per the networks
+    // console.log(gas)
+  })
+
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      // use a signed transacion, should behave the same as a non-signed
-      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)}),
+      gas = await registry.estimateGas('apply', undefined, listBytes, ParameterDefaults.MIN_DEPOSIT, ''),
+      // use a signed transacion, should behave the same as a non-signed. NOTE can't use an estimated GasPrice here or its an INSANE amount. TODO
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: gas, sign: users[0].secretKey.substring(2)}),
       // grab the block number so we can grab the events that happened
       block = tx1.blockNumber
+
+    // console.log(gas) // if you are curious, looks to be about 132000 consistently, whatever that means in ganache...
 
     expect(block).toBeTruthy()
 

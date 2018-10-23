@@ -17,7 +17,7 @@ export default class extends Deployable {
   /**
    * An amount of funds an owner has given a spender permission to use
    */
-  async allowance(owner:string, spender:string): Promise<Nos> {
+  allowance(owner:string, spender:string): Promise<Nos> {
     const deployed = this.requireDeployed()
 
     return deployed.methods.allowance(owner, spender).call()
@@ -25,7 +25,7 @@ export default class extends Deployable {
   /**
    * Grant permission to a spender located at the given address to use up to the given amount of funds
    */
-  async approve(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  approve(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
@@ -34,15 +34,15 @@ export default class extends Deployable {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.approve(address, amount).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.approve(address, amount).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.approve(address, amount).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
    * Set our deployed refernce from an already deployed contract
    * @see abstracts/deployable#at
    */
-  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+  at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
     const ap:AtParams = {
       address: params.address,
       abi: tokenJson.abi,
@@ -55,10 +55,10 @@ export default class extends Deployable {
   /**
    * Return the current balance of the given address
    */
-  async balanceOf(address:string): Promise<Nos> {
+  balanceOf(address:string): Promise<Nos> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.balanceOf(address).call()
+    return deployed.methods.balanceOf(address).call()
   }
 
   /**
@@ -66,7 +66,7 @@ export default class extends Deployable {
    * contract options to the super class' deployContract method.
    * @see abstracts/deployable#deployContract
    */
-  async deploy(web3:Web3, params:Erc20DeployParams = {}, opts?:ContractOptions): Promise<string> {
+  deploy(web3:Web3, params:Erc20DeployParams = {}, opts?:ContractOptions): Promise<string> {
     const dp:DeployParams = {
       abi: tokenJson.abi,
       bytecode: tokenJson.bytecode,
@@ -83,26 +83,26 @@ export default class extends Deployable {
   /**
    * Move the given number of funds from the msg.sender to a given address
    */
-  async transfer(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  transfer(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
     if (opts && opts.sign) {
       const encoded = deployed.methods.transfer(address, amount).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.transfer(address, amount).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.transfer(address, amount).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
    * Move the given number of funds from one given address to another given address
    */
-  async transferFrom(web3:Web3, from:string, to:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  transferFrom(web3:Web3, from:string, to:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
     if (opts && opts.sign) {
       const encoded = deployed.methods.transferFrom(from, to, amount).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.transferFrom(from, to, amount).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.transferFrom(from, to, amount).send(this.assignContractOptions({ from: account }, opts))
   }
 }

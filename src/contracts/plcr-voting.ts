@@ -22,7 +22,7 @@ export default class extends Deployable {
    * Set our deployed refernce from an already deployed contract
    * @see abstracts/deployable#at
    */
-  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+  at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
     const ap:AtParams = {
       address: params.address,
       abi: votingJson.abi,
@@ -53,7 +53,7 @@ export default class extends Deployable {
     tx1 = await this.requestVotingRights(tokens, { from: voter })
     prevID = await this.getInsertPointForNumTokens(voter, tokens, id)
 
-    return await deployed.methods.commitVote(id, hash, tokens, prevID).send({ from: voter })
+    return deployed.methods.commitVote(id, hash, tokens, prevID).send({ from: voter })
   }
 
   /**
@@ -61,7 +61,7 @@ export default class extends Deployable {
    * contract options to the super class' _deploy method.
    * @see abstracts/deployable#_deploy
    */
-  async deploy(web3:Web3, params:VotingDeployParams, opts?:ContractOptions): Promise<string> {
+  deploy(web3:Web3, params:VotingDeployParams, opts?:ContractOptions): Promise<string> {
     // voting bytecode must be updated for both library dependencies
     let bytecode = updateBytecode(votingJson.bytecode, 'DLL', params.dllAddress.slice(2))
 
@@ -83,10 +83,10 @@ export default class extends Deployable {
    * update. In that case, return the previous node of the node being updated. Otherwise return the
    * first node that was found with a value less than or equal to the provided tokens.
    */
-  async getInsertPointForNumTokens(voter:string, tokens:Nos, id:Nos): Promise<Nos> {
+  getInsertPointForNumTokens(voter:string, tokens:Nos, id:Nos): Promise<Nos> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.getInsertPointForNumTokens(voter, tokens, id).call()
+    return deployed.methods.getInsertPointForNumTokens(voter, tokens, id).call()
   }
 
   /**
@@ -102,7 +102,7 @@ export default class extends Deployable {
    * Loads a number of ERC20 tokens into the voting contract for one-to-one voting rights.
    * Assumes that `account` has approved the voting contract to spend on their behalf.
    */
-  async requestVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  requestVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
@@ -112,7 +112,7 @@ export default class extends Deployable {
   /**
    * Withdraws ERC20 tokens from the voting contract to revoke one-to-one voting rights.
    */
-  async withdrawVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  withdrawVotingRights(tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
@@ -122,29 +122,29 @@ export default class extends Deployable {
   /**
    * Reveals vote cast and secret salt used in generating commitHash to attribute committed tokens
    */
-  async revealVote(id:Nos, vote:Nos, salt:Nos, opts?: ContractOptions): Promise<TransactionReceipt> {
+  revealVote(id:Nos, vote:Nos, salt:Nos, opts?: ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    return await deployed.methods.revealVote(id, vote, salt).send({ from: account })
+    return deployed.methods.revealVote(id, vote, salt).send({ from: account })
   }
 
   /**
    * Checks if the commit period is still active for the specified poll.
    */
-  async commitPeriodActive(id:Nos) : Promise<boolean> {
+  commitPeriodActive(id:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.commitPeriodActive(id).call()
+    return deployed.methods.commitPeriodActive(id).call()
   }
 
   /**
    * Checks if the reveal period is still active for the specified poll.
    */
-  async revealPeriodActive(id:Nos) : Promise<boolean> {
+  revealPeriodActive(id:Nos) : Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.revealPeriodActive(id).call()
+    return deployed.methods.revealPeriodActive(id).call()
   }
 }
 

@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import { Contract, EventEmitter, EventLog } from 'web3/types'
 import { Errors, GAS, GAS_PRICE } from '../constants'
+import { Nos } from '../@types'
 import {
   Keyed,
   ContractOptions,
@@ -80,6 +81,15 @@ export default abstract class implements Keyed {
     return this.deployed.options.address
   }
 
+  /**
+   * Given the name of a method and the args it expects, return an estimate of the Gas cost
+   */
+  estimateGas(method:string, opts?:ContractOptions, ...args:any[]): Promise<Nos> {
+    const deployed = this.requireDeployed(), meth = deployed.methods[method]
+
+    return meth.apply(deployed, args).estimateGas(opts)
+  }
+
   getAddress(): string {
     const deployed = this.requireDeployed()
     return deployed.options.address
@@ -100,11 +110,11 @@ export default abstract class implements Keyed {
     return emitter
   }
 
-  async getPastEvents(name:string, opts?:PastEventFilterOptions): Promise<EventLog[]> {
+  getPastEvents(name:string, opts?:PastEventFilterOptions): Promise<EventLog[]> {
     const deployed = this.requireDeployed()
 
     // @ts-ignore:2345
-    return await deployed.getPastEvents(name, opts)
+    return deployed.getPastEvents(name, opts)
   }
 
   requireAccount(opts?:ContractOptions): string {
