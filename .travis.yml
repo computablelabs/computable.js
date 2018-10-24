@@ -6,5 +6,3 @@ install:
   - npm install
 script:
   - npm test
-  - npm run build:clean
-  - npm run build
