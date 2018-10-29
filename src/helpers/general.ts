@@ -41,12 +41,12 @@ export function stringToBytes(web3:Web3, str:string): string {
 // TODO i think encoded may be an array of strings?
 export async function sendSignedTransaction(web3:Web3, to:string, from:string, encoded:string, opts:ContractOptions): Promise<TransactionReceipt> {
   const rawTx = {
-    to: web3.utils.toHex(to),
-    from: web3.utils.toHex(from),
-    nonce: await web3.eth.getTransactionCount(from),
+    to: to,
+    from: from,
+    nonce: web3.utils.toHex(await web3.eth.getTransactionCount(from)),
     data: web3.utils.toHex(encoded),
-    gasLimit: opts.gas,
-    gasPrice: opts.gasPrice,
+    gasLimit: web3.utils.toHex(opts.gas),
+    gasPrice: web3.utils.toHex(opts.gasPrice),
   }
 
   let tx = new Tx(rawTx)

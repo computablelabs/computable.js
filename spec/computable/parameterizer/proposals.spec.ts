@@ -75,7 +75,7 @@ describe('Parameterizer: Reparamaterize', () => {
 
       // the emitter must be fetched before the proposition is made or it wont fire
       const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
-      parameterizer.proposeReparameterization('voteQuorum', 51)
+      parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
       // its ok to await the event after the proposition, as long as the emitter was fetched first
       const propID = eventReturnValues('propID', await onData(emitter)),

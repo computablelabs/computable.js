@@ -26,10 +26,10 @@ let web3:Web3,
 
 const users = [{
     secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
-    balance: 1000000000000,
+    balance: 1000000000000000000, // 1 ETH in wei
   }, {
     secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
-    balance: 1000000000000,
+    balance: 1000000000000000000,
   }]
 
 describe('Registry', () => {

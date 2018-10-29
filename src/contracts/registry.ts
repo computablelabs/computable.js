@@ -55,23 +55,24 @@ export default class extends Deployable {
    * @param tokens The number of ERC20 tokens a user is willing to potentially stake
    * @param data Extra data relevant to the application. Think IPFS hashes.
    */
-  async apply(web3:Web3, listing:string, tokens:Nos, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
+  apply(web3:Web3, listing:string, tokens:Nos, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
+    if (opts && opts.estimateGas) return deployed.methods.apply(listing, tokens, data).estimateGas()
     // the presence of opts.sign (or lack thereof) determines how we call for this (value should be a private key)
-    if (opts && opts.sign) {
+    else if (opts && opts.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.apply(listing, tokens, data).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.apply(listing, tokens, data).send(this.assignContractOptions({ from: account}, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.apply(listing, tokens, data).send(this.assignContractOptions({ from: account}, opts))
   }
 
   /**
    * Returns a bool that indicates if `apply` was called for a given listing hash
    */
-  async appWasMade(listing:string): Promise<boolean> {
+  appWasMade(listing:string): Promise<boolean> {
     const deployed = this.requireDeployed()
 
     return deployed.methods.appWasMade(listing).call()
@@ -81,7 +82,7 @@ export default class extends Deployable {
    * Set our deployed refernce from an already deployed contract
    * @see abstracts/deployable#at
    */
-  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+  at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
     const ap:AtParams = {
       address: params.address,
       abi: registryJson.abi,
@@ -97,39 +98,42 @@ export default class extends Deployable {
    * @param listing The hash being challenged, whether listed or in application
    * @param data Extra data relevant to the challenge. Think IPFS hashes.
    */
-  async challenge(web3:Web3, listing:string, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
+  challenge(web3:Web3, listing:string, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    if (opts && opts.sign) {
+    if (opts && opts.estimateGas) return deployed.methods.challenge(listing, data).estimateGas()
+    else if (opts && opts.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.challenge(listing, data).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.challenge(listing, data).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.challenge(listing, data).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
    * Return a challenge corresponding to the given ID.
    */
-  async challenges(id:Nos): Promise<Challenge> {
+  challenges(id:Nos): Promise<Challenge> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.challenges(id).call()
+    return deployed.methods.challenges(id).call()
   }
 
   /**
    * Called by voter to claim their reward for each completed vote. Must be preceded by call to updateStatus
    */
-  async claimReward(web3:Web3, id:Nos, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  claimReward(web3:Web3, id:Nos, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
       deployed = this.requireDeployed()
-    if (opts && opts.sign) {
+
+    if (opts && opts.estimateGas) return deployed.methods.claimReward(id, salt).estimateGas()
+    else if (opts && opts.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.claimReward(id, salt).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.claimReward(id, salt).send(this.assignContractOptions({from: account}, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.claimReward(id, salt).send(this.assignContractOptions({from: account}, opts))
   }
 
   /**
@@ -137,7 +141,7 @@ export default class extends Deployable {
    * contract options to the super class' _deploy method.
    * @see abstracts/deployable#deployContract
    */
-  async deploy(web3:Web3, params:RegistryDeployParams, opts?:ContractOptions): Promise<string> {
+  deploy(web3:Web3, params:RegistryDeployParams, opts?:ContractOptions): Promise<string> {
     const dp:DeployParams = {
       abi: registryJson.abi,
       bytecode: registryJson.bytecode,
@@ -157,14 +161,15 @@ export default class extends Deployable {
    * @param listing listing that msg.sender is the owner of
    * @param amount how much to increase by
    */
-  async deposit(web3:Web3, listing:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  deposit(web3:Web3, listing:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
       deployed = this.requireDeployed()
 
-    if (opts && opts.sign) {
+    if (opts && opts.estimateGas) return deployed.methods.deposit(listing, amount).estimateGas()
+    else if (opts && opts.sign) {
       const encoded = deployed.methods.deposit(listing, amount).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.deposit(listing, amount).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.deposit(listing, amount).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
@@ -172,98 +177,100 @@ export default class extends Deployable {
    * Returns all tokens to the owner of the listingHash
    * @param listing listing that msg.sender is the owner of
    */
-  async exit(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+  exit(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    if (opts && opts.sign) {
+    if (opts && opts.estimateGas) return deployed.methods.exit(listing).estimateGas()
+    else if (opts && opts.sign) {
       const encoded = deployed.methods.exit(listing).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.exit(listing).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.exit(listing).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
    * Return a bool indicating if this listing has been whitelisted
    */
-  async isWhitelisted(listing:string): Promise<boolean> {
+  isWhitelisted(listing:string): Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.isWhitelisted(listing).call()
+    return deployed.methods.isWhitelisted(listing).call()
   }
 
   /**
    * Return a listing corresponding to the given listing hash.
    */
-  async listings(listing:string): Promise<RegistryListing> {
+  listings(listing:string): Promise<RegistryListing> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.listings(listing).call()
+    return deployed.methods.listings(listing).call()
   }
 
   /**
    * Return the name passed to this contract instance at deploy time
    */
-  async name(): Promise<string> {
+  name(): Promise<string> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.name().call()
+    return deployed.methods.name().call()
   }
 
   /**
    * Return the address of the parameterizer referenced by this contract instance
    */
-  async parameterizer(): Promise<string> {
+  parameterizer(): Promise<string> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.parameterizer().call()
+    return deployed.methods.parameterizer().call()
   }
 
   /**
    * Return the address of the token referenced by this contract instance
    */
-  async token(): Promise<string> {
+  token(): Promise<string> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.token().call()
+    return deployed.methods.token().call()
   }
 
   /**
    * Updates a listingHash's status from 'application' to 'listing' or resolves a challenge if one exists.
    * Delegates to `whitelistApplication` or `resolveChallenge`
    */
-  async updateStatus(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+  updateStatus(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
       deployed = this.requireDeployed()
 
-    if (opts && opts.sign) {
+    if (opts && opts.estimateGas) return deployed.methods.updateStatus(listing).estimateGas()
+    else if (opts && opts.sign) {
       const encoded = deployed.methods.updateStatus(listing).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.updateStatus(listing).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.updateStatus(listing).send(this.assignContractOptions({ from: account }, opts))
   }
 
   /**
    * Return the address of the plcr-voting referenced by this contract instance
    */
-  async voting(): Promise<string> {
+  voting(): Promise<string> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.voting().call()
+    return deployed.methods.voting().call()
   }
 
  /**
   * Return the voter's token reward for the given poll.
   */
-  async voterReward(voter:string, id:Nos, salt:Nos): Promise<Nos> {
+  voterReward(voter:string, id:Nos, salt:Nos): Promise<Nos> {
     const deployed = this.requireDeployed()
-    return await deployed.methods.voterReward(voter, id, salt).call()
+    return deployed.methods.voterReward(voter, id, salt).call()
   }
 
   /**
    * Determines whether the given listingHash can be whitelisted.
    */
-  async canBeWhitelisted(listing:string): Promise<boolean> {
+  canBeWhitelisted(listing:string): Promise<boolean> {
     const deployed = this.requireDeployed()
-    return await deployed.methods.canBeWhitelisted(listing).call()
+    return deployed.methods.canBeWhitelisted(listing).call()
   }
 
   /**
@@ -272,13 +279,14 @@ export default class extends Deployable {
    * @param listing listing that msg.sender is the owner of
    * @param tokens The number of ERC20 tokens to withdraw from unstaked deposity
    */
-  async withdraw(web3:Web3, listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  withdraw(web3:Web3, listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
       account = this.requireAccount(opts)
 
-    if (opts && opts.sign) {
+    if (opts && opts.estimateGas) return deployed.methods.withdraw(listing, tokens).estimateGas()
+    else if (opts && opts.sign) {
       const encoded = deployed.methods.withdraw(listing, tokens).encodeABI()
-      return await sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return await deployed.methods.withdraw(listing, tokens).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
+    } else return deployed.methods.withdraw(listing, tokens).send(this.assignContractOptions({ from: account }, opts))
   }
 }

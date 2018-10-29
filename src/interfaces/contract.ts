@@ -12,6 +12,8 @@ export interface ContractOptions {
   from?:string;
   gas?:any; //gasLimit
   gasPrice?:any;
+  value?: any;
+  estimateGas?:boolean; // tells the HOC method to simply return a gas use estimate
   sign?:string; // value would be a private key
 }
 

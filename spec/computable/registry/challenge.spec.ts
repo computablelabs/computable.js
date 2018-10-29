@@ -204,11 +204,11 @@ describe('Registry: Challenge', () => {
 
     // propose a new min_deposit... old one is 10
     const propID = eventReturnValues('_ReparameterizationProposal',
-      await parameterizer.proposeReparameterization('minDeposit', 20, { from: proposer }), 'propID')
+      await parameterizer.proposeReparameterization(web3, 'minDeposit', 20, { from: proposer }), 'propID')
     expect(propID).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
-    await parameterizer.processProposal(propID)
+    await parameterizer.processProposal(web3, propID)
 
     const challengerStartBal = await erc20.balanceOf(challenger)
     await registry.challenge(web3, listBytes, '', { from: challenger })
