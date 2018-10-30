@@ -152,7 +152,7 @@ describe('Registry: Challenge', () => {
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
     await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(id, 1, 420, { from: voter })
+    await voting.revealVote(web3, id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(web3, listBytes)
 
@@ -180,7 +180,7 @@ describe('Registry: Challenge', () => {
     // vote to support
     await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(id, 1, 420, { from: voter })
+    await voting.revealVote(web3, id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(web3, listBytes)
     // with the support vote should have succeeded

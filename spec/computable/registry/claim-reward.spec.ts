@@ -121,7 +121,7 @@ describe('Registry: Claim Reward', () => {
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
 
     // Reveal vote
-    await voting.revealVote(id, 0, 420, { from: voter })
+    await voting.revealVote(web3, id, 0, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(web3, listBytes)
 
@@ -135,7 +135,7 @@ describe('Registry: Claim Reward', () => {
     await registry.claimReward(web3, id, 420, {from: voter})
 
     // Voter withdraws voting rights
-    await voting.withdrawVotingRights(10, {from: voter})
+    await voting.withdrawVotingRights(web3, 10, {from: voter})
 
     // Get final voter balance
     const voterFinalBalance = maybeParseInt(await erc20.balanceOf(voter))

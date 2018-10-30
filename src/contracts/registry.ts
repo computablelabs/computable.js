@@ -57,16 +57,17 @@ export default class extends Deployable {
    */
   apply(web3:Web3, listing:string, tokens:Nos, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.apply(listing, tokens, data).estimateGas()
+    if (options.estimateGas) return deployed.methods.apply(listing, tokens, data).estimateGas()
     // the presence of opts.sign (or lack thereof) determines how we call for this (value should be a private key)
-    else if (opts && opts.sign) {
+    else if (options.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.apply(listing, tokens, data).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.apply(listing, tokens, data).send(this.assignContractOptions({ from: account}, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.apply(listing, tokens, data).send(options)
   }
 
   /**
@@ -100,15 +101,16 @@ export default class extends Deployable {
    */
   challenge(web3:Web3, listing:string, data:string = '', opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.challenge(listing, data).estimateGas()
-    else if (opts && opts.sign) {
+    if (options.estimateGas) return deployed.methods.challenge(listing, data).estimateGas()
+    else if (options.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.challenge(listing, data).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.challenge(listing, data).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.challenge(listing, data).send(options)
   }
 
   /**
@@ -125,15 +127,16 @@ export default class extends Deployable {
    */
   claimReward(web3:Web3, id:Nos, salt:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
-      deployed = this.requireDeployed()
+      deployed = this.requireDeployed(),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.claimReward(id, salt).estimateGas()
-    else if (opts && opts.sign) {
+    if (options.estimateGas) return deployed.methods.claimReward(id, salt).estimateGas()
+    else if (options.sign) {
       // the called method is always responsible for getting the abi encoded method here
       const encoded = deployed.methods.claimReward(id, salt).encodeABI()
       // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.claimReward(id, salt).send(this.assignContractOptions({from: account}, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.claimReward(id, salt).send(options)
   }
 
   /**
@@ -163,13 +166,14 @@ export default class extends Deployable {
    */
   deposit(web3:Web3, listing:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
-      deployed = this.requireDeployed()
+      deployed = this.requireDeployed(),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.deposit(listing, amount).estimateGas()
+    if (options.estimateGas) return deployed.methods.deposit(listing, amount).estimateGas()
     else if (opts && opts.sign) {
       const encoded = deployed.methods.deposit(listing, amount).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.deposit(listing, amount).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.deposit(listing, amount).send(options)
   }
 
   /**
@@ -179,13 +183,14 @@ export default class extends Deployable {
    */
   exit(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.exit(listing).estimateGas()
-    else if (opts && opts.sign) {
+    if (options.estimateGas) return deployed.methods.exit(listing).estimateGas()
+    else if (options.sign) {
       const encoded = deployed.methods.exit(listing).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.exit(listing).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.exit(listing).send(options)
   }
 
   /**
@@ -239,13 +244,14 @@ export default class extends Deployable {
    */
   updateStatus(web3:Web3, listing:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const account = this.requireAccount(opts),
-      deployed = this.requireDeployed()
+      deployed = this.requireDeployed(),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.updateStatus(listing).estimateGas()
-    else if (opts && opts.sign) {
+    if (options.estimateGas) return deployed.methods.updateStatus(listing).estimateGas()
+    else if (options.sign) {
       const encoded = deployed.methods.updateStatus(listing).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.updateStatus(listing).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.updateStatus(listing).send(options)
   }
 
   /**
@@ -281,12 +287,13 @@ export default class extends Deployable {
    */
   withdraw(web3:Web3, listing:string, tokens:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    if (opts && opts.estimateGas) return deployed.methods.withdraw(listing, tokens).estimateGas()
-    else if (opts && opts.sign) {
+    if (options.estimateGas) return deployed.methods.withdraw(listing, tokens).estimateGas()
+    else if (options.sign) {
       const encoded = deployed.methods.withdraw(listing, tokens).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, opts)
-    } else return deployed.methods.withdraw(listing, tokens).send(this.assignContractOptions({ from: account }, opts))
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.withdraw(listing, tokens).send(options)
   }
 }

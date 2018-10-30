@@ -126,7 +126,7 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
 
-    const tx3 = await voting.revealVote(id, 1, 420, { from: accounts[2] })
+    const tx3 = await voting.revealVote(web3, id, 1, 420, { from: accounts[2] })
     expect(tx3).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)

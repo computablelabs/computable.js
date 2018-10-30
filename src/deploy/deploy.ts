@@ -3,8 +3,9 @@ import Web3 from 'web3'
 import { Contract } from 'web3/types'
 import HDWalletProvider from 'truffle-hdwallet-provider'
 import {
-  TEST_NET_GAS,
-  TEST_NET_GAS_PRICE,
+  GAS,
+  DEPLOYMENT_GAS,
+  GAS_PRICE,
 } from '../constants'
 import Erc20 from '../contracts/erc-20'
 import Voting from '../contracts/plcr-voting'
@@ -47,7 +48,7 @@ web3 = new Web3(provider)
 const deploy = async () => {
   token = new Erc20(account)
   // supply as 2 ETH converted to wei
-  tokenAddress = await token.deploy(web3, { address: account, supply: 2000000000000000000 }, { gas: TEST_NET_GAS, gasPrice: TEST_NET_GAS_PRICE })
+  tokenAddress = await token.deploy(web3, { address: account, supply: 2000000000000000000 }, { gas: DEPLOYMENT_GAS, gasPrice: GAS_PRICE })
   console.log(`TOKEN ADDRESS: ${tokenAddress}`)
 
   dll = await deployDll(web3, account)
@@ -57,16 +58,16 @@ const deploy = async () => {
   attributeStoreAddress = store.options.address
 
   voting = new Voting(account)
-  votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress }, { gas: TEST_NET_GAS, gasPrice: TEST_NET_GAS_PRICE })
+  votingAddress = await voting.deploy(web3, { tokenAddress, dllAddress, attributeStoreAddress }, { gas: DEPLOYMENT_GAS, gasPrice: GAS_PRICE })
   console.log(`VOTING ADDRESS: ${votingAddress}`)
 
   parameterizer = new Parameterizer(account)
   // allow the p11r to fall back on defaults
-  parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress }, { gas: TEST_NET_GAS, gasPrice: TEST_NET_GAS_PRICE })
+  parameterizerAddress = await parameterizer.deploy(web3, { tokenAddress, votingAddress }, { gas: DEPLOYMENT_GAS, gasPrice: GAS_PRICE })
   console.log(`PARAMETERIZER ADDRESS: ${parameterizerAddress}`)
 
   registry = new Registry(account)
-  registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: 'Computable TCR v0.1.0' }, { gas: TEST_NET_GAS, gasPrice: TEST_NET_GAS_PRICE })
+  registryAddress = await registry.deploy(web3, { tokenAddress, votingAddress, parameterizerAddress, name: 'Computable TCR v0.1.0' }, { gas: DEPLOYMENT_GAS, gasPrice: GAS_PRICE })
   console.log(`REGISTRY ADDRESS: ${registryAddress}`)
 
   // TODO should prob have node process exit here rather than mash ^C

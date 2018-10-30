@@ -170,7 +170,7 @@ export default class extends Deployable {
 
     if (options.estimateGas) return deployed.methods.proposeReparameterization(attribute, val).estimateGas()
     else if (options.sign) {
-      const encoded = deployed.methods.processProposal(attribute, val).encodeABI()
+      const encoded = deployed.methods.proposeReparameterization(attribute, val).encodeABI()
       return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
     }
     else return deployed.methods.proposeReparameterization(attribute, val).send(options)

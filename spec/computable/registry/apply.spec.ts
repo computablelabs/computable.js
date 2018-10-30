@@ -78,7 +78,7 @@ describe('Registry: Apply', () => {
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
       // use a signed transacion, get estimates for gas && price
-      price = web3.eth.getGasPrice(),
+      price = await web3.eth.getGasPrice(),
       gas = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { estimateGas: true }), // NOTE you only need send the args the bytecode method expects
       // we have to make the secret keys actual secret keys and not the faux-hexed ones above... real use cases won't need to substr...
       tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: gas, gasPrice: price, sign: users[0].secretKey.substr(2)}),
