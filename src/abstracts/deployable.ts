@@ -1,6 +1,11 @@
 import Web3 from 'web3'
 import { Contract, EventEmitter, EventLog } from 'web3/types'
-import { Errors, GAS, GAS_PRICE } from '../constants'
+import {
+  Errors,
+  DEPLOYMENT_GAS,
+  GAS,
+  GAS_PRICE
+} from '../constants'
 import {
   Keyed,
   ContractOptions,
@@ -26,6 +31,9 @@ export default abstract class implements Keyed {
    */
   protected assignContractOptions(src:Keyed, opts?:ContractOptions): ContractOptions {
     if(opts) {
+      // default our gas prices if not present
+      if(!opts.gas) opts.gas = GAS // TODO change globally to gasLimit? i dislike 'gas'...
+      if(!opts.gasPrice) opts.gasPrice = GAS_PRICE
       // delete sign so we don't pass it along
       delete opts.sign
       // copy src onto opts so that any overridden props take precedence
@@ -49,7 +57,7 @@ export default abstract class implements Keyed {
       params.address,
       {
         from: params.from || account,
-        gas: opts && opts.gas || GAS,
+        gas: opts && opts.gas || DEPLOYMENT_GAS,
         gasPrice: opts && opts.gasPrice || GAS_PRICE // TODO this needs to have [env] vars for local, testNet, mainNet etc...
       }
     )
@@ -70,7 +78,7 @@ export default abstract class implements Keyed {
     this.deployed = await new web3.eth.Contract(
       params.abi,
       undefined,
-      { gas: opts && opts.gas || GAS, gasPrice: opts && opts.gasPrice || GAS_PRICE })
+      { gas: opts && opts.gas || DEPLOYMENT_GAS, gasPrice: opts && opts.gasPrice || GAS_PRICE })
     // it appears web3 is unhappy getting falsy in the no-args case, so we pass an empty array
     // TODO PR a correction
     .deploy({ data: params.bytecode, arguments: params.args || [] })
@@ -100,11 +108,11 @@ export default abstract class implements Keyed {
     return emitter
   }
 
-  async getPastEvents(name:string, opts?:PastEventFilterOptions): Promise<EventLog[]> {
+  getPastEvents(name:string, opts?:PastEventFilterOptions): Promise<EventLog[]> {
     const deployed = this.requireDeployed()
 
     // @ts-ignore:2345
-    return await deployed.getPastEvents(name, opts)
+    return deployed.getPastEvents(name, opts)
   }
 
   requireAccount(opts?:ContractOptions): string {

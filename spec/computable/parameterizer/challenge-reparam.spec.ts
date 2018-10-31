@@ -80,16 +80,16 @@ describe('Parameterizer: challengeReparameterization', () => {
       startingBalOne = await erc20.balanceOf(accounts[1]),
       emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
 
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
     const propID = eventReturnValues('propID', await onData(emitter)),
-      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+      tx1 = await parameterizer.challengeReparameterization(web3, propID, { from: accounts[1] })
 
     expect(tx1).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
 
-    const tx2 = await parameterizer.processProposal(propID)
+    const tx2 = await parameterizer.processProposal(web3, propID)
     expect(tx2).toBeTruthy()
 
     const voteQ = await parameterizer.get('voteQuorum')
@@ -112,11 +112,11 @@ describe('Parameterizer: challengeReparameterization', () => {
       reParamEmitter = parameterizer.getEventEmitter('_ReparameterizationProposal'),
       challEmitter = parameterizer.getEventEmitter('_NewChallenge')
 
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
     const propID = eventReturnValues('propID', await onData(reParamEmitter))
 
-    parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+    parameterizer.challengeReparameterization(web3, propID, { from: accounts[1] })
 
     const id = eventReturnValues('id', await onData(challEmitter)),
       // accounts[2] as voter here TODO setup some spec-level constants
@@ -126,11 +126,11 @@ describe('Parameterizer: challengeReparameterization', () => {
 
     await increaseTime(provider, ParameterDefaults.P_COMMIT_STAGE_LENGTH + 1)
 
-    const tx3 = await voting.revealVote(id, 1, 420, { from: accounts[2] })
+    const tx3 = await voting.revealVote(web3, id, 1, 420, { from: accounts[2] })
     expect(tx3).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_REVEAL_STAGE_LENGTH + 1)
-    await parameterizer.processProposal(propID)
+    await parameterizer.processProposal(web3, propID)
 
     const quorum = await parameterizer.get('voteQuorum')
     expect(quorum).toBe('51')

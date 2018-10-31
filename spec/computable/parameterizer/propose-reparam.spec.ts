@@ -46,13 +46,13 @@ describe('Parameterizer: Process a proposal', () => {
     expect(applicantStartingBalance).toBe('5000000')
 
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
     const propID = eventReturnValues('propID', await onData(emitter))
 
     await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
 
-    const tx3 = await parameterizer.processProposal(propID)
+    const tx3 = await parameterizer.processProposal(web3, propID)
     expect(tx3).toBeTruthy()
     // we should see the changes now
     const vq = await parameterizer.get('voteQuorum')

@@ -47,7 +47,7 @@ describe('Parameterizer: canBeSet', () => {
   it('should be truthy if a proposal passed its application stage with no challenge', async () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
     // the await here returns the full event log object
     const propID = eventReturnValues('propID', await onData(emitter))
 
@@ -69,7 +69,7 @@ describe('Parameterizer: canBeSet', () => {
   it('should be falsy if proposal did not pass challenge phase', async () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
-    parameterizer.proposeReparameterization('dispensationPct', 58)
+    parameterizer.proposeReparameterization(web3, 'dispensationPct', 58)
 
     const propID = eventReturnValues('propID', await onData(emitter))
 

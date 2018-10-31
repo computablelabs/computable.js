@@ -20,10 +20,10 @@ import {
 // define users and private keys so we can test signed transactions as well
 const users = [{
     secretKey: '0x71cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d69',
-    balance: 1000000000000,
+    balance: 1000000000000000000, // 1 ETH in wei
   }, {
     secretKey: '0x81cc6e70f524061c36f6b9091889785f6e777d489267334bbef1c129cb7d0d70',
-    balance: 1000000000000,
+    balance: 1000000000000000000,
   }]
 
 const provider:any = ganache.provider({ accounts: users }),
@@ -77,8 +77,11 @@ describe('Registry: Apply', () => {
 
   it('allows a new application', async () => {
     const listBytes = stringToBytes(web3, 'listing.com'),
-      // use a signed transacion, should behave the same as a non-signed
-      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: 500000, sign: users[0].secretKey.substring(2)}),
+      // use a signed transacion, get estimates for gas && price
+      price = await web3.eth.getGasPrice(),
+      gas = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, '', { estimateGas: true }), // NOTE you only need send the args the bytecode method expects
+      // we have to make the secret keys actual secret keys and not the faux-hexed ones above... real use cases won't need to substr...
+      tx1 = await registry.apply(web3, listBytes, ParameterDefaults.MIN_DEPOSIT, undefined, {gas: gas, gasPrice: price, sign: users[0].secretKey.substr(2)}),
       // grab the block number so we can grab the events that happened
       block = tx1.blockNumber
 
@@ -165,13 +168,13 @@ describe('Registry: Apply', () => {
       const maxUint = new BigNumber(2).pow(256).minus(bigOne),
         applyStageLen = maxUint.minus(new BigNumber(block.timestamp)).plus(bigOne),
         propID = eventsReturnValues('_ReparameterizationProposal',
-          await parameterizer.proposeReparameterization('applyStageLen',
+          await parameterizer.proposeReparameterization(web3, 'applyStageLen',
             applyStageLen.toString(10), { from: accounts[1] }), 'propID')
 
       expect(propID).toBeTruthy()
 
       await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
-      await parameterizer.processProposal(propID)
+      await parameterizer.processProposal(web3, propID)
 
       // assure prop was processed
       const actualLen = await parameterizer.get('applyStageLen')

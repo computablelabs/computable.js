@@ -75,6 +75,11 @@ describe('Erc20 Token', () => {
   })
 
   describe('Approvals', () => {
+    it('can estimate gas for an approval', async () => {
+      const result = await erc20.approve(web3, accounts[1], 1000, { estimateGas: true })
+      expect(result).toBeTruthy()
+    })
+
     it('sender approves account[1] for 1000', async () => {
       await erc20.approve(web3, accounts[1], 1000)
       const allowance = await erc20.allowance(accounts[0], accounts[1])

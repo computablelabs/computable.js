@@ -66,10 +66,10 @@ describe('Parameterizer: challengeCanBeResolved', () => {
   it('should be truthy if a challenge is ready to be resolved', async () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
     // the actual call, no need to wait for the TX as we'll use the async listener for an event log
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
     const propID = eventReturnValues('propID', await onData(emitter)),
-      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+      tx1 = await parameterizer.challengeReparameterization(web3, propID, { from: accounts[1] })
 
     expect(tx1).toBeTruthy()
 
@@ -82,10 +82,10 @@ describe('Parameterizer: challengeCanBeResolved', () => {
 
   it('should be falsy if challenge not ready', async () => {
     const emitter = parameterizer.getEventEmitter('_ReparameterizationProposal')
-    parameterizer.proposeReparameterization('voteQuorum', 51)
+    parameterizer.proposeReparameterization(web3, 'voteQuorum', 51)
 
     const propID = eventReturnValues('propID', await onData(emitter)),
-      tx1 = await parameterizer.challengeReparameterization(propID, { from: accounts[1] })
+      tx1 = await parameterizer.challengeReparameterization(web3, propID, { from: accounts[1] })
 
     expect(tx1).toBeTruthy()
 

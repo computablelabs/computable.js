@@ -4,6 +4,7 @@ import { ParameterDefaults, GAS, GAS_PRICE, Errors } from '../constants'
 import Deployable from '../abstracts/deployable'
 import { Nos } from '../@types'
 import parameterizerJson from '../../computable/build/contracts/Parameterizer.json'
+import { sendSignedTransaction } from '../helpers'
 // TODO PR web3 to export these properly
 import {
   Keyed,
@@ -44,7 +45,7 @@ export default class extends Deployable {
    * Set our deployed refernce from an already deployed contract
    * @see abstracts/deployable#at
    */
-  async at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
+  at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
     const ap:AtParams = {
       address: params.address,
       abi: parameterizerJson.abi,
@@ -56,29 +57,34 @@ export default class extends Deployable {
   /**
    * Determines if a proposal passed its application stage without a challenge
    */
-  async canBeSet(propID:string): Promise<boolean> {
+  canBeSet(hash:string): Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.canBeSet(propID).call()
+    return deployed.methods.canBeSet(hash).call()
   }
 
   /**
-   * Determines whether the provided proposal ID has a challenge which can be resolved
+   * Determines whether the identified proposal has a challenge which can be resolved
    */
-  async challengeCanBeResolved(propID:string): Promise<boolean> {
+  challengeCanBeResolved(hash:string): Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.challengeCanBeResolved(propID).call()
+    return deployed.methods.challengeCanBeResolved(hash).call()
   }
 
   /**
    * Challenge a given proposal ID, and stake tokens to do so
    */
-  async challengeReparameterization(propID:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+  challengeReparameterization(web3:Web3, hash:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    return await deployed.methods.challengeReparameterization(propID).send({ from: account })
+    if (options.estimateGas) return deployed.methods.challengeReparameterization(hash).estimateGas()
+    else if (options.sign) {
+      const encoded = deployed.methods.challengeReparameterization(hash).encodeABI()
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.challengeReparameterization(hash).send(options)
   }
 
   /**
@@ -86,7 +92,7 @@ export default class extends Deployable {
    * contract options to the super class' _deploy method.
    * @see abstracts/deployable#deployContract
    */
-  async deploy(web3:Web3, params:ParameterizerDeployParams, opts?:ContractOptions): Promise<string> {
+  deploy(web3:Web3, params:ParameterizerDeployParams, opts?:ContractOptions): Promise<string> {
     const dp:DeployParams = {
       abi: parameterizerJson.abi,
       bytecode: parameterizerJson.bytecode,
@@ -114,48 +120,59 @@ export default class extends Deployable {
   /**
    * Fetch a given attribute as it is set on the deployed contract
    */
-  async get(attribute:string): Promise<Nos> {
+  get(attribute:string): Promise<Nos> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.get(attribute).call()
+    return deployed.methods.get(attribute).call()
   }
 
   /**
    * For the given proposal ID, set it, resolve its challenge, or delete it depending on whether it can be set,
    * has a challenge which can be resolved, or if its "process by" date has passed
    */
-  async processProposal(propID:string, opts?:ContractOptions): Promise<TransactionReceipt> {
+  processProposal(web3:Web3, hash:string, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    return await deployed.methods.processProposal(propID).send({ from: account })
+    if (options.estimateGas) return deployed.methods.processProposal(hash).estimateGas()
+    else if (options.sign) {
+      const encoded = deployed.methods.processProposal(hash).encodeABI()
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    } else return deployed.methods.processProposal(hash).send(options)
   }
 
   /**
    * Determines whether a proposal exists for the provided proposal ID
    */
-  async propExists(propID:string): Promise<boolean> {
+  propExists(hash:string): Promise<boolean> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.propExists(propID).call()
+    return deployed.methods.propExists(hash).call()
   }
 
   /**
    * Proposals map pollIDs to intended data change if poll passes
    */
-  async proposals(propID:string): Promise<ParameterizerProposal> {
+  proposals(hash:string): Promise<ParameterizerProposal> {
     const deployed = this.requireDeployed()
 
-    return await deployed.methods.proposals(propID).call()
+    return deployed.methods.proposals(hash).call()
   }
 
   /**
    * Propose a change of the given attribute to the given value
    */
-  async proposeReparameterization(attribute:string, val:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
+  proposeReparameterization(web3:Web3, attribute:string, val:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
     const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts)
+      account = this.requireAccount(opts),
+      options = this.assignContractOptions({ from: account }, opts)
 
-    return await deployed.methods.proposeReparameterization(attribute, val).send({ from: account })
+    if (options.estimateGas) return deployed.methods.proposeReparameterization(attribute, val).estimateGas()
+    else if (options.sign) {
+      const encoded = deployed.methods.proposeReparameterization(attribute, val).encodeABI()
+      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
+    }
+    else return deployed.methods.proposeReparameterization(attribute, val).send(options)
   }
 }

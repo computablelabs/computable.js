@@ -152,7 +152,7 @@ describe('Registry: Challenge', () => {
     // 1 serving as a truthy vote for the challenged, i.e a falsy vote and it would not be listed
     await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(id, 1, 420, { from: voter })
+    await voting.revealVote(web3, id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(web3, listBytes)
 
@@ -180,7 +180,7 @@ describe('Registry: Challenge', () => {
     // vote to support
     await voting.commitVote(web3, id, voter, 1, 10, 420)
     await increaseTime(provider, ParameterDefaults.COMMIT_STAGE_LENGTH + 1)
-    await voting.revealVote(id, 1, 420, { from: voter })
+    await voting.revealVote(web3, id, 1, 420, { from: voter })
     await increaseTime(provider, ParameterDefaults.REVEAL_STAGE_LENGTH + 1)
     await registry.updateStatus(web3, listBytes)
     // with the support vote should have succeeded
@@ -204,11 +204,11 @@ describe('Registry: Challenge', () => {
 
     // propose a new min_deposit... old one is 10
     const propID = eventReturnValues('_ReparameterizationProposal',
-      await parameterizer.proposeReparameterization('minDeposit', 20, { from: proposer }), 'propID')
+      await parameterizer.proposeReparameterization(web3, 'minDeposit', 20, { from: proposer }), 'propID')
     expect(propID).toBeTruthy()
 
     await increaseTime(provider, ParameterDefaults.P_APPLY_STAGE_LENGTH + 1)
-    await parameterizer.processProposal(propID)
+    await parameterizer.processProposal(web3, propID)
 
     const challengerStartBal = await erc20.balanceOf(challenger)
     await registry.challenge(web3, listBytes, '', { from: challenger })
