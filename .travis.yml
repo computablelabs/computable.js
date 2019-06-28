@@ -1,10 +1,8 @@
 language: node_js
 node_js:
-  - "8.11.1"
-before_install: dpkg --compare-versions `npm -v` ge 5.10.0 || npm i -g npm@^5.10.0
+  - "10.16.0"
+before_install: dpkg --compare-versions `npm -v` ge 6.9.0 || npm i -g npm@^6.9.0
 install:
   - npm install
 script:
   - npm test
-  - npm run build:clean
-  - npm run build

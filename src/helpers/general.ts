@@ -1,9 +1,7 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3/types'
-import Tx from 'ethereumjs-tx'
 import { Nos } from '../@types'
-import { ContractOptions } from '../interfaces'
-import { ONE_MILLION } from '../constants'
+import { TransactOpts } from '../interfaces'
 
 export function maybeParseInt(arg:Nos, radix=10): number {
   return typeof arg === 'string' ? parseInt(arg, radix) : arg
@@ -34,26 +32,6 @@ export function increaseTime(provider:any, seconds:number): Promise<any> {
   )
 }
 
-export function stringToBytes(web3:Web3, str:string): string {
-  return web3.utils.toHex(str)
-}
-
-// TODO i think encoded may be an array of strings?
-export async function sendSignedTransaction(web3:Web3, to:string, from:string, encoded:string, opts:ContractOptions): Promise<TransactionReceipt> {
-  const rawTx = {
-    to: to,
-    from: from,
-    nonce: web3.utils.toHex(await web3.eth.getTransactionCount(from)),
-    data: web3.utils.toHex(encoded),
-    gasLimit: web3.utils.toHex(opts.gas),
-    gasPrice: web3.utils.toHex(opts.gasPrice),
-  }
-
-  let tx = new Tx(rawTx)
-  // @ts-ignore 2345 - we do actually know opts.sign in here at this point
-  tx.sign(new Buffer(opts.sign, 'hex'))
-  // @ts-ignore 2322 - TODO we could define the buffer interface here to have 'raw'
-  tx = tx.serialize().toString('hex')
-
-  return web3.eth.sendSignedTransaction(`0x${tx}`)
+export function stringToBytes(w3:Web3, str:string): string {
+  return w3.utils.toHex(str)
 }

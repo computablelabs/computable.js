@@ -1,115 +1,17 @@
 import Web3 from 'web3'
-import { Contract, TransactionReceipt } from 'web3/types'
+import { Contract, Transaction, TransactionReceipt } from 'web3/types'
 import {
   Keyed,
-  ContractOptions,
-  DeployParams,
-  AtParams,
-  Erc20DeployParams,
+  TransactOpts,
 } from '../interfaces'
-import Deployable from '../abstracts/deployable'
-import tokenJson from '../../computable/build/contracts/ConstructableToken.json'
-import { Nos } from '../@types'
-import { Token, GAS, GAS_PRICE } from '../constants'
-import { sendSignedTransaction } from '../helpers'
+import { Nos, Return } from '../@types'
+import { GAS_PRICE } from '../constants'
+import Deployed from '../abstracts/deployed'
 
-export default class extends Deployable {
-  /**
-   * An amount of funds an owner has given a spender permission to use
-   */
-  allowance(owner:string, spender:string): Promise<Nos> {
+export default class extends Deployed {
+  async balanceOf(owner:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-
-    return deployed.methods.allowance(owner, spender).call()
-  }
-  /**
-   * Grant permission to a spender located at the given address to use up to the given amount of funds
-   */
-  approve(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts),
-      options = this.assignContractOptions({ from: account }, opts)
-
-    // the presence of opts.estimateGas takes precedence
-    if (options.estimateGas) return deployed.methods.approve(address, amount).estimateGas()
-    // the presence of opts.sign (or lack thereof) determines how we call for this (value should be a private key)
-    else if (options.sign) {
-      // the called method is always responsible for getting the abi encoded method here
-      const encoded = deployed.methods.approve(address, amount).encodeABI()
-      // use the helper to actually send a signed transaction (web3, to, from, encodedABI, opts)
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
-    } else return deployed.methods.approve(address, amount).send(options)
-  }
-
-  /**
-   * Set our deployed refernce from an already deployed contract
-   * @see abstracts/deployable#at
-   */
-  at(web3:Web3, params:AtParams, opts?:ContractOptions): Promise<boolean> {
-    const ap:AtParams = {
-      address: params.address,
-      abi: tokenJson.abi,
-      from: params.from,
-    }
-
-    return super.at(web3, ap, opts)
-  }
-
-  /**
-   * Return the current balance of the given address
-   */
-  balanceOf(address:string): Promise<Nos> {
-    const deployed = this.requireDeployed()
-
-    return deployed.methods.balanceOf(address).call()
-  }
-
-  /**
-   * Pepare the deploy options, passing them along with the instantiated web3 and optional
-   * contract options to the super class' deployContract method.
-   * @see abstracts/deployable#deployContract
-   */
-  deploy(web3:Web3, params:Erc20DeployParams = {}, opts?:ContractOptions): Promise<string> {
-    const dp:DeployParams = {
-      abi: tokenJson.abi,
-      bytecode: tokenJson.bytecode,
-      args:[
-        params.address || this.defaultAccount,
-        params.supply || Token.supply
-      ]
-
-    }
-
-    return super.deployContract(web3, dp, opts)
-  }
-
-  /**
-   * Move the given number of funds from the msg.sender to a given address
-   */
-  transfer(web3:Web3, address:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts),
-      options = this.assignContractOptions({ from: account }, opts)
-
-    if (options.estimateGas) return deployed.methods.transfer(address, amount).estimateGas()
-    else if (options.sign) {
-      const encoded = deployed.methods.transfer(address, amount).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
-    } else return deployed.methods.transfer(address, amount).send(options)
-  }
-
-  /**
-   * Move the given number of funds from one given address to another given address
-   */
-  transferFrom(web3:Web3, from:string, to:string, amount:Nos, opts?:ContractOptions): Promise<TransactionReceipt> {
-    const deployed = this.requireDeployed(),
-      account = this.requireAccount(opts),
-      options = this.assignContractOptions({ from: account }, opts)
-
-    if (options.estimateGas) return deployed.methods.transferFrom(from, to, amount).estimateGas()
-    if (options.sign) {
-      const encoded = deployed.methods.transferFrom(from, to, amount).encodeABI()
-      return sendSignedTransaction(web3, deployed.options.address, account, encoded, options)
-    } else return deployed.methods.transferFrom(from, to, amount).send(options)
+    let assigned = this.assignTransactOpts({gas: this.getGas('balanceOf')}, opts)
+    return [await deployed.methods.balanceOf(owner), assigned]
   }
 }

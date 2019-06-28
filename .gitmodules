@@ -1,4 +1,0 @@
-[submodule "computable"]
-  path = computable
-  url = https://github.com/computablelabs/computable
-  ignore = all
