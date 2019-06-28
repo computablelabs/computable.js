@@ -7,6 +7,12 @@ import { TransactionReceipt, EventLog } from 'web3/types'
 
 /**
  * Access the data held in receipt.events.name.returnValues.
+ * ex:
+ * import eventsReturnValues...
+ *
+ * const foo = eventsReturnValues('EventName',
+ *   await contract.method(args...), 'foo')
+ * expect(foo).toBeWhatever()
  */
 export function eventsReturnValues(name:string, tx:TransactionReceipt, refinement?:string): any {
   const ret = tx.events && tx.events[name] && tx.events[name].returnValues

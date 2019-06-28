@@ -1,8 +1,7 @@
 /*
  * TODO better define type defintions
- *   Types were previously exported in web3.beta.34, but were removed
- *   in web3.beta.36. Web3 types are not being exported from @types/web3, but
- *   the definitions are incomplete when compared to web3.beta.34.
+ * Web3 can be a bit hit-or-miss with its typedefs
+ * override (or fulfull) them here
  *
  */
 
@@ -11,11 +10,11 @@ declare module "web3/types" {
     [key: string]: any
   }
 
-  interface EventEmitter {
+  interface EventLog {
     [key: string]: any
   }
 
-  interface EventLog {
+  interface Transaction {
     [key: string]: any
   }
 

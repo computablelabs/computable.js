@@ -18,7 +18,7 @@
     "url": "https://www.github.com/computablelabs/computable.js"
   },
   "engines": {
-    "node": ">=8.2.1"
+    "node": ">=10.16.0"
   },
   "files": [
     "dist/"
@@ -32,21 +32,18 @@
     "test-init": "jasmine-ts init"
   },
   "dependencies": {
-    "ethereumjs-tx": "^1.3.7",
-    "web3": "^1.0.0-beta.36"
+    "web3": "^1.0.0-beta.55"
   },
   "devDependencies": {
-    "@types/ethereumjs-tx": "^1.0.0",
-    "@types/jasmine": "^2.8.6",
-    "@types/node": "^10.5.0",
-    "@types/underscore": "^1.8.8",
-    "@types/web3": "^1.0.10",
-    "bignumber.js": "^7.2.1",
-    "ganache-cli": "^6.1.0",
-    "jasmine": "^3.1.0",
+    "@types/jasmine": "^3.3.13",
+    "@types/node": "^12.0.10",
+    "@types/web3": "^1.0.19",
+    "bignumber.js": "^9.0.0",
+    "ganache-cli": "^6.4.4",
+    "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "jasmine-ts": "^0.2.1",
-    "truffle-hdwallet-provider": "0.0.5",
-    "typescript": "^2.8.1"
+    "jasmine-ts": "^0.3.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2"
   }
 }

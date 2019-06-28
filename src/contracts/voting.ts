@@ -3,11 +3,10 @@ import { TransactionReceipt } from 'web3/types'
 import { GAS_PRICE, Errors } from '../constants'
 import Deployed from '../abstracts/deployed'
 import { Nos } from '../@types'
-import * as abi from '../contracts/parameterizer.abi'
+import abi from '../contracts/voting.abi'
 import {
   Keyed,
   TransactOpts,
-  Reparam,
 } from '../interfaces'
 
 export default class extends Deployed {
@@ -16,6 +15,8 @@ export default class extends Deployed {
    * @see abstracts/deployable#at
    */
   at(w3:Web3, address:string, opts?:TransactOpts): Promise<boolean> {
+
     return super.at(w3, address, abi, opts)
   }
 }
+
