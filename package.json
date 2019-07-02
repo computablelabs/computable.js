@@ -26,9 +26,17 @@
   "scripts": {
     "test": "JASMINE_CONFIG_PATH=./spec/support/jasmine.json jasmine-ts",
     "build": "npm run build:clean && tsc -p ./tsbuild.json && cp -r ./src/@types/** ./dist/@types",
-    "build:clean": " rm -rf ./dist",
+    "build:clean": "rm -rf ./dist",
     "build:dry": "npm run build:clean && tsc -noEmit -p ./tsbuild.json",
-    "test-init": "jasmine-ts init"
+    "test-init": "jasmine-ts init",
+    "update:ethertoken": "cp -t src/contracts/ethertoken ../computable/contracts/ethertoken/ethertoken.abi ../computable/contracts/ethertoken/ethertoken.bin",
+    "update:markettoken": "cp -t src/contracts/markettoken ../computable/contracts/markettoken/markettoken.abi ../computable/contracts/markettoken/markettoken.bin",
+    "update:voting": "cp -t src/contracts/voting ../computable/contracts/voting/voting.abi ../computable/contracts/voting/voting.bin",
+    "update:parameterizer": "cp -t src/contracts/parameterizer ../computable/contracts/parameterizer/parameterizer.abi ../computable/contracts/parameterizer/parameterizer.bin",
+    "update:reserve": "cp -t src/contracts/reserve ../computable/contracts/reserve/reserve.abi ../computable/contracts/reserve/reserve.bin",
+    "update:datatrust": "cp -t src/contracts/datatrust ../computable/contracts/datatrust/datatrust.abi ../computable/contracts/datatrust/datatrust.bin",
+    "update:listing": "cp -t src/contracts/listing ../computable/contracts/listing/listing.abi ../computable/contracts/listing/listing.bin",
+    "update:contracts": "npm run update:ethertoken && npm run update:markettoken && npm run update:voting && npm run update:parameterizer && npm run update:reserve && npm run update:datatrust && npm run update:listing"
   },
   "dependencies": {
     "web3": "^1.0.0-beta.55"

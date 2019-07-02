@@ -1,13 +1,11 @@
-export const NAME:string = 'Computable Labs: Data Marketplace'
+export const ONE_ETHER:string = '1000000000000000000'
+export const ONE_FINNEY:string = '1000000000000000'
+export const ONE_SZABO:string = '1000000000000'
+export const ONE_GWEI:string = '1000000000'
+export const ONE_MWEI:string = '1000000'
+export const ONE_KWEI:string = '1000'
 
-export const ONE_ETH:number = 1000000000000000000
-export const ONE_FINNEY:number = 1000000000000000
-export const ONE_SZABO:number = 1000000000000
-export const ONE_GWEI:number = 1000000000
-export const ONE_MWEI:number = 1000000
-export const ONE_KWEI:number = 1000
-
-export const GAS_PRICE:number = ONE_GWEI * 2
+export const GAS_PRICE:string = '2000000000' // 2 GWEI
 export const DEPLOY_GAS:number = 4700000
 export const MIN_GAS:number = 21000
 export const GAS_BUFFER:number = 100000

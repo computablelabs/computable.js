@@ -1,11 +1,7 @@
 import Web3 from 'web3'
-import { PARAMETERIZER_ABI } from '../constants'
+import { TransactOpts } from '../interfaces'
+import { DATATRUST_ABI } from '../constants'
 import Deployed from '../abstracts/deployed'
-import { Nos } from '../@types'
-import {
-  TransactOpts,
-  Reparam,
-} from '../interfaces'
 
 export default class extends Deployed {
   /**
@@ -13,6 +9,6 @@ export default class extends Deployed {
    * @see abstracts/deployable#at
    */
   at(w3:Web3, address:string, opts?:TransactOpts): Promise<boolean> {
-    return super.at(w3, address, PARAMETERIZER_ABI, opts)
+    return super.at(w3, address, DATATRUST_ABI, opts)
   }
 }

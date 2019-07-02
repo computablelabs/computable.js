@@ -7,7 +7,7 @@ import { Return } from '../@types'
  * @param args A Return from an HOC method
  * @returns The TX reciept
  */
-export function call(args:Return): Promise<TransactionReceipt> {
+export function call(args:Return): Promise<any> {
   return args[0].call(args[1])
 }
 
