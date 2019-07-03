@@ -19,7 +19,7 @@ export default class extends Erc20 {
   async setPrivileged(listing:string, reserve:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('setPrivileged')}, opts)
-    return [await deployed.setPrivileged(listing, reserve), assigned]
+    return [await deployed.methods.setPrivileged(listing, reserve), assigned]
   }
 
   async getPrivileged(opts?:TransactOpts): Promise<Return> {
@@ -28,9 +28,9 @@ export default class extends Erc20 {
     return [await deployed.methods.getPrivileged(), assigned]
   }
 
-  async hasPrivileged(addr:string, opts?:TransactOpts): Promise<Return> {
+  async hasPrivilege(addr:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-    let assigned = this.assignTransactOpts({gas: this.getGas('getPrivileged')}, opts)
-    return [await deployed.methods.hasPrivileged(addr), assigned]
+    let assigned = this.assignTransactOpts({gas: this.getGas('hasPrivilege')}, opts)
+    return [await deployed.methods.hasPrivilege(addr), assigned]
   }
 }
