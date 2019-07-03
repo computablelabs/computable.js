@@ -2,7 +2,7 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types'
 import MarketToken from '../../src/contracts/market-token'
-import { ETHER_TOKEN_ABI, ONE_ETHER, ONE_GWEI } from  '../../src/constants'
+import { MARKET_TOKEN_ABI, ONE_ETHER, ONE_GWEI } from  '../../src/constants'
 import { Return } from '../../src/@types'
 import {
   deploy,
@@ -27,7 +27,7 @@ describe('Market Token', () => {
     // deploy it...
     const bin:string = readBytecode('markettoken')
 
-    deployed = await deploy(w3, accounts[0], ETHER_TOKEN_ABI,
+    deployed = await deploy(w3, accounts[0], MARKET_TOKEN_ABI,
       bin, [accounts[0], ONE_ETHER])
 
     // now we can instantiate the HOC
