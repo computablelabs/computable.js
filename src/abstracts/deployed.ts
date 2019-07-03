@@ -31,7 +31,7 @@ export default abstract class implements Keyed {
     return !!this.deployed
   }
 
-  protected assignTransactOpts(src:Keyed, opts?:TransactOpts): TransactOpts {
+  assignTransactOpts(src:Keyed, opts?:TransactOpts): TransactOpts {
     const account = this.requireAccount(opts)
 
     if (opts) {

@@ -30,4 +30,45 @@ export default class extends Deployed {
     return [await deployed.methods.balanceOf(owner), assigned]
   }
 
+  async decreaseApproval(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('decreaseApproval')}, opts)
+    return [await deployed.methods.decreaseApproval(spender, amount), assigned]
+  }
+
+  async getDecimals(opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('decimals')}, opts)
+    return [await deployed.methods.decimals(), assigned]
+  }
+
+  async getSymbol(opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('symbol')}, opts)
+    return [await deployed.methods.symbol(), assigned]
+  }
+
+  async increaseApproval(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('increaseApproval')}, opts)
+    return [await deployed.methods.increaseApproval(spender, amount), assigned]
+  }
+
+  async totalSupply(opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('totalSupply')}, opts)
+    return [await deployed.methods.totalSupply(), assigned]
+  }
+
+  async transfer(to:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('transfer')}, opts)
+    return [await deployed.methods.transfer(to, amount), assigned]
+  }
+
+  async transferFrom(source:string, to:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('transferFrom')}, opts)
+    return [await deployed.methods.transferFrom(source, to, amount), assigned]
+  }
 }
