@@ -46,7 +46,7 @@ describe('Market Token', () => {
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThan(0)
+      expect(opts['gas']).toBeGreaterThan(121000)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -64,7 +64,7 @@ describe('Market Token', () => {
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThan(0)
+      expect(opts['gas']).toBeGreaterThan(121000)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -82,7 +82,7 @@ describe('Market Token', () => {
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThan(0)
+      expect(opts['gas']).toBeGreaterThan(121000)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
