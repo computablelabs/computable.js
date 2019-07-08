@@ -44,12 +44,13 @@ describe('Listing', () => {
       const defaults = await listing.isListed("listing", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('isListed')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -62,12 +63,13 @@ describe('Listing', () => {
       const defaults = await listing.withdrawFromListing("listing", "1000", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('withdrawFromListing')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -80,12 +82,13 @@ describe('Listing', () => {
       const defaults = await listing.list("listing", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('list')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -98,12 +101,13 @@ describe('Listing', () => {
       const defaults = await listing.getListing("listing", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('getListing')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -135,12 +139,13 @@ describe('Listing', () => {
       const defaults = await listing.claimBytesAccessed("listing", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('claimBytesAccessed')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -153,12 +158,13 @@ describe('Listing', () => {
       const defaults = await listing.challenge("listing",{})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('challenge')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -171,12 +177,13 @@ describe('Listing', () => {
       const defaults = await listing.resolveChallenge("listing",{})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('resolveChallenge')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -189,12 +196,13 @@ describe('Listing', () => {
       const defaults = await listing.exit("listing", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = listing.getGas('exit')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
