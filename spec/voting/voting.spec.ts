@@ -44,7 +44,7 @@ describe('Voting', () => {
       const defaults = await voting.setPrivileged("listing", "reserve", {})
       let tx = defaults[0]
       let opts = defaults[1]
-      let gas = voting.getGas('listing')
+      let gas = voting.getGas('setPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
