@@ -2,64 +2,251 @@ import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types'
 import Voting from '../../src/contracts/voting'
-import Parameterizer from '../../src/contracts/parameterizer'
-import Listing from '../../src/contracts/listing'
+import { VOTING_ABI, ONE_ETHER, ONE_GWEI } from  '../../src/constants'
+import { Return } from '../../src/@types'
 import {
-  stringToBytes,
+  deploy,
+  readBytecode,
+  call,
+  transact,
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider)
+  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
+    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
+    toBN = w3.utils.toBN
 
-let accounts:string[],
-  voting:Voting,
-  parameterizer:Parameterizer,
-  listing:Listing
+let voting:Voting,
+  accounts:string[],
+  deployed:Contract
 
 describe('Voting', () => {
-  beforeAll(() => {
-
-  })
-
-  afterAll(() => {
-
-  })
-
-  beforeEach(async () => {
+  beforeAll(async () => {
     accounts = await w3.eth.getAccounts()
 
-    // erc20 = new Erc20(accounts[0])
-    // voting = new Voting(accounts[0])
-    // parameterizer = new Parameterizer(accounts[0])
-    // listing = new Listing(accounts[0])
+    // deploy it...
+    const bin:string = readBytecode('voting')
 
-    // 0th account approves voting and reg to spend
-    // await erc20.approve(web3, votingAddress, 1000000)
-    // await erc20.approve(web3, registryAddress, 1000000)
-    // 1st account, as challenger, needs funds
-    // await erc20.transfer(web3, accounts[1], 500000)
-    // 2nd account as voter needs funds
-    // await erc20.transfer(web3, accounts[2], 500000)
-    // registry needs to be approved to spend ond the challenger's behalf
-    // await erc20.approve(web3, registryAddress, 450000, { from: accounts[1] })
-    // voting needs approval from voter
-    // await erc20.approve(web3, votingAddress, 450000, { from: accounts[2] })
+    deployed = await deploy(w3,
+                            accounts[0],
+                            VOTING_ABI,
+                            bin,
+                            [accounts[0]])
+
+    // now we can instantiate the HOC
+    voting = new Voting(accounts[0])
+    await voting.at(w3, deployed.options.address)
   })
 
-  it('can be instantiated from an existing deployment', async () => {
-    // const address = voting.getAddress(),
-      // other = new Voting(accounts[0]),
-      // works = await other.at(web3, { address })
+  describe('Class methods for Voting', () => {
 
-    // expect(works).toBe(true)
+    it('calls setPrivileged correctly', async () => {
+      const defaults = await voting.setPrivileged("listing", "reserve", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('setPrivileged')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls getPrivileged correctly', async () => {
+      const defaults = await voting.getPrivileged({})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('getPrivileged')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls hasPrivilege correctly', async () => {
+      const defaults = await voting.hasPrivilege("addr", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('hasPrivilege')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls candidateIs correctly', async () => {
+      const defaults = await voting.candidateIs("hash", "kind", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('candidateIs')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls isCandidate correctly', async () => {
+      const defaults = await voting.isCandidate("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('isCandidate')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls getCandidate correctly', async () => {
+      const defaults = await voting.getCandidate("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('getCandidate')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls getCandidateOwner correctly', async () => {
+      const defaults = await voting.getCandidateOwner("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('getCandidateOwner')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls didPass correctly', async () => {
+      const defaults = await voting.didPass("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('didPass')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls vote correctly', async () => {
+      const defaults = await voting.vote("hash", 1, {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('vote')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls getStake correctly', async () => {
+      const defaults = await voting.getStake("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('getStake')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls unstake correctly', async () => {
+      const defaults = await voting.unstake("hash", {})
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('unstake')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
   })
-
-  it('commits vote, updates state', async () => {
-    // const domainOne = stringToBytes(web3, 'one.net'),
-      // domainTwo = stringToBytes(web3, 'two.net'),
-      // tx1 = await registry.apply(web3, domainOne, ParameterDefaults.MIN_DEPOSIT),
-      // tx2 = await registry.apply(web3, domainTwo, ParameterDefaults.MIN_DEPOSIT)
-
-  })
-
 })
