@@ -44,12 +44,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.setPrivileged("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('setPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -62,12 +63,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getPrivileged({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100483)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -80,12 +82,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getHash("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getHash')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100615)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -98,12 +101,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getBackendAddress({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getBackendAddress')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100603)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -116,12 +120,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getBackendUrl({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getBackendUrl')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -134,12 +139,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.setBackendUrl("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('setBackendUrl')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -152,12 +158,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.setDataHash("datatrust", "data", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('setDataHash')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -170,12 +177,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.register("datatrust",{})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('register')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -188,12 +196,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.resolveRegistration("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('resolveRegistration')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -206,12 +215,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.requestDelivery("datatrust", "1000", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('requestDelivery')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -224,12 +234,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getBytesPurchased("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getBytesPurchased')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101045)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -242,12 +253,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getDelivery("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getDelivery')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -260,12 +272,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.listingAccessed("datatrust", "delivery", "100000", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('listingAccessed')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -278,12 +291,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.getBytesAccessed("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('getBytesAccessed')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101096)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -296,12 +310,13 @@ describe('Datatrust', () => {
       const defaults = await datatrust.delivered("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = datatrust.getGas('delivered')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
