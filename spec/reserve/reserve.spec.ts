@@ -16,6 +16,10 @@ const provider:any = ganache.provider(),
     transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
     toBN = w3.utils.toBN
 
+const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const votingAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const p11rAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+
 let reserve:Reserve,
   accounts:string[],
   deployed:Contract
@@ -31,7 +35,9 @@ describe('Reserve', () => {
                             accounts[0],
                             RESERVE_ABI,
                             bin,
-                            [accounts[0], accounts[0], accounts[0]])
+                            [marketTokenAddress,
+                              votingAddress,
+                              p11rAddress])
 
     // now we can instantiate the HOC
     reserve = new Reserve(accounts[0])
