@@ -16,11 +16,11 @@ const provider:any = ganache.provider(),
     transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
     toBN = w3.utils.toBN
 
-const marketTokenAddress = "markettoken"
-const votingAddress = "voting"
-const p11rAddress = "p11r"
-const reserveAddress = "reserve"
-const datatrustAddress = "datatrust"
+const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const votingAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const p11rAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const reserveAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+const datatrustAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
 
 let listing:Listing,
   accounts:string[],
