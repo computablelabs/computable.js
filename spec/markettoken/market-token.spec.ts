@@ -41,7 +41,7 @@ describe('Market Token', () => {
       const defaults = await token.setPrivileged("listing", "reserve", {})
       let tx = defaults[0]
       let opts = defaults[1]
-      let gas = token.getGas('listing')
+      let gas = token.getGas('setPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
