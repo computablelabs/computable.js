@@ -16,6 +16,12 @@ const provider:any = ganache.provider(),
     transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
     toBN = w3.utils.toBN
 
+const marketTokenAddress = "markettoken"
+const votingAddress = "voting"
+const p11rAddress = "p11r"
+const reserveAddress = "reserve"
+const datatrustAddress = "datatrust"
+
 let listing:Listing,
   accounts:string[],
   deployed:Contract
@@ -31,7 +37,11 @@ describe('Listing', () => {
                             accounts[0],
                             LISTING_ABI,
                             bin,
-                            [accounts[0], accounts[0], accounts[0], accounts[0], accounts[0]])
+                            [marketTokenAddress,
+                              votingAddress,
+                              p11rAddress,
+                              reserveAddress,
+                              datatrustAddress])
 
     // now we can instantiate the HOC
     listing = new Listing(accounts[0])
