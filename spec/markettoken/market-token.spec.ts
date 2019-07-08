@@ -41,12 +41,13 @@ describe('Market Token', () => {
       const defaults = await token.setPrivileged("listing", "reserve", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = token.getGas('listing')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(121000)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -59,12 +60,13 @@ describe('Market Token', () => {
       const defaults = await token.getPrivileged({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = token.getGas('getPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(121000)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -77,12 +79,13 @@ describe('Market Token', () => {
       const defaults = await token.hasPrivilege("addr", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = token.getGas('hasPrivilege')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(121000)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
