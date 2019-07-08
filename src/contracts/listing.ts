@@ -38,13 +38,6 @@ export default class extends Deployed {
     return [await deployed.methods.getListing(hash), assigned]
   }
 
-  // no longer exists in abi?
-  // async removeApplication(hash:string, opts?:TransactOpts): Promise<Return> {
-  //   const deployed = this.requireDeployed()
-  //   let assigned = this.assignTransactOpts({gas: this.getGas('removeApplication')}, opts)
-  //   return [await deployed.methods.removeApplication(hash), assigned]
-  // }
-
   async claimBytesAccessed(hash:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('claimBytesAccessed')}, opts)
