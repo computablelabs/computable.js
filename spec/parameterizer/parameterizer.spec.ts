@@ -16,6 +16,18 @@ const provider:any = ganache.provider(),
     transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
     toBN = w3.utils.toBN
 
+const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+
+const priceFloor = w3.utils.toWei('1', 'szabo')
+const spread = 110
+const listReward = w3.utils.toWei('250', 'szabo')
+const stake = w3.utils.toWei('10', 'finney')
+const voteBy = 100
+const plurality = 50
+const backendPayment = 25
+const makerPayment = 25
+const costPerByte = w3.utils.toWei('100', 'gwei')
+
 let parameterizer:Parameterizer,
   accounts:string[],
   deployed:Contract
@@ -31,16 +43,16 @@ describe('Parameterizer', () => {
                             accounts[0],
                             PARAMETERIZER_ABI,
                             bin,
-                            [accounts[0],
-                              10000,
-                              10000,
-                              10000,
-                              10000,
-                              10000,
-                              10000,
-                              10000,
-                              10000,
-                              10000])
+                            [marketTokenAddress,
+                              priceFloor,
+                              spread,
+                              listReward,
+                              stake,
+                              voteBy,
+                              plurality,
+                              backendPayment,
+                              makerPayment,
+                              costPerByte])
 
     // now we can instantiate the HOC
     parameterizer = new Parameterizer(accounts[0])
