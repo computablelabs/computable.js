@@ -16,6 +16,12 @@ const provider:any = ganache.provider(),
     transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
     toBN = w3.utils.toBN
 
+const marketTokenAddress = "markettoken"
+const votingAddress = "voting"
+const p11rAddress = "p11r"
+const reserveAddress = "reserve"
+const datatrustAddress = "datatrust"
+
 let datatrust:Datatrust,
   accounts:string[],
   deployed:Contract
@@ -31,7 +37,10 @@ describe('Datatrust', () => {
                             accounts[0],
                             DATATRUST_ABI,
                             bin,
-                            [accounts[0], accounts[0], accounts[0], accounts[0]])
+                            [marketTokenAddress,
+                              votingAddress,
+                              p11rAddress,
+                              reserveAddress])
 
     // now we can instantiate the HOC
     datatrust = new Datatrust(accounts[0])
