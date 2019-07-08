@@ -44,12 +44,13 @@ describe('Voting', () => {
       const defaults = await voting.setPrivileged("listing", "reserve", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('listing')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -62,12 +63,13 @@ describe('Voting', () => {
       const defaults = await voting.getPrivileged({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('getPrivileged')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -80,12 +82,13 @@ describe('Voting', () => {
       const defaults = await voting.hasPrivilege("addr", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('hasPrivilege')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -98,12 +101,13 @@ describe('Voting', () => {
       const defaults = await voting.candidateIs("hash", "kind", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('candidateIs')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100793)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -116,12 +120,13 @@ describe('Voting', () => {
       const defaults = await voting.isCandidate("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('isCandidate')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100823)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -134,12 +139,13 @@ describe('Voting', () => {
       const defaults = await voting.getCandidate("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('getCandidate')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -152,12 +158,13 @@ describe('Voting', () => {
       const defaults = await voting.getCandidateOwner("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('getCandidateOwner')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100874)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -170,12 +177,13 @@ describe('Voting', () => {
       const defaults = await voting.didPass("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('didPass')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -188,12 +196,13 @@ describe('Voting', () => {
       const defaults = await voting.vote("hash", 1, {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('vote')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -206,12 +215,13 @@ describe('Voting', () => {
       const defaults = await voting.getStake("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('getStake')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101166)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -224,12 +234,13 @@ describe('Voting', () => {
       const defaults = await voting.unstake("hash", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = voting.getGas('unstake')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(101191)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
