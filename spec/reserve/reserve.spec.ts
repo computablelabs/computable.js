@@ -44,12 +44,13 @@ describe('Reserve', () => {
       const defaults = await reserve.getSupportPrice({})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = reserve.getGas('getSupportPrice')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -62,12 +63,13 @@ describe('Reserve', () => {
       const defaults = await reserve.support("datatrust", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = reserve.getGas('support')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -80,12 +82,13 @@ describe('Reserve', () => {
       const defaults = await reserve.getWithdrawalProceeds("address", {})
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = reserve.getGas('getWithdrawalProceeds')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
@@ -98,12 +101,13 @@ describe('Reserve', () => {
       const defaults = await reserve.withdraw()
       let tx = defaults[0]
       let opts = defaults[1]
+      let gas = reserve.getGas('withdraw')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
       expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
-      expect(opts['gas']).toBeGreaterThanOrEqual(100697)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
       let from = opts['from']
       expect(from).not.toBeNull()
       expect(from!.trim().length).toBeGreaterThan(0)
