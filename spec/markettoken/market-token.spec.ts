@@ -12,9 +12,10 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  reserveAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  listingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 let token:MarketToken,
   accounts:string[],
@@ -38,7 +39,7 @@ describe('Market Token', () => {
   describe('Class methods for Market Token', () => {
 
     it('calls setPrivileged correctly', async () => {
-      const defaults = await token.setPrivileged("listing", "reserve", {})
+      const defaults = await token.setPrivileged(reserveAddress, listingAddress)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = token.getGas('setPrivileged')
@@ -57,7 +58,7 @@ describe('Market Token', () => {
     })
 
     it('calls getPrivileged correctly', async () => {
-      const defaults = await token.getPrivileged({})
+      const defaults = await token.getPrivileged()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = token.getGas('getPrivileged')
@@ -76,7 +77,7 @@ describe('Market Token', () => {
     })
 
     it('calls hasPrivilege correctly', async () => {
-      const defaults = await token.hasPrivilege("addr", {})
+      const defaults = await token.hasPrivilege('addr')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = token.getGas('hasPrivilege')

@@ -39,7 +39,7 @@
     "update:contracts": "npm run update:ethertoken && npm run update:markettoken && npm run update:voting && npm run update:parameterizer && npm run update:reserve && npm run update:datatrust && npm run update:listing"
   },
   "dependencies": {
-    "web3": "^1.0.0-beta.55"
+    "web3": "1.0.0-beta.37"
   },
   "devDependencies": {
     "@types/jasmine": "^3.3.13",

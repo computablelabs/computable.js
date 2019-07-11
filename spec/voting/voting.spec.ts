@@ -12,9 +12,13 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  p11rAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  reserveAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  datatrustAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  listingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 let voting:Voting,
   accounts:string[],
@@ -31,7 +35,7 @@ describe('Voting', () => {
                             accounts[0],
                             VOTING_ABI,
                             bin,
-                            [accounts[0]])
+                            [marketTokenAddress])
 
     // now we can instantiate the HOC
     voting = new Voting(accounts[0])
@@ -40,8 +44,13 @@ describe('Voting', () => {
 
   describe('Class methods for Voting', () => {
 
+    it('exists', () => {
+      expect(deployed).toBeTruthy()
+    })
+
     it('calls setPrivileged correctly', async () => {
-      const defaults = await voting.setPrivileged("listing", "reserve", {})
+      const defaults = await voting.setPrivileged(p11rAddress, reserveAddress,
+        datatrustAddress, listingAddress)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('setPrivileged')
@@ -60,7 +69,7 @@ describe('Voting', () => {
     })
 
     it('calls getPrivileged correctly', async () => {
-      const defaults = await voting.getPrivileged({})
+      const defaults = await voting.getPrivileged()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('getPrivileged')
@@ -79,7 +88,7 @@ describe('Voting', () => {
     })
 
     it('calls hasPrivilege correctly', async () => {
-      const defaults = await voting.hasPrivilege("addr", {})
+      const defaults = await voting.hasPrivilege('addr')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('hasPrivilege')
@@ -98,7 +107,7 @@ describe('Voting', () => {
     })
 
     it('calls candidateIs correctly', async () => {
-      const defaults = await voting.candidateIs("hash", "kind", {})
+      const defaults = await voting.candidateIs('hash', 'kind')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('candidateIs')
@@ -117,7 +126,7 @@ describe('Voting', () => {
     })
 
     it('calls isCandidate correctly', async () => {
-      const defaults = await voting.isCandidate("hash", {})
+      const defaults = await voting.isCandidate('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('isCandidate')
@@ -136,7 +145,7 @@ describe('Voting', () => {
     })
 
     it('calls getCandidate correctly', async () => {
-      const defaults = await voting.getCandidate("hash", {})
+      const defaults = await voting.getCandidate('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('getCandidate')
@@ -155,7 +164,7 @@ describe('Voting', () => {
     })
 
     it('calls getCandidateOwner correctly', async () => {
-      const defaults = await voting.getCandidateOwner("hash", {})
+      const defaults = await voting.getCandidateOwner('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('getCandidateOwner')
@@ -174,7 +183,7 @@ describe('Voting', () => {
     })
 
     it('calls didPass correctly', async () => {
-      const defaults = await voting.didPass("hash", {})
+      const defaults = await voting.didPass('hash', 50)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('didPass')
@@ -193,7 +202,7 @@ describe('Voting', () => {
     })
 
     it('calls vote correctly', async () => {
-      const defaults = await voting.vote("hash", 1, {})
+      const defaults = await voting.vote('hash', 1)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('vote')
@@ -212,7 +221,7 @@ describe('Voting', () => {
     })
 
     it('calls getStake correctly', async () => {
-      const defaults = await voting.getStake("hash", {})
+      const defaults = await voting.getStake('somehash', 'someaddress')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('getStake')
@@ -231,7 +240,7 @@ describe('Voting', () => {
     })
 
     it('calls unstake correctly', async () => {
-      const defaults = await voting.unstake("hash", {})
+      const defaults = await voting.unstake('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = voting.getGas('unstake')

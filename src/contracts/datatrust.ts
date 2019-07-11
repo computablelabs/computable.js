@@ -1,8 +1,7 @@
 import Web3 from 'web3'
-import {  } from 'web3/types'
 import { TransactOpts } from '../interfaces'
 import { DATATRUST_ABI } from '../constants'
-import { Return } from '../@types'
+import { Nos, Return} from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Deployed {
@@ -68,7 +67,7 @@ export default class extends Deployed {
     return [await deployed.methods.resolveRegistration(hash), assigned]
   }
 
-  async requestDelivery(hash:string, amount:string, opts?:TransactOpts): Promise<Return> {
+  async requestDelivery(hash:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('requestDelivery')}, opts)
     return [await deployed.methods.requestDelivery(hash, amount), assigned]
@@ -86,7 +85,7 @@ export default class extends Deployed {
     return [await deployed.methods.getDelivery(hash), assigned]
   }
 
-  async listingAccessed(listing:string, delivery:string, amount:string, opts?:TransactOpts): Promise<Return> {
+  async listingAccessed(listing:string, delivery:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('listingAccessed')}, opts)
     return [await deployed.methods.listingAccessed(listing, delivery, amount), assigned]
@@ -98,9 +97,9 @@ export default class extends Deployed {
     return [await deployed.methods.getBytesAccessed(hash), assigned]
   }
 
-  async delivered(delivery:string, opts?:TransactOpts): Promise<Return> {
+  async delivered(delivery:string, url:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('delivered')}, opts)
-    return [await deployed.methods.delivered(delivery), assigned]
+    return [await deployed.methods.delivered(delivery, url), assigned]
   }
 }

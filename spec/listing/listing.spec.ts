@@ -12,15 +12,13 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
-
-const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const votingAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const p11rAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const reserveAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const datatrustAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  p11rAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  reserveAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  datatrustAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 let listing:Listing,
   accounts:string[],
@@ -31,7 +29,7 @@ describe('Listing', () => {
     accounts = await w3.eth.getAccounts()
 
     // deploy it...
-    const bin:string = readBytecode('voting')
+    const bin:string = readBytecode('listing')
 
     deployed = await deploy(w3,
                             accounts[0],
@@ -51,7 +49,7 @@ describe('Listing', () => {
   describe('Class methods for Listing', () => {
 
     it('calls isListed correctly', async () => {
-      const defaults = await listing.isListed("listing", {})
+      const defaults = await listing.isListed('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('isListed')
@@ -70,7 +68,7 @@ describe('Listing', () => {
     })
 
     it('calls withdrawFromListing correctly', async () => {
-      const defaults = await listing.withdrawFromListing("listing", "1000", {})
+      const defaults = await listing.withdrawFromListing('listing', '1000')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('withdrawFromListing')
@@ -89,7 +87,7 @@ describe('Listing', () => {
     })
 
     it('calls list correctly', async () => {
-      const defaults = await listing.list("listing", {})
+      const defaults = await listing.list('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('list')
@@ -108,7 +106,7 @@ describe('Listing', () => {
     })
 
     it('calls getListing correctly', async () => {
-      const defaults = await listing.getListing("listing", {})
+      const defaults = await listing.getListing('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('getListing')
@@ -127,7 +125,7 @@ describe('Listing', () => {
     })
 
     it('calls claimBytesAccessed correctly', async () => {
-      const defaults = await listing.claimBytesAccessed("listing", {})
+      const defaults = await listing.claimBytesAccessed('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('claimBytesAccessed')
@@ -146,7 +144,7 @@ describe('Listing', () => {
     })
 
     it('calls challenge correctly', async () => {
-      const defaults = await listing.challenge("listing",{})
+      const defaults = await listing.challenge('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('challenge')
@@ -165,7 +163,7 @@ describe('Listing', () => {
     })
 
     it('calls resolveChallenge correctly', async () => {
-      const defaults = await listing.resolveChallenge("listing",{})
+      const defaults = await listing.resolveChallenge('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('resolveChallenge')
@@ -184,7 +182,7 @@ describe('Listing', () => {
     })
 
     it('calls exit correctly', async () => {
-      const defaults = await listing.exit("listing", {})
+      const defaults = await listing.exit('listing')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = listing.getGas('exit')

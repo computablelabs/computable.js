@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import {  } from 'web3/types'
 import { TransactOpts } from '../interfaces'
 import { PARAMETERIZER_ABI } from '../constants'
-import { Return } from '../@types'
+import { Nos, Return } from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Deployed {
@@ -50,7 +50,7 @@ export default class extends Deployed {
     return [await deployed.methods.getPriceFloor(), assigned]
   }
 
-  async getHash(param:Number, value:Number, opts?:TransactOpts): Promise<Return> {
+  async getHash(param:Nos, value:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('getHash')}, opts)
     return [await deployed.methods.getHash(param, value), assigned]
@@ -86,7 +86,7 @@ export default class extends Deployed {
     return [await deployed.methods.getVoteBy(), assigned]
   }
 
-  async reparameterize(param:Number, value:Number, opts?:TransactOpts): Promise<Return> {
+  async reparameterize(param:Nos, value:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('reparameterize')}, opts)
     return [await deployed.methods.reparameterize(param, value), assigned]
