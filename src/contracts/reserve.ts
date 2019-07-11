@@ -1,8 +1,7 @@
 import Web3 from 'web3'
-import {  } from 'web3/types'
 import { TransactOpts } from '../interfaces'
 import { RESERVE_ABI } from '../constants'
-import { Return } from '../@types'
+import { Nos, Return } from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Deployed {
@@ -20,7 +19,7 @@ export default class extends Deployed {
     return [await deployed.methods.getSupportPrice(), assigned]
   }
 
-  async support(offer:string, opts?:TransactOpts): Promise<Return> {
+  async support(offer:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('support')}, opts)
     return [await deployed.methods.support(offer), assigned]

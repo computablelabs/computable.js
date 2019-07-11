@@ -12,13 +12,11 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
-
-const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const votingAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const p11rAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  etherTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  p11rAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 let reserve:Reserve,
   accounts:string[],
@@ -35,8 +33,8 @@ describe('Reserve', () => {
                             accounts[0],
                             RESERVE_ABI,
                             bin,
-                            [marketTokenAddress,
-                              votingAddress,
+                            [etherTokenAddress,
+                              marketTokenAddress,
                               p11rAddress])
 
     // now we can instantiate the HOC
@@ -47,7 +45,7 @@ describe('Reserve', () => {
   describe('Class methods for Reserve', () => {
 
     it('calls getSupportPrice correctly', async () => {
-      const defaults = await reserve.getSupportPrice({})
+      const defaults = await reserve.getSupportPrice()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = reserve.getGas('getSupportPrice')
@@ -66,7 +64,7 @@ describe('Reserve', () => {
     })
 
     it('calls support correctly', async () => {
-      const defaults = await reserve.support("datatrust", {})
+      const defaults = await reserve.support(ONE_ETHER)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = reserve.getGas('support')
@@ -85,7 +83,7 @@ describe('Reserve', () => {
     })
 
     it('calls getWithdrawalProceeds correctly', async () => {
-      const defaults = await reserve.getWithdrawalProceeds("address", {})
+      const defaults = await reserve.getWithdrawalProceeds('address')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = reserve.getGas('getWithdrawalProceeds')

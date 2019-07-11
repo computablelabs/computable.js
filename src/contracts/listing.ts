@@ -1,8 +1,7 @@
 import Web3 from 'web3'
-import {  } from 'web3/types'
 import { TransactOpts } from '../interfaces'
 import { LISTING_ABI } from '../constants'
-import { Return } from '../@types'
+import { Nos, Return } from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Deployed {
@@ -20,7 +19,7 @@ export default class extends Deployed {
     return [await deployed.methods.isListed(hash), assigned]
   }
 
-  async withdrawFromListing(hash:string, amount:string, opts?:TransactOpts): Promise<Return> {
+  async withdrawFromListing(hash:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('withdrawFromListing')}, opts)
     return [await deployed.methods.withdrawFromListing(hash, amount), assigned]
@@ -36,6 +35,12 @@ export default class extends Deployed {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('getListing')}, opts)
     return [await deployed.methods.getListing(hash), assigned]
+  }
+
+  async resolveApplication(hash:string, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('resolveApplication')}, opts)
+    return [await deployed.methods.resolveApplication(hash), assigned]
   }
 
   async claimBytesAccessed(hash:string, opts?:TransactOpts): Promise<Return> {

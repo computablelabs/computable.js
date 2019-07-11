@@ -12,8 +12,7 @@ import {
 } from '../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
+  w3 = new Web3(provider),
     toBN = w3.utils.toBN
 
 // we'll use the ether token contract to test the deployed base methods here (could be any contract)

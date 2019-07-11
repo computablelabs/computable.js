@@ -1,14 +1,9 @@
 import Web3 from 'web3'
-import {  } from 'web3/types'
-
-import {
-  TransactOpts,
-  Keyed
- } from '../interfaces'
+import { TransactOpts } from '../interfaces'
 import { GAS_PRICE, MARKET_TOKEN_ABI } from '../constants'
 import Erc20 from './erc-20'
 
-import { Nos, Return } from '../@types'
+import { Return } from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Erc20 {

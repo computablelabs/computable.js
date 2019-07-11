@@ -12,14 +12,13 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
-
-const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const votingAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const p11rAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
-const reserveAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  etherTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  p11rAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  reserveAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  listingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 let datatrust:Datatrust,
   accounts:string[],
@@ -30,13 +29,13 @@ describe('Datatrust', () => {
     accounts = await w3.eth.getAccounts()
 
     // deploy it...
-    const bin:string = readBytecode('voting')
+    const bin:string = readBytecode('datatrust')
 
     deployed = await deploy(w3,
                             accounts[0],
                             DATATRUST_ABI,
                             bin,
-                            [marketTokenAddress,
+                            [etherTokenAddress,
                               votingAddress,
                               p11rAddress,
                               reserveAddress])
@@ -49,7 +48,7 @@ describe('Datatrust', () => {
   describe('Class methods for Datatrust', () => {
 
     it('calls setPrivileged correctly', async () => {
-      const defaults = await datatrust.setPrivileged("datatrust", {})
+      const defaults = await datatrust.setPrivileged(listingAddress)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('setPrivileged')
@@ -68,7 +67,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getPrivileged correctly', async () => {
-      const defaults = await datatrust.getPrivileged({})
+      const defaults = await datatrust.getPrivileged()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getPrivileged')
@@ -87,7 +86,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getHash correctly', async () => {
-      const defaults = await datatrust.getHash("datatrust", {})
+      const defaults = await datatrust.getHash('some-string')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getHash')
@@ -106,7 +105,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getBackendAddress correctly', async () => {
-      const defaults = await datatrust.getBackendAddress({})
+      const defaults = await datatrust.getBackendAddress()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getBackendAddress')
@@ -125,7 +124,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getBackendUrl correctly', async () => {
-      const defaults = await datatrust.getBackendUrl({})
+      const defaults = await datatrust.getBackendUrl()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getBackendUrl')
@@ -144,7 +143,7 @@ describe('Datatrust', () => {
     })
 
     it('calls setBackendUrl correctly', async () => {
-      const defaults = await datatrust.setBackendUrl("datatrust", {})
+      const defaults = await datatrust.setBackendUrl('https://www.datatrust')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('setBackendUrl')
@@ -163,7 +162,7 @@ describe('Datatrust', () => {
     })
 
     it('calls setDataHash correctly', async () => {
-      const defaults = await datatrust.setDataHash("datatrust", "data", {})
+      const defaults = await datatrust.setDataHash('somelistinghash', 'somedata')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('setDataHash')
@@ -182,7 +181,7 @@ describe('Datatrust', () => {
     })
 
     it('calls register correctly', async () => {
-      const defaults = await datatrust.register("datatrust",{})
+      const defaults = await datatrust.register('https://www.datatrust.com')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('register')
@@ -201,7 +200,7 @@ describe('Datatrust', () => {
     })
 
     it('calls resolveRegistration correctly', async () => {
-      const defaults = await datatrust.resolveRegistration("datatrust", {})
+      const defaults = await datatrust.resolveRegistration('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('resolveRegistration')
@@ -220,7 +219,7 @@ describe('Datatrust', () => {
     })
 
     it('calls requestDelivery correctly', async () => {
-      const defaults = await datatrust.requestDelivery("datatrust", "1000", {})
+      const defaults = await datatrust.requestDelivery('samehash', '1000')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('requestDelivery')
@@ -239,7 +238,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getBytesPurchased correctly', async () => {
-      const defaults = await datatrust.getBytesPurchased("datatrust", {})
+      const defaults = await datatrust.getBytesPurchased('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getBytesPurchased')
@@ -258,7 +257,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getDelivery correctly', async () => {
-      const defaults = await datatrust.getDelivery("datatrust", {})
+      const defaults = await datatrust.getDelivery('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getDelivery')
@@ -277,7 +276,7 @@ describe('Datatrust', () => {
     })
 
     it('calls listingAccessed correctly', async () => {
-      const defaults = await datatrust.listingAccessed("datatrust", "delivery", "100000", {})
+      const defaults = await datatrust.listingAccessed('somelisting', 'somedelivery', '100000')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('listingAccessed')
@@ -296,7 +295,7 @@ describe('Datatrust', () => {
     })
 
     it('calls getBytesAccessed correctly', async () => {
-      const defaults = await datatrust.getBytesAccessed("datatrust", {})
+      const defaults = await datatrust.getBytesAccessed('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('getBytesAccessed')
@@ -315,7 +314,7 @@ describe('Datatrust', () => {
     })
 
     it('calls delivered correctly', async () => {
-      const defaults = await datatrust.delivered("datatrust", {})
+      const defaults = await datatrust.delivered('somehash', 'https://some-url')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('delivered')

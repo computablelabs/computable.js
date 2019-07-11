@@ -12,11 +12,9 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
-
-const marketTokenAddress = "0x931D387731bBbC988B312206c74F77D004D6B84b"
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN,
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 const priceFloor = w3.utils.toWei('1', 'szabo')
 const spread = 110
@@ -37,7 +35,7 @@ describe('Parameterizer', () => {
     accounts = await w3.eth.getAccounts()
 
     // deploy it...
-    const bin:string = readBytecode('voting')
+    const bin:string = readBytecode('parameterizer')
 
     deployed = await deploy(w3,
                             accounts[0],
@@ -62,7 +60,7 @@ describe('Parameterizer', () => {
   describe('Class methods for Parameterizer', () => {
 
     it('calls getBackendPayment correctly', async () => {
-      const defaults = await parameterizer.getBackendPayment({})
+      const defaults = await parameterizer.getBackendPayment()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getBackendPayment')
@@ -81,7 +79,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getMakerPayment correctly', async () => {
-      const defaults = await parameterizer.getMakerPayment({})
+      const defaults = await parameterizer.getMakerPayment()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getMakerPayment')
@@ -100,7 +98,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getReservePayment correctly', async () => {
-      const defaults = await parameterizer.getReservePayment({})
+      const defaults = await parameterizer.getReservePayment()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getReservePayment')
@@ -119,7 +117,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getCostPerByte correctly', async () => {
-      const defaults = await parameterizer.getCostPerByte({})
+      const defaults = await parameterizer.getCostPerByte()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getCostPerByte')
@@ -138,7 +136,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getStake correctly', async () => {
-      const defaults = await parameterizer.getStake({})
+      const defaults = await parameterizer.getStake()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getStake')
@@ -157,7 +155,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getPriceFloor correctly', async () => {
-      const defaults = await parameterizer.getPriceFloor({})
+      const defaults = await parameterizer.getPriceFloor()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getPriceFloor')
@@ -176,7 +174,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getHash correctly', async () => {
-      const defaults = await parameterizer.getHash(2, 42, {})
+      const defaults = await parameterizer.getHash(2, 42)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getHash')
@@ -195,7 +193,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getSpread correctly', async () => {
-      const defaults = await parameterizer.getSpread({})
+      const defaults = await parameterizer.getSpread()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getSpread')
@@ -214,7 +212,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getListReward correctly', async () => {
-      const defaults = await parameterizer.getListReward({})
+      const defaults = await parameterizer.getListReward()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getListReward')
@@ -233,7 +231,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getPlurality correctly', async () => {
-      const defaults = await parameterizer.getPlurality({})
+      const defaults = await parameterizer.getPlurality()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getPlurality')
@@ -252,7 +250,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getReparam correctly', async () => {
-      const defaults = await parameterizer.getReparam('hash', {})
+      const defaults = await parameterizer.getReparam('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getReparam')
@@ -271,7 +269,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls getVoteBy correctly', async () => {
-      const defaults = await parameterizer.getVoteBy({})
+      const defaults = await parameterizer.getVoteBy()
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('getVoteBy')
@@ -290,7 +288,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls reparameterize correctly', async () => {
-      const defaults = await parameterizer.reparameterize(2, 42, {})
+      const defaults = await parameterizer.reparameterize(2, 42)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('reparameterize')
@@ -309,7 +307,7 @@ describe('Parameterizer', () => {
     })
 
     it('calls resolveReparam correctly', async () => {
-      const defaults = await parameterizer.resolveReparam('hash',{})
+      const defaults = await parameterizer.resolveReparam('hash')
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('resolveReparam')

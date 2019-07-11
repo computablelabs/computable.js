@@ -1,8 +1,7 @@
 import Web3 from 'web3'
-import {  } from 'web3/types'
 import { TransactOpts } from '../interfaces'
 import { VOTING_ABI } from '../constants'
-import { Return } from '../@types'
+import { Nos, Return } from '../@types'
 import Deployed from '../abstracts/deployed'
 
 export default class extends Deployed {
@@ -14,10 +13,10 @@ export default class extends Deployed {
     return super.at(w3, address, VOTING_ABI, opts)
   }
 
-  async setPrivileged(listing:string, reserve:string, opts?:TransactOpts): Promise<Return> {
+  async setPrivileged(parameterizer:string, reserve:string, datatrust:string, listing:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('setPrivileged')}, opts)
-    return [await deployed.methods.setPrivileged(listing, reserve), assigned]
+    return [await deployed.methods.setPrivileged(parameterizer, reserve, datatrust, listing), assigned]
   }
 
   async getPrivileged(opts?:TransactOpts): Promise<Return> {
@@ -32,7 +31,7 @@ export default class extends Deployed {
     return [await deployed.methods.hasPrivilege(addr), assigned]
   }
 
-  async candidateIs(hash:string, kind:string, opts?:TransactOpts): Promise<Return> {
+  async candidateIs(hash:string, kind:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('candidateIs')}, opts)
     return [await deployed.methods.candidateIs(hash, kind), assigned]
@@ -56,22 +55,22 @@ export default class extends Deployed {
     return [await deployed.methods.getCandidateOwner(hash), assigned]
   }
 
-  async didPass(hash:string, opts?:TransactOpts): Promise<Return> {
+  async didPass(hash:string, plurality:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('didPass')}, opts)
-    return [await deployed.methods.didPass(hash), assigned]
+    return [await deployed.methods.didPass(hash, plurality), assigned]
   }
 
-  async vote(hash:string, option:number, opts?:TransactOpts): Promise<Return> {
+  async vote(hash:string, option:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('vote')}, opts)
     return [await deployed.methods.vote(hash, option), assigned]
   }
 
-  async getStake(hash:string, opts?:TransactOpts): Promise<Return> {
+  async getStake(hash:string, address:string,  opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('getStake')}, opts)
-    return [await deployed.methods.getStake(hash), assigned]
+    return [await deployed.methods.getStake(hash, address), assigned]
   }
 
   async unstake(hash:string, opts?:TransactOpts): Promise<Return> {

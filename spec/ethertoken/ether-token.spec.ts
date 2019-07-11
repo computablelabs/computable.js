@@ -12,9 +12,8 @@ import {
 } from '../../src/helpers'
 
 const provider:any = ganache.provider(),
-  w3 = new Web3(provider, undefined, {defaultBlock: 'latest',
-    transactionConfirmationBlocks: 1, transactionBlockTimeout: 5}),
-    toBN = w3.utils.toBN
+  w3 = new Web3(provider),
+  toBN = w3.utils.toBN
 
 let etherToken:EtherToken,
   accounts:string[],
