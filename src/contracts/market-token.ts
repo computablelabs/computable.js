@@ -11,10 +11,10 @@ export default class extends Erc20 {
     return super.at(w3, address, MARKET_TOKEN_ABI, opts)
   }
 
-  async setPrivileged(listing:string, reserve:string, opts?:TransactOpts): Promise<Return> {
+  async setPrivileged(reserve:string, listing:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('setPrivileged')}, opts)
-    return [await deployed.methods.setPrivileged(listing, reserve), assigned]
+    return [await deployed.methods.setPrivileged(reserve, listing), assigned]
   }
 
   async getPrivileged(opts?:TransactOpts): Promise<Return> {
