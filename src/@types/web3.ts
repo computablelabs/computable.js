@@ -18,6 +18,11 @@ declare module "web3/types" {
     [key: string]: any
   }
 
+  interface SignedTransaction {
+    rawTransaction?: string
+    [key: string]: any
+  }
+
   interface TransactionReceipt {
     [key: string]: any
   }
