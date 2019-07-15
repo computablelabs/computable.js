@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ONE_ETHER = '1000000000000000000';
+exports.ONE_FINNEY = '1000000000000000';
+exports.ONE_SZABO = '1000000000000';
+exports.ONE_GWEI = '1000000000';
+exports.ONE_MWEI = '1000000';
+exports.ONE_KWEI = '1000';
+exports.GAS_PRICE = '2000000000';
+exports.DEPLOY_GAS = 4700000;
+exports.MIN_GAS = 21000;
+exports.GAS_BUFFER = 100000;
