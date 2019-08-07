@@ -6,7 +6,7 @@ export default abstract class implements Keyed {
     account?: string;
     address?: string;
     abi?: any;
-    protected deployed?: Contract;
+    deployed?: Contract;
     constructor(account?: string);
     protected at(w3: Web3, address: string, abi: any, opts?: TransactOpts): Promise<boolean>;
     assignTransactOpts(src: Keyed, opts?: TransactOpts): TransactOpts;
