@@ -17,7 +17,7 @@ export default abstract class implements Keyed {
   public account?:string
   public address?:string
   public abi?:any
-  protected deployed?:Contract
+  public deployed?:Contract
 
   constructor(account?:string) {
     if (account) this.account = account
