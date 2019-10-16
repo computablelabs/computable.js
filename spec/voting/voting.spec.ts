@@ -49,7 +49,7 @@ describe('Voting', () => {
     })
 
     it('calls setPrivileged correctly', async () => {
-      const defaults = await voting.setPrivileged(p11rAddress, reserveAddress,
+      const defaults = await voting.setPrivileged(p11rAddress,
         datatrustAddress, listingAddress)
       let tx = defaults[0]
       let opts = defaults[1]

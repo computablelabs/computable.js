@@ -43,10 +43,10 @@ export default class extends Deployed {
     return [await deployed.methods.resolveApplication(hash), assigned]
   }
 
-  async claimBytesAccessed(hash:string, opts?:TransactOpts): Promise<Return> {
+  async claimAccessReward(hash:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-    let assigned = this.assignTransactOpts({gas: this.getGas('claimBytesAccessed')}, opts)
-    return [await deployed.methods.claimBytesAccessed(hash), assigned]
+    let assigned = this.assignTransactOpts({gas: this.getGas('claimAccessReward')}, opts)
+    return [await deployed.methods.claimAccessReward(hash), assigned]
   }
 
   async challenge(hash:string, opts?:TransactOpts): Promise<Return> {

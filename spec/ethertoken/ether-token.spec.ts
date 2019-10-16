@@ -28,7 +28,7 @@ describe('EtherToken', () => {
     const bin:string = readBytecode('ethertoken')
 
     deployed = await deploy(w3, accounts[0], ETHER_TOKEN_ABI,
-      bin, [accounts[0], ONE_ETHER])
+      bin, [])
 
     // now we can instantiate the HOC
     etherToken = new EtherToken(accounts[0])
@@ -42,10 +42,17 @@ describe('EtherToken', () => {
       expect(etherToken.abi).toBeTruthy()
     })
 
-    it('has an initial balance that can be checked', async () => {
-      const bal = toBN(await call(await etherToken.balanceOf(accounts[0])))
-      expect(bal.toString()).toBe(ONE_ETHER)
+  })
+
+  describe('Deposit', () => {
+    it('funds have been deposited', async () => {
+      const origBal = toBN(await call(await etherToken.balanceOf(accounts[0])))
+      expect(origBal.toString()).toBe('0')
+      await transact(await etherToken.deposit(ONE_ETHER, {from: accounts[0]}))
+      const newBal = toBN(await call(await etherToken.balanceOf(accounts[0])))
+      expect(newBal.toString()).toBe(ONE_ETHER)
     })
+
   })
 
   describe('Transfers', () => {

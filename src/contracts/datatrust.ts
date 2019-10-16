@@ -91,10 +91,10 @@ export default class extends Deployed {
     return [await deployed.methods.listingAccessed(listing, delivery, amount), assigned]
   }
 
-  async getBytesAccessed(hash:string, opts?:TransactOpts): Promise<Return> {
+  async getAccessRewardEarned(hash:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-    let assigned = this.assignTransactOpts({gas: this.getGas('getBytesAccessed')}, opts)
-    return [await deployed.methods.getBytesAccessed(hash), assigned]
+    let assigned = this.assignTransactOpts({gas: this.getGas('getAccessRewardEarned')}, opts)
+    return [await deployed.methods.getAccessRewardEarned(hash), assigned]
   }
 
   async delivered(delivery:string, url:string, opts?:TransactOpts): Promise<Return> {

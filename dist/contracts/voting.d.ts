@@ -4,7 +4,7 @@ import { Nos, Return } from '../@types';
 import Deployed from '../abstracts/deployed';
 export default class extends Deployed {
     at(w3: Web3, address: string, opts?: TransactOpts): Promise<boolean>;
-    setPrivileged(parameterizer: string, reserve: string, datatrust: string, listing: string, opts?: TransactOpts): Promise<Return>;
+    setPrivileged(parameterizer: string, datatrust: string, listing: string, opts?: TransactOpts): Promise<Return>;
     getPrivileged(opts?: TransactOpts): Promise<Return>;
     hasPrivilege(addr: string, opts?: TransactOpts): Promise<Return>;
     candidateIs(hash: string, kind: Nos, opts?: TransactOpts): Promise<Return>;

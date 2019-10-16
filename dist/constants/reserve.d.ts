@@ -34,8 +34,8 @@ export declare const RESERVE_ABI: ({
     "outputs": never[];
     "inputs": {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     }[];
     "constant": boolean;
     "payable": boolean;
@@ -46,8 +46,8 @@ export declare const RESERVE_ABI: ({
     "name": string;
     "outputs": {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     }[];
     "inputs": {
         "type": string;

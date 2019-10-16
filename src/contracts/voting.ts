@@ -13,10 +13,10 @@ export default class extends Deployed {
     return super.at(w3, address, VOTING_ABI, opts)
   }
 
-  async setPrivileged(parameterizer:string, reserve:string, datatrust:string, listing:string, opts?:TransactOpts): Promise<Return> {
+  async setPrivileged(parameterizer:string, datatrust:string, listing:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('setPrivileged')}, opts)
-    return [await deployed.methods.setPrivileged(parameterizer, reserve, datatrust, listing), assigned]
+    return [await deployed.methods.setPrivileged(parameterizer, datatrust, listing), assigned]
   }
 
   async getPrivileged(opts?:TransactOpts): Promise<Return> {

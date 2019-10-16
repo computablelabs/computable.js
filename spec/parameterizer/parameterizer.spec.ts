@@ -1,8 +1,12 @@
 import * as ganache from 'ganache-cli'
 import Web3 from 'web3'
 import { Contract } from 'web3/types'
+import EtherToken from '../../src/contracts/ether-token'
+import MarketToken from '../../src/contracts/market-token'
+import Voting from '../../src/contracts/voting'
 import Parameterizer from '../../src/contracts/parameterizer'
-import { PARAMETERIZER_ABI, ONE_ETHER, ONE_GWEI } from  '../../src/constants'
+import Reserve from '../../src/contracts/reserve'
+import { ETHER_TOKEN_ABI, MARKET_TOKEN_ABI, VOTING_ABI, PARAMETERIZER_ABI, RESERVE_ABI, ONE_ETHER, ONE_GWEI } from  '../../src/constants'
 import { Return } from '../../src/@types'
 import {
   deploy,
@@ -14,7 +18,11 @@ import {
 const provider:any = ganache.provider(),
   w3 = new Web3(provider),
   toBN = w3.utils.toBN,
-  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
+  etherTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  datatrustAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  listingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 const priceFloor = w3.utils.toWei('1', 'szabo')
 const spread = 110
@@ -26,22 +34,55 @@ const backendPayment = 25
 const makerPayment = 25
 const costPerByte = w3.utils.toWei('100', 'gwei')
 
-let parameterizer:Parameterizer,
+let etherToken:EtherToken,
+  marketToken:MarketToken,
+  voting:Voting,
+  parameterizer:Parameterizer,
+  reserve:Reserve,
   accounts:string[],
-  deployed:Contract
+  instantiated:boolean,
+  deployedEtherToken:Contract,
+  deployedMarketToken:Contract,
+  deployedVoting:Contract,
+  deployedParameterizer:Contract,
+  deployedReserve:Contract
 
 describe('Parameterizer', () => {
   beforeAll(async () => {
     accounts = await w3.eth.getAccounts()
 
-    // deploy it...
-    const bin:string = readBytecode('parameterizer')
+    //// deploy ether token
+    //const etherTokenBin:string = readBytecode('ethertoken')
+    //deployedEtherToken = await deploy(w3, accounts[0], ETHER_TOKEN_ABI,
+    //  etherTokenBin, [])
+    //// now instantiate EtherToken HOC 
+    //etherToken = new EtherToken(accounts[0])
+    //instantiated = await etherToken.at(w3, deployedEtherToken.options.address)
 
-    deployed = await deploy(w3,
+    //// deploy market token
+    //const marketTokenBin:string = readBytecode('markettoken')
+    //deployedMarketToken = await deploy(w3, accounts[0], MARKET_TOKEN_ABI,
+    //  marketTokenBin, [accounts[0], ONE_GWEI])
+    //// now instantiate MarketToken HOC 
+    //marketToken = new MarketToken(accounts[0])
+    //instantiated = await marketToken.at(w3, deployedMarketToken.options.address)
+
+    //// deploy voting 
+    //const votingBin:string = readBytecode('voting')
+    //deployedVoting = await deploy(w3, accounts[0], VOTING_ABI,
+    //  votingBin, [deployedMarketToken.options.address])
+    //// now instantiate Voting HOC 
+    //voting = new Voting(accounts[0])
+    //instantiated = await voting.at(w3, deployedVoting.options.address)
+
+    // deploy Parameterizer
+    const parameterizerBin:string = readBytecode('parameterizer')
+    deployedParameterizer = await deploy(w3,
                             accounts[0],
                             PARAMETERIZER_ABI,
-                            bin,
+                            parameterizerBin,
                             [marketTokenAddress,
+                              votingAddress,
                               priceFloor,
                               spread,
                               listReward,
@@ -51,10 +92,24 @@ describe('Parameterizer', () => {
                               backendPayment,
                               makerPayment,
                               costPerByte])
-
     // now we can instantiate the HOC
     parameterizer = new Parameterizer(accounts[0])
-    await parameterizer.at(w3, deployed.options.address)
+    await parameterizer.at(w3, deployedParameterizer.options.address)
+
+    //// deploy reserve 
+    //const reserveBin:string = readBytecode('reserve')
+    //deployedReserve = await deploy(w3, accounts[0], RESERVE_ABI,
+    //  reserveBin, [deployedEtherToken.options.address,
+    //               deployedMarketToken.options.address,
+    //               deployedParameterizer.options.address])
+    //// now instantiate Reserve HOC 
+    //reserve = new Reserve(accounts[0])
+    //instantiated = await reserve.at(w3, deployedReserve.options.address)
+    //
+    //// MarketToken Set Privileged
+    //await transact(await marketToken.setPrivileged(deployedReserve.options.address, listingAddress))
+    //// Voting Set Privileged
+    //await transact(await voting.setPrivileged(deployedParameterizer.options.address, datatrustAddress, listingAddress))
   })
 
   describe('Class methods for Parameterizer', () => {
@@ -288,7 +343,31 @@ describe('Parameterizer', () => {
     })
 
     it('calls reparameterize correctly', async () => {
-      const defaults = await parameterizer.reparameterize(2, 42)
+      //// Deposit into ether token
+      //const origBal = toBN(await call(await etherToken.balanceOf(accounts[0])))
+      //expect(origBal.toString()).toBe('0')
+      //await transact(await etherToken.deposit(ONE_ETHER, {from: accounts[0]}))
+      //const newBal = toBN(await call(await etherToken.balanceOf(accounts[0])))
+      //expect(newBal.toString()).toBe(ONE_ETHER)
+
+      //// Grant ethertoken allowance to reserve
+      //const oldAllowance = toBN(await call(await etherToken.allowance(accounts[0], deployedReserve.options.address)))
+      //expect(oldAllowance.toString()).toBe('0')
+      //await transact(await etherToken.approve(deployedReserve.options.address, ONE_ETHER))
+      //const newAllowance = toBN(await call(await etherToken.allowance(accounts[0], deployedReserve.options.address)))
+      //expect(newAllowance.toString()).toBe(ONE_ETHER)
+
+      //// Call support
+      //await transact(await reserve.support(ONE_ETHER))
+      //// Approve the market token allowance
+      //const oldMktAllowance = await call(await marketToken.allowance(accounts[0], deployedVoting.options.address))
+      //expect(oldMktAllowance.toString()).toBe('0')
+      //await transact(await marketToken.approve(deployedVoting.options.address, ONE_ETHER))
+      //const newMktAllowance = await call(await marketToken.allowance(accounts[0], deployedVoting.options.address))
+      //expect(newMktAllowance.toString()).toBe(ONE_ETHER)
+
+      // PLURALITY == 6
+      const defaults = await parameterizer.reparameterize(6, 51)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('reparameterize')
@@ -304,6 +383,9 @@ describe('Parameterizer', () => {
       let gasPrice = opts['gasPrice']
       expect(gasPrice).not.toBeNull()
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
+
+      // Now call the actual transaction
+      //await transact(await parameterizer.reparameterize(6, 51, {gas: 5000000}))
     })
 
     it('calls resolveReparam correctly', async () => {

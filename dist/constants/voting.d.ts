@@ -37,8 +37,8 @@ export declare const VOTING_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "inputs": {
         "type": string;
@@ -58,8 +58,8 @@ export declare const VOTING_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;

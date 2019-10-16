@@ -124,11 +124,11 @@ describe('Listing', () => {
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
     })
 
-    it('calls claimBytesAccessed correctly', async () => {
-      const defaults = await listing.claimBytesAccessed('listing')
+    it('calls claimAccessReward correctly', async () => {
+      const defaults = await listing.claimAccessReward('listing')
       let tx = defaults[0]
       let opts = defaults[1]
-      let gas = listing.getGas('claimBytesAccessed')
+      let gas = listing.getGas('claimAccessReward')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)

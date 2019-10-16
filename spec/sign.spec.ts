@@ -49,7 +49,7 @@ describe('Signing helper functions', () => {
     const bin:string = readBytecode('ethertoken')
 
     deployed = await deploy(w3, accounts[0], ETHER_TOKEN_ABI,
-      bin, [accounts[0], ONE_ETHER])
+      bin, [])
 
     // now we can instantiate the HOC
     token = new EtherToken(accounts[0])
@@ -69,8 +69,8 @@ describe('Signing helper functions', () => {
 
   it('is setup properly', async () => {
     // hydrated accounts already have ETH
-    // const bal = toBN(await w3.eth.getBalance(accounts[0]))
-    // expect(bal.gt(toBN(0))).toBe(true)
+    const bal = toBN(await w3.eth.getBalance(accounts[0]))
+    expect(bal.gt(toBN(0))).toBe(true)
     // the newly imported account has no funds...
     let userBal = toBN(await w3.eth.getBalance(account))
     expect(userBal.gt(toBN(0))).toBe(false)
@@ -90,7 +90,9 @@ describe('Signing helper functions', () => {
     // user has no ethertoken
     let tokenBal = toBN(await call(await token.balanceOf(account)))
     expect(tokenBal.gt(toBN(0))).toBe(false)
-    // get them some (from [0]) so they can transfer it to someone else
+    // have account[0] deposit some eth 
+    await transact(await token.deposit(ONE_GWEI))
+    // Then transfer to account
     await transact(await token.transfer(account, ONE_GWEI))
     // should have bal now...
     tokenBal = toBN(await call(await token.balanceOf(account)))

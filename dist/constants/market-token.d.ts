@@ -25,8 +25,8 @@ export declare const MARKET_TOKEN_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;
@@ -38,8 +38,8 @@ export declare const MARKET_TOKEN_ABI: ({
     "name": string;
     "outputs": {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     }[];
     "inputs": {
         "type": string;
@@ -62,8 +62,8 @@ export declare const MARKET_TOKEN_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;

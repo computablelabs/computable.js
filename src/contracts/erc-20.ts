@@ -30,10 +30,10 @@ export default class extends Deployed {
     return [await deployed.methods.balanceOf(owner), assigned]
   }
 
-  async decreaseApproval(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+  async decreaseAllowance(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-    let assigned = this.assignTransactOpts({gas: this.getGas('decreaseApproval')}, opts)
-    return [await deployed.methods.decreaseApproval(spender, amount), assigned]
+    let assigned = this.assignTransactOpts({gas: this.getGas('decreaseAllowance')}, opts)
+    return [await deployed.methods.decreaseAllowance(spender, amount), assigned]
   }
 
   async getDecimals(opts?:TransactOpts): Promise<Return> {
@@ -48,10 +48,10 @@ export default class extends Deployed {
     return [await deployed.methods.symbol(), assigned]
   }
 
-  async increaseApproval(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
+  async increaseAllowance(spender:string, amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
-    let assigned = this.assignTransactOpts({gas: this.getGas('increaseApproval')}, opts)
-    return [await deployed.methods.increaseApproval(spender, amount), assigned]
+    let assigned = this.assignTransactOpts({gas: this.getGas('increaseAllowance')}, opts)
+    return [await deployed.methods.increaseAllowance(spender, amount), assigned]
   }
 
   async totalSupply(opts?:TransactOpts): Promise<Return> {

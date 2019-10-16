@@ -12,7 +12,7 @@ export default class extends Erc20 {
   async deposit(amount:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('deposit'), value: amount}, opts)
-    return [await deployed.methods.deposit(amount), assigned]
+    return [await deployed.methods.deposit(), assigned]
   }
 
   async withdraw(amount:Nos, opts?:TransactOpts): Promise<Return> {

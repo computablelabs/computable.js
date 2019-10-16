@@ -294,11 +294,11 @@ describe('Datatrust', () => {
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
     })
 
-    it('calls getBytesAccessed correctly', async () => {
-      const defaults = await datatrust.getBytesAccessed('somehash')
+    it('calls getAccessRewardEarned correctly', async () => {
+      const defaults = await datatrust.getAccessRewardEarned('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
-      let gas = datatrust.getGas('getBytesAccessed')
+      let gas = datatrust.getGas('getAccessRewardEarned')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)

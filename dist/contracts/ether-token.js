@@ -21,7 +21,7 @@ class default_1 extends erc_20_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             let assigned = this.assignTransactOpts({ gas: this.getGas('deposit'), value: amount }, opts);
-            return [yield deployed.methods.deposit(amount), assigned];
+            return [yield deployed.methods.deposit(), assigned];
         });
     }
     withdraw(amount, opts) {

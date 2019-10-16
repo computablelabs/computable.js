@@ -17,6 +17,6 @@ export default class extends Deployed {
     getBytesPurchased(addr: string, opts?: TransactOpts): Promise<Return>;
     getDelivery(hash: string, opts?: TransactOpts): Promise<Return>;
     listingAccessed(listing: string, delivery: string, amount: Nos, opts?: TransactOpts): Promise<Return>;
-    getBytesAccessed(hash: string, opts?: TransactOpts): Promise<Return>;
+    getAccessRewardEarned(hash: string, opts?: TransactOpts): Promise<Return>;
     delivered(delivery: string, url: string, opts?: TransactOpts): Promise<Return>;
 }

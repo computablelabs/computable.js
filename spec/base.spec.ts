@@ -28,7 +28,7 @@ describe('Deployed Base Class', () => {
     const bin:string = readBytecode('ethertoken')
 
     deployed = await deploy(w3, accounts[0], ETHER_TOKEN_ABI,
-      bin, [accounts[0], ONE_ETHER])
+      bin, [])
 
     // now we can instantiate the HOC
     base = new EtherToken(accounts[0])

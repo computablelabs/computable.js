@@ -40,8 +40,8 @@ export declare const LISTING_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;
@@ -56,8 +56,8 @@ export declare const LISTING_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "inputs": {
         "type": string;
