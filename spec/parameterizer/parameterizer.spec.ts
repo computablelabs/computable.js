@@ -14,11 +14,8 @@ import {
 const provider:any = ganache.provider(),
   w3 = new Web3(provider),
   toBN = w3.utils.toBN,
-  etherTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
   marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
-  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
-  datatrustAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
-  listingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
+  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 const priceFloor = w3.utils.toWei('1', 'szabo')
 const spread = 110
