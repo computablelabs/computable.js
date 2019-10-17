@@ -31,6 +31,13 @@ class default_1 extends deployed_1.default {
             return [yield deployed.methods.getPrivileged(), assigned];
         });
     }
+    getReserve(opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            let assigned = this.assignTransactOpts({ gas: this.getGas('getReserve') }, opts);
+            return [yield deployed.methods.getReserve(), assigned];
+        });
+    }
     getHash(url, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
@@ -57,6 +64,13 @@ class default_1 extends deployed_1.default {
             const deployed = this.requireDeployed();
             let assigned = this.assignTransactOpts({ gas: this.getGas('setBackendUrl') }, opts);
             return [yield deployed.methods.setBackendUrl(url), assigned];
+        });
+    }
+    getDataHash(listing, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            let assigned = this.assignTransactOpts({ gas: this.getGas('getDataHash') }, opts);
+            return [yield deployed.methods.getDataHash(listing), assigned];
         });
     }
     setDataHash(listing, data, opts) {

@@ -25,6 +25,13 @@ export default class extends Deployed {
     return [await deployed.methods.getPrivileged(), assigned]
   }
 
+  async getReserve(opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('getReserve')}, opts)
+    return [await deployed.methods.getReserve(), assigned]
+  }
+
+
   async getHash(url:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('getHash')}, opts)
@@ -48,6 +55,13 @@ export default class extends Deployed {
     let assigned = this.assignTransactOpts({gas: this.getGas('setBackendUrl')}, opts)
     return [await deployed.methods.setBackendUrl(url), assigned]
   }
+
+  async getDataHash(listing:string, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('getDataHash')}, opts)
+    return [await deployed.methods.getDataHash(listing), assigned]
+  }
+
 
   async setDataHash(listing:string, data:string, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
