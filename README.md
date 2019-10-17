@@ -17,3 +17,9 @@ These files are not included in the Typescript build, as a browser environment c
 is stored as a constant, and used to instantiate each *Higher Order Contract* as well as to look up gas cost on demand. Bytecode files,
 _.bin_, are only required for specs thus can be read utilizing the Node.js `readfile` based helper `readBytecode` (`.bin` files are not included
 in the Typescript build)
+
+## Getting Help
+
+If you're having trouble using this library, log into the
+[Computable discord server](https://discord.gg/3mFF8zy). Members of the
+development team hang out there and might be able to help with your questions.
