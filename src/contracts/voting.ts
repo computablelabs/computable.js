@@ -61,6 +61,12 @@ export default class extends Deployed {
     return [await deployed.methods.didPass(hash, plurality), assigned]
   }
 
+  async pollClosed(hash:string, opts?:TransactOpts): Promise<Return> {
+    const deployed = this.requireDeployed()
+    let assigned = this.assignTransactOpts({gas: this.getGas('pollClosed')}, opts)
+    return [await deployed.methods.pollClosed(hash), assigned]
+  }
+
   async vote(hash:string, option:Nos, opts?:TransactOpts): Promise<Return> {
     const deployed = this.requireDeployed()
     let assigned = this.assignTransactOpts({gas: this.getGas('vote')}, opts)

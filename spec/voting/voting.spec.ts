@@ -257,5 +257,24 @@ describe('Voting', () => {
       expect(gasPrice).not.toBeNull()
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
     })
+
+    it('calls pollClosed correctly', async () => {
+      const defaults = await voting.pollClosed('hash')
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = voting.getGas('pollClosed')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
   })
 })

@@ -12,6 +12,7 @@ export default class extends Deployed {
     getCandidate(hash: string, opts?: TransactOpts): Promise<Return>;
     getCandidateOwner(hash: string, opts?: TransactOpts): Promise<Return>;
     didPass(hash: string, plurality: Nos, opts?: TransactOpts): Promise<Return>;
+    pollClosed(hash: string, opts?: TransactOpts): Promise<Return>;
     vote(hash: string, option: Nos, opts?: TransactOpts): Promise<Return>;
     getStake(hash: string, address: string, opts?: TransactOpts): Promise<Return>;
     unstake(hash: string, opts?: TransactOpts): Promise<Return>;
