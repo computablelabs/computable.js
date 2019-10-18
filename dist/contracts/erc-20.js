@@ -34,11 +34,11 @@ class default_1 extends deployed_1.default {
             return [yield deployed.methods.balanceOf(owner), assigned];
         });
     }
-    decreaseApproval(spender, amount, opts) {
+    decreaseAllowance(spender, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            let assigned = this.assignTransactOpts({ gas: this.getGas('decreaseApproval') }, opts);
-            return [yield deployed.methods.decreaseApproval(spender, amount), assigned];
+            let assigned = this.assignTransactOpts({ gas: this.getGas('decreaseAllowance') }, opts);
+            return [yield deployed.methods.decreaseAllowance(spender, amount), assigned];
         });
     }
     getDecimals(opts) {
@@ -55,11 +55,11 @@ class default_1 extends deployed_1.default {
             return [yield deployed.methods.symbol(), assigned];
         });
     }
-    increaseApproval(spender, amount, opts) {
+    increaseAllowance(spender, amount, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            let assigned = this.assignTransactOpts({ gas: this.getGas('increaseApproval') }, opts);
-            return [yield deployed.methods.increaseApproval(spender, amount), assigned];
+            let assigned = this.assignTransactOpts({ gas: this.getGas('increaseAllowance') }, opts);
+            return [yield deployed.methods.increaseAllowance(spender, amount), assigned];
         });
     }
     totalSupply(opts) {

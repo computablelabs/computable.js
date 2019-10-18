@@ -19,15 +19,7 @@ export declare const ETHER_TOKEN_ABI: ({
     "gas"?: undefined;
 } | {
     "outputs": never[];
-    "inputs": ({
-        "type": string;
-        "name": string;
-        "unit"?: undefined;
-    } | {
-        "type": string;
-        "name": string;
-        "unit": string;
-    })[];
+    "inputs": never[];
     "constant": boolean;
     "payable": boolean;
     "type": string;
@@ -38,8 +30,8 @@ export declare const ETHER_TOKEN_ABI: ({
     "name": string;
     "outputs": {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     }[];
     "inputs": {
         "type": string;
@@ -62,8 +54,8 @@ export declare const ETHER_TOKEN_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;

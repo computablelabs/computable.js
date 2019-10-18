@@ -17,11 +17,11 @@ class default_1 extends deployed_1.default {
     at(w3, address, opts) {
         return super.at(w3, address, constants_1.VOTING_ABI, opts);
     }
-    setPrivileged(parameterizer, reserve, datatrust, listing, opts) {
+    setPrivileged(parameterizer, datatrust, listing, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
             let assigned = this.assignTransactOpts({ gas: this.getGas('setPrivileged') }, opts);
-            return [yield deployed.methods.setPrivileged(parameterizer, reserve, datatrust, listing), assigned];
+            return [yield deployed.methods.setPrivileged(parameterizer, datatrust, listing), assigned];
         });
     }
     getPrivileged(opts) {
@@ -71,6 +71,13 @@ class default_1 extends deployed_1.default {
             const deployed = this.requireDeployed();
             let assigned = this.assignTransactOpts({ gas: this.getGas('didPass') }, opts);
             return [yield deployed.methods.didPass(hash, plurality), assigned];
+        });
+    }
+    pollClosed(hash, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deployed = this.requireDeployed();
+            let assigned = this.assignTransactOpts({ gas: this.getGas('pollClosed') }, opts);
+            return [yield deployed.methods.pollClosed(hash), assigned];
         });
     }
     vote(hash, option, opts) {

@@ -85,6 +85,26 @@ describe('Datatrust', () => {
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
     })
 
+    it('calls getReserve correctly', async () => {
+      const defaults = await datatrust.getReserve()
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = datatrust.getGas('getReserve')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+
     it('calls getHash correctly', async () => {
       const defaults = await datatrust.getHash('some-string')
       let tx = defaults[0]
@@ -147,6 +167,25 @@ describe('Datatrust', () => {
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = datatrust.getGas('setBackendUrl')
+      expect(tx).not.toBeNull(accounts[0])
+      expect(opts).not.toBeNull()
+      expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('from')).toBeGreaterThan(-1)
+      expect(Object.keys(opts).indexOf('gasPrice')).toBeGreaterThan(-1)
+      expect(opts['gas']).toBeGreaterThanOrEqual(gas)
+      let from = opts['from']
+      expect(from).not.toBeNull()
+      expect(from!.trim().length).toBeGreaterThan(0)
+      let gasPrice = opts['gasPrice']
+      expect(gasPrice).not.toBeNull()
+      expect(parseInt(gasPrice)).toBeGreaterThan(0)
+    })
+
+    it('calls getDataHash correctly', async () => {
+      const defaults = await datatrust.getDataHash('somelistinghash')
+      let tx = defaults[0]
+      let opts = defaults[1]
+      let gas = datatrust.getGas('getDataHash')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)
@@ -294,11 +333,11 @@ describe('Datatrust', () => {
       expect(parseInt(gasPrice)).toBeGreaterThan(0)
     })
 
-    it('calls getBytesAccessed correctly', async () => {
-      const defaults = await datatrust.getBytesAccessed('somehash')
+    it('calls getAccessRewardEarned correctly', async () => {
+      const defaults = await datatrust.getAccessRewardEarned('somehash')
       let tx = defaults[0]
       let opts = defaults[1]
-      let gas = datatrust.getGas('getBytesAccessed')
+      let gas = datatrust.getGas('getAccessRewardEarned')
       expect(tx).not.toBeNull(accounts[0])
       expect(opts).not.toBeNull()
       expect(Object.keys(opts).indexOf('gas')).toBeGreaterThan(-1)

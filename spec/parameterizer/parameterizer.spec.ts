@@ -14,7 +14,8 @@ import {
 const provider:any = ganache.provider(),
   w3 = new Web3(provider),
   toBN = w3.utils.toBN,
-  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
+  marketTokenAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b',
+  votingAddress = '0x931D387731bBbC988B312206c74F77D004D6B84b'
 
 const priceFloor = w3.utils.toWei('1', 'szabo')
 const spread = 110
@@ -28,20 +29,21 @@ const costPerByte = w3.utils.toWei('100', 'gwei')
 
 let parameterizer:Parameterizer,
   accounts:string[],
-  deployed:Contract
+  instantiated:boolean,
+  deployedParameterizer:Contract
 
 describe('Parameterizer', () => {
   beforeAll(async () => {
     accounts = await w3.eth.getAccounts()
 
-    // deploy it...
-    const bin:string = readBytecode('parameterizer')
-
-    deployed = await deploy(w3,
+    // deploy Parameterizer
+    const parameterizerBin:string = readBytecode('parameterizer')
+    deployedParameterizer = await deploy(w3,
                             accounts[0],
                             PARAMETERIZER_ABI,
-                            bin,
+                            parameterizerBin,
                             [marketTokenAddress,
+                              votingAddress,
                               priceFloor,
                               spread,
                               listReward,
@@ -51,10 +53,9 @@ describe('Parameterizer', () => {
                               backendPayment,
                               makerPayment,
                               costPerByte])
-
     // now we can instantiate the HOC
     parameterizer = new Parameterizer(accounts[0])
-    await parameterizer.at(w3, deployed.options.address)
+    await parameterizer.at(w3, deployedParameterizer.options.address)
   })
 
   describe('Class methods for Parameterizer', () => {
@@ -288,7 +289,9 @@ describe('Parameterizer', () => {
     })
 
     it('calls reparameterize correctly', async () => {
-      const defaults = await parameterizer.reparameterize(2, 42)
+
+      // PLURALITY == 6
+      const defaults = await parameterizer.reparameterize(6, 51)
       let tx = defaults[0]
       let opts = defaults[1]
       let gas = parameterizer.getGas('reparameterize')

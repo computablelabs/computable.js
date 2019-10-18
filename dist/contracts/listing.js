@@ -52,11 +52,11 @@ class default_1 extends deployed_1.default {
             return [yield deployed.methods.resolveApplication(hash), assigned];
         });
     }
-    claimBytesAccessed(hash, opts) {
+    claimAccessReward(hash, opts) {
         return __awaiter(this, void 0, void 0, function* () {
             const deployed = this.requireDeployed();
-            let assigned = this.assignTransactOpts({ gas: this.getGas('claimBytesAccessed') }, opts);
-            return [yield deployed.methods.claimBytesAccessed(hash), assigned];
+            let assigned = this.assignTransactOpts({ gas: this.getGas('claimAccessReward') }, opts);
+            return [yield deployed.methods.claimAccessReward(hash), assigned];
         });
     }
     challenge(hash, opts) {

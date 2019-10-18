@@ -41,16 +41,15 @@ export declare const DATATRUST_ABI: ({
     "anonymous"?: undefined;
 } | {
     "name": string;
-    "outputs": never[];
-    "inputs": ({
+    "outputs": {
         "type": string;
-        "name": string;
-        "unit"?: undefined;
-    } | {
-        "type": string;
-        "name": string;
         "unit": string;
-    })[];
+        "name": string;
+    }[];
+    "inputs": {
+        "type": string;
+        "name": string;
+    }[];
     "constant": boolean;
     "payable": boolean;
     "type": string;

@@ -9,7 +9,7 @@ export default class extends Deployed {
     list(hash: string, opts?: TransactOpts): Promise<Return>;
     getListing(hash: string, opts?: TransactOpts): Promise<Return>;
     resolveApplication(hash: string, opts?: TransactOpts): Promise<Return>;
-    claimBytesAccessed(hash: string, opts?: TransactOpts): Promise<Return>;
+    claimAccessReward(hash: string, opts?: TransactOpts): Promise<Return>;
     challenge(hash: string, opts?: TransactOpts): Promise<Return>;
     resolveChallenge(hash: string, opts?: TransactOpts): Promise<Return>;
     exit(hash: string, opts?: TransactOpts): Promise<Return>;

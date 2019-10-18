@@ -31,8 +31,8 @@ export declare const PARAMETERIZER_ABI: ({
         "unit"?: undefined;
     } | {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     })[];
     "constant": boolean;
     "payable": boolean;
@@ -44,8 +44,8 @@ export declare const PARAMETERIZER_ABI: ({
     "name": string;
     "outputs": {
         "type": string;
-        "name": string;
         "unit": string;
+        "name": string;
     }[];
     "inputs": never[];
     "constant": boolean;
